@@ -1,0 +1,51 @@
+local LEFT_MOUSE = hash("left_mouse")
+local MIDDLE_MOUSE = hash("middle_mouse")
+local RIGHT_MOUSE = hash("right_mouse")
+local WHEEL_UP = hash("wheel_up")
+local WHEEL_DOWN = hash("wheel_down")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.actions = {}
+	self.mouse = {
+		x = 0,
+		y = 0,
+		wheel = 0,
+		buttons = {},
+	}
+end
+
+function update(self, dt)
+	local w, h = window.get_size()
+	imgui.set_display_size(w, h)
+
+	print(self.mouse.wheel)
+	imgui.set_mouse_input(
+		self.mouse.x,
+		h - self.mouse.y,
+		self.mouse.buttons[LEFT_MOUSE] or 0,
+		self.mouse.buttons[MIDDLE_MOUSE] or 0,
+		self.mouse.buttons[RIGHT_MOUSE] or 0,
+		self.mouse.wheel
+	)
+end
+
+local function mouse_button(self, action_id, action)
+end
+
+function on_input(self, action_id, action)
+	if action_id == LEFT_MOUSE or action_id == MIDDLE_MOUSE or action_id == RIGHT_MOUSE then
+		if action.pressed then
+			self.mouse.buttons[action_id] = 1
+		elseif action.released then
+			self.mouse.buttons[action_id] = 0
+		end
+	elseif action_id == WHEEL_UP or action_id == WHEEL_DOWN then
+		self.mouse.wheel = action.value
+	end
+
+	if not action_id then
+		self.mouse.x = action.x
+		self.mouse.y = action.y
+	end
+end
