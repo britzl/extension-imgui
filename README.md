@@ -13,4 +13,4 @@ Projects such as [cimgui](https://github.com/cimgui/cimgui) offers Dear ImGUI bi
   * Solution is to migrate to `imgui_impl_opengl3.cpp`. Pull request accepted!
 
 ## Usage
-Refer to [example/example.script](/example/example.script) to learn more about how to use the extension. Also check the bindings in `LuaInit()` in `extension_imgui.cpp`.
+Refer to [example/example.script](/example/example.script) to learn how to use the extension. Also check the bindings in `LuaInit()` in `extension_imgui.cpp`.
