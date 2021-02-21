@@ -3,10 +3,12 @@
 #define LIB_NAME "ImGui"
 #define MODULE_NAME "imgui"
 
+#include <stdlib.h>
+
 // include the Defold SDK
 #include <dmsdk/sdk.h>
 
-//#include <OpenGL/gl.h>
+#include <GLES2/gl2.h>
 #include "imgui/imgui_impl_opengl2.h"
 //#include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui.h"
