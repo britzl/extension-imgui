@@ -30,8 +30,6 @@
 //  2017-09-01: OpenGL: Save and restore current polygon mode.
 //  2016-09-10: OpenGL: Uploading font texture as RGBA32 to increase compatibility with users shaders (not ideal).
 //  2016-09-05: OpenGL: Fixed save and restore of current scissor rectangle.
-#include <dmsdk/sdk.h>
-
 
 #include "imgui.h"
 #include "imgui_impl_opengl2.h"
@@ -129,9 +127,8 @@ void ImGui_ImplOpenGL2_RenderDrawData(ImDrawData* draw_data)
     // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
     int fb_width = (int)(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
     int fb_height = (int)(draw_data->DisplaySize.y * draw_data->FramebufferScale.y);
-    if (fb_width == 0 || fb_height == 0) {
+    if (fb_width == 0 || fb_height == 0)
         return;
-    }
 
     // Backup GL state
     GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);

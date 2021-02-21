@@ -3,20 +3,67 @@ function init(self)
 	self.show_demo_window = false
 end
 
+
+local function update_tab1(self)
+	imgui.text("This is some useful text.")
+	local changed, checked = imgui.checkbox("Demo window", self.show_demo_window)
+	if changed then
+		self.show_demo_window = checked
+	end
+
+	imgui.separator()
+
+	if imgui.button("Button") then
+		self.counter = self.counter + 1
+	end
+	imgui.same_line()
+	imgui.text(("counter = %d"):format(self.counter))
+
+	imgui.separator()
+	
+	local pos = go.get_position("object")
+	local changed, x, y, z = imgui.input_float3("pos", pos.x, pos.y, pos.z)
+	if changed then
+		pos.x = x
+		pos.y = y
+		pos.z = z
+		go.set_position(pos, "object")
+	end
+end
+
+local function update_tab2(self)
+	local selected = imgui.tree_node("root")
+	if selected then
+		imgui.bullet()
+		self.foo_selected = imgui.selectable("foo", self.foo_selected)
+		imgui.bullet()
+		self.bar_selected = imgui.selectable("bar", self.bar_selected)
+		imgui.tree_pop()
+	end
+end
+
+
+
 function update(self, dt)
 	if self.show_demo_window then
 		imgui.demo()
 	end
 
-	do
-		imgui.window_begin("Hello, world!")
-		imgui.text("This is some useful text.")
-		self.show_demo_window = imgui.checkbox("Demo window", self.show_demo_window)
-		if imgui.button("Button") then
-			self.counter = self.counter + 1
-		end
-		imgui.same_line()
-		imgui.text(("counter = %d"):format(self.counter))
-		imgui.window_end();
+	imgui.begin_window("Hello, world!")
+	imgui.begin_tab_bar("tabs")
+	
+	local tab1_open = imgui.begin_tab_item("Tab1")
+	if tab1_open then
+		update_tab1(self)
+		imgui.end_tab_item()
 	end
+
+	local tab2_open = imgui.begin_tab_item("Tab2")
+	if tab2_open then
+		update_tab2(self)
+		imgui.end_tab_item()
+	end
+		
+	imgui.end_tab_bar()
+	imgui.end_window()
 end

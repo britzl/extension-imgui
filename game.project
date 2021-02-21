@@ -15,3 +15,7 @@ title = ImGui
 [library]
 include_dirs = imgui
 
+[input]
+game_binding = /imgui/bindings/imgui.input_bindingc
+use_accelerometer = 0
+
