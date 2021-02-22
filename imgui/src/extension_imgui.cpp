@@ -233,6 +233,55 @@ static int imgui_EndChild(lua_State* L)
 
 
 // ----------------------------
+// ----- COMBO ---------
+// ----------------------------
+static int imgui_BeginCombo(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    const char* preview = luaL_checkstring(L, 2);
+    bool result = ImGui::BeginCombo(label, preview);
+    lua_pushboolean(L, result);
+    return 1;
+}
+static int imgui_EndCombo(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::EndCombo();
+    return 0;
+}
+static int imgui_Combo(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+
+    int current = luaL_checknumber(L, 2);
+    if(!lua_istable(L, 3))
+    {
+        luaL_error(L, "You must provide a table");
+    }
+    const size_t len = lua_objlen(L, 3);
+    const char* items[len];
+    for(int i=0; i<len; i++)
+    {
+        lua_pushnumber(L, i + 1);
+        int top = lua_gettop(L);
+        lua_gettable(L, 3);
+        const char* item = luaL_checkstring(L, 4);
+        items[i] = item;
+        lua_pop(L, 1);
+    }
+
+    bool result = ImGui::Combo(label, &current, items, len);
+    lua_pushboolean(L, result);
+    lua_pushnumber(L, current);
+    return 2;
+}
+
+// ----------------------------
 // ----- TAB BAR ---------
 // ----------------------------
 static int imgui_BeginTabBar(lua_State* L)
@@ -618,7 +667,11 @@ static const luaL_reg Module_methods[] =
 
     {"begin_tab_item", imgui_BeginTabItem},
     {"end_tab_item", imgui_EndTabItem},
-        
+
+    {"begin_combo", imgui_BeginCombo},
+    {"end_combo", imgui_EndCombo},
+    {"combo", imgui_Combo},
+    
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
         
