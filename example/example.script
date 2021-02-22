@@ -40,6 +40,22 @@ local function update_tab2(self)
 		self.bar_selected = imgui.selectable("bar", self.bar_selected)
 		imgui.tree_pop()
 	end
+
+	
+	local JEDI = { "Luke", "Anakin", "Yoda" }
+	local changed, jedi = imgui.combo("Jedi##array", self.selected_jedi or 1, JEDI)
+	if changed then
+		self.selected_jedi = jedi
+	end
+
+	if imgui.begin_combo("Jedi##selectable", "Select a Jedi") then
+		for i=1,#JEDI do
+			if imgui.selectable(JEDI[i], i == (self.selected_jedi or 1)) then
+				self.selected_jedi = i
+			end
+		end
+		imgui.end_combo()
+	end
 end
 
 

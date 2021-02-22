@@ -258,7 +258,7 @@ static int imgui_Combo(lua_State* L)
     imgui_NewFrame();
     const char* label = luaL_checkstring(L, 1);
 
-    int current = luaL_checknumber(L, 2);
+    int current = luaL_checknumber(L, 2) - 1 ;
     if(!lua_istable(L, 3))
     {
         luaL_error(L, "You must provide a table");
@@ -277,7 +277,7 @@ static int imgui_Combo(lua_State* L)
 
     bool result = ImGui::Combo(label, &current, items, len);
     lua_pushboolean(L, result);
-    lua_pushnumber(L, current);
+    lua_pushnumber(L, current + 1);
     return 2;
 }
 
