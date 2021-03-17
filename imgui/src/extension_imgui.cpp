@@ -763,9 +763,6 @@ static void LuaInit(lua_State* L)
 
 dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
 {
-    float displayWidth = dmConfigFile::GetFloat(params->m_ConfigFile, "display.width", 960.0f);
-    float displayHeight = dmConfigFile::GetFloat(params->m_ConfigFile, "display.height", 540.0f);
-    imgui_Init(displayWidth, displayHeight);
     imgui_ExtensionInit();
     return dmExtension::RESULT_OK;
 }
@@ -773,6 +770,10 @@ dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
 dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
 {
     LuaInit(params->m_L);
+    float displayWidth = dmConfigFile::GetFloat(params->m_ConfigFile, "display.width", 960.0f);
+    float displayHeight = dmConfigFile::GetFloat(params->m_ConfigFile, "display.height", 540.0f);
+    imgui_Init(displayWidth, displayHeight);
+
     return dmExtension::RESULT_OK;
 }
 
