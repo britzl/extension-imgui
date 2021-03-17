@@ -8,10 +8,9 @@
 // include the Defold SDK
 #include <dmsdk/sdk.h>
 
-#include <GLES2/gl2.h>
-#include "imgui/imgui_impl_opengl2.h"
-//#include "imgui/imgui_impl_opengl3.h"
-#include "imgui/imgui.h"
+
+#include "imgui/imgui_impl_opengl3.h"
+
 
 
 
@@ -25,8 +24,7 @@ static void imgui_NewFrame()
 {
     if (g_imgui_NewFrame == false)
     {
-        //ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplOpenGL2_NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
         g_imgui_NewFrame = true;
     }
@@ -589,14 +587,7 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 {
     imgui_NewFrame();
     ImGui::Render();
-    //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    // from ImGui_ImplOpenGL2_SetupRenderState in imgui_impl_opengl2.cpp
-    GLint last_program;
-    glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-    glUseProgram(0);    
-    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-    glUseProgram(last_program);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     g_imgui_NewFrame = false;
     return dmExtension::RESULT_OK;
@@ -618,16 +609,14 @@ static void imgui_Init(float width, float height)
         io.KeyMap[i] = i;
     }
         
-    //ImGui_ImplOpenGL3_Init();
-    ImGui_ImplOpenGL2_Init();
+    ImGui_ImplOpenGL3_Init();
 }
 
 
 static void imgui_Shutdown()
 {
     dmLogInfo("imgui_Shutdown");
-    //ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplOpenGL2_Shutdown();
+    ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();
 }
 
