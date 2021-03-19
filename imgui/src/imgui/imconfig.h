@@ -1,6 +1,8 @@
 #if defined(DM_PLATFORM_HTML5)
 #define IMGUI_IMPL_OPENGL_ES2
 #undef GL_ES_VERSION_2_0
+#elif defined(DM_PLATFORM_WINDOWS)
+#define IMGUI_IMPL_OPENGL_LOADER_GL3W
 #else
 #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM "dummy_loader.h"
 #endif
