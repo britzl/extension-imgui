@@ -1,4 +1,8 @@
+#if defined(DM_PLATFORM_WINDOWS)
+#define IMGUI_IMPL_OPENGL_LOADER_GL3W
+#else
 #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM "dummy_loader.h"
+#endif
 //-----------------------------------------------------------------------------
 // COMPILE-TIME OPTIONS FOR DEAR IMGUI
 // Runtime options (clipboard callbacks, enabling various features, etc.) can generally be set via the ImGuiIO structure.
