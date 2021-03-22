@@ -5,7 +5,8 @@
 
 #include <stdlib.h>
 
-#if defined(DM_PLATFORM_WINDOWS)
+#include "imgui/imconfig.h"
+#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
 #include <GL/gl3w.h>
 #endif
 
@@ -600,7 +601,7 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 
 static void imgui_Init(float width, float height)
 {
-#if defined(DM_PLATFORM_WINDOWS)
+#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
     int r = gl3wInit();
     if (r != GL3W_OK) {
         dmLogError("Failed to initialize OpenGL: %d", r);

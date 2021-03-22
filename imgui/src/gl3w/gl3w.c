@@ -26,7 +26,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#if defined(DM_PLATFORM_WINDOWS)
+#if defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_LINUX)
 
 #include <GL/gl3w.h>
 #include <stdlib.h>
