@@ -400,7 +400,7 @@ static int imgui_InputFloat4(lua_State* L)
     v[1]  = luaL_checknumber(L, 3);
     v[2]  = luaL_checknumber(L, 4);
     v[3]  = luaL_checknumber(L, 5);
-    
+
     bool changed = ImGui::InputFloat4(label, v);
     lua_pushboolean(L, changed);
     if (changed)
@@ -579,6 +579,43 @@ static int imgui_IsItemHovered(lua_State* L)
     return 1;
 }
 
+// ----------------------------
+// ----- STYLE ----------------
+// ----------------------------
+
+static int imgui_SetStyleWindowRounding(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowRounding = luaL_checknumber(L, 1);
+    return 0;
+}
+static int imgui_SetStyleFrameRounding(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.FrameRounding = luaL_checknumber(L, 1);
+    return 0;
+}
+static int imgui_SetStyleScrollbarRounding(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.ScrollbarRounding = luaL_checknumber(L, 1);
+    return 0;
+}
+static int imgui_SetStyleColor(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    double r = luaL_checknumber(L, 2);
+    double g = luaL_checknumber(L, 3);
+    double b = luaL_checknumber(L, 4);
+    double a = luaL_checknumber(L, 5);
+    style.Colors[luaL_checkinteger(L, 1)] = ImVec4(r, g, b, a);
+    return 0;
+}
+
 
 // ----------------------------
 // ----- DRAW -----------------
@@ -608,7 +645,7 @@ static void imgui_Init(float width, float height)
     {
         io.KeyMap[i] = i;
     }
-        
+
     ImGui_ImplOpenGL3_Init();
 }
 
@@ -627,7 +664,7 @@ static void imgui_ExtensionInit()
     {
         free(g_imgui_TextBuffer);
     }
-    g_imgui_TextBuffer = (char*)malloc(TEXTBUFFER_SIZE); 
+    g_imgui_TextBuffer = (char*)malloc(TEXTBUFFER_SIZE);
 }
 
 static void imgui_ExtensionShutdown()
@@ -647,7 +684,7 @@ static const luaL_reg Module_methods[] =
     {"begin_window", imgui_Begin},
     {"end_window", imgui_End},
     {"is_window_focused", imgui_IsWindowFocused},
-    
+
     {"begin_child", imgui_BeginChild},
     {"end_child", imgui_EndChild},
 
@@ -660,10 +697,10 @@ static const luaL_reg Module_methods[] =
     {"begin_combo", imgui_BeginCombo},
     {"end_combo", imgui_EndCombo},
     {"combo", imgui_Combo},
-    
+
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
-        
+
     {"selectable", imgui_Selectable},
     {"text", imgui_Text},
     {"input_text", imgui_InputText},
@@ -678,7 +715,7 @@ static const luaL_reg Module_methods[] =
     {"unindent", imgui_Unindent},
     {"spacing", imgui_Spacing},
     {"separator", imgui_Separator},
-                
+
     {"demo", imgui_Demo},
 
     {"set_mouse_input", imgui_SetMouseInput},
@@ -694,6 +731,11 @@ static const luaL_reg Module_methods[] =
     {"is_item_hovered", imgui_IsItemHovered},
     {"is_mouse_clicked", imgui_IsMouseClicked},
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},
+
+    {"set_style_window_rounding", imgui_SetStyleWindowRounding},
+    {"set_style_frame_rounding", imgui_SetStyleFrameRounding},
+    {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
+    {"set_style_color", imgui_SetStyleColor},
     {0, 0}
 };
 
@@ -757,6 +799,61 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "TREENODE_SPAN_AVAILABLE_WIDTH", ImGuiTreeNodeFlags_SpanAvailWidth);
     lua_setfieldstringint(L, "TREENODE_SPAN_FULL_WIDTH", ImGuiTreeNodeFlags_SpanFullWidth);
     lua_setfieldstringint(L, "TREENODE_NAV_LEFT_JUMPS_BACK_HERE", ImGuiTreeNodeFlags_NavLeftJumpsBackHere);
+
+    lua_setfieldstringint(L, "ImGuiCol_Text", ImGuiCol_Text);
+    lua_setfieldstringint(L, "ImGuiCol_TextDisabled", ImGuiCol_TextDisabled);
+    lua_setfieldstringint(L, "ImGuiCol_WindowBg", ImGuiCol_WindowBg);
+    lua_setfieldstringint(L, "ImGuiCol_ChildBg", ImGuiCol_ChildBg);
+    lua_setfieldstringint(L, "ImGuiCol_PopupBg", ImGuiCol_PopupBg);
+    lua_setfieldstringint(L, "ImGuiCol_Border", ImGuiCol_Border);
+    lua_setfieldstringint(L, "ImGuiCol_BorderShadow", ImGuiCol_BorderShadow);
+    lua_setfieldstringint(L, "ImGuiCol_FrameBg", ImGuiCol_FrameBg);
+    lua_setfieldstringint(L, "ImGuiCol_FrameBgHovered", ImGuiCol_FrameBgHovered);
+    lua_setfieldstringint(L, "ImGuiCol_FrameBgActive", ImGuiCol_FrameBgActive);
+    lua_setfieldstringint(L, "ImGuiCol_TitleBg", ImGuiCol_TitleBg);
+    lua_setfieldstringint(L, "ImGuiCol_TitleBgActive", ImGuiCol_TitleBgActive);
+    lua_setfieldstringint(L, "ImGuiCol_TitleBgCollapsed", ImGuiCol_TitleBgCollapsed);
+    lua_setfieldstringint(L, "ImGuiCol_MenuBarBg", ImGuiCol_MenuBarBg);
+    lua_setfieldstringint(L, "ImGuiCol_ScrollbarBg", ImGuiCol_ScrollbarBg);
+    lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrab", ImGuiCol_ScrollbarGrab);
+    lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabHovered", ImGuiCol_ScrollbarGrabHovered);
+    lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabActive", ImGuiCol_ScrollbarGrabActive);
+    lua_setfieldstringint(L, "ImGuiCol_CheckMark", ImGuiCol_CheckMark);
+    lua_setfieldstringint(L, "ImGuiCol_SliderGrab", ImGuiCol_SliderGrab);
+    lua_setfieldstringint(L, "ImGuiCol_SliderGrabActive", ImGuiCol_SliderGrabActive);
+    lua_setfieldstringint(L, "ImGuiCol_Button", ImGuiCol_Button);
+    lua_setfieldstringint(L, "ImGuiCol_ButtonHovered", ImGuiCol_ButtonHovered);
+    lua_setfieldstringint(L, "ImGuiCol_ButtonActive", ImGuiCol_ButtonActive);
+    lua_setfieldstringint(L, "ImGuiCol_Header", ImGuiCol_Header);
+    lua_setfieldstringint(L, "ImGuiCol_HeaderHovered", ImGuiCol_HeaderHovered);
+    lua_setfieldstringint(L, "ImGuiCol_HeaderActive", ImGuiCol_HeaderActive);
+    lua_setfieldstringint(L, "ImGuiCol_Separator", ImGuiCol_Separator);
+    lua_setfieldstringint(L, "ImGuiCol_SeparatorHovered", ImGuiCol_SeparatorHovered);
+    lua_setfieldstringint(L, "ImGuiCol_SeparatorActive", ImGuiCol_SeparatorActive);
+    lua_setfieldstringint(L, "ImGuiCol_ResizeGrip", ImGuiCol_ResizeGrip);
+    lua_setfieldstringint(L, "ImGuiCol_ResizeGripHovered", ImGuiCol_ResizeGripHovered);
+    lua_setfieldstringint(L, "ImGuiCol_ResizeGripActive", ImGuiCol_ResizeGripActive);
+    lua_setfieldstringint(L, "ImGuiCol_Tab", ImGuiCol_Tab);
+    lua_setfieldstringint(L, "ImGuiCol_TabHovered", ImGuiCol_TabHovered);
+    lua_setfieldstringint(L, "ImGuiCol_TabActive", ImGuiCol_TabActive);
+    lua_setfieldstringint(L, "ImGuiCol_TabUnfocused", ImGuiCol_TabUnfocused);
+    lua_setfieldstringint(L, "ImGuiCol_TabUnfocusedActive", ImGuiCol_TabUnfocusedActive);
+    lua_setfieldstringint(L, "ImGuiCol_PlotLines", ImGuiCol_PlotLines);
+    lua_setfieldstringint(L, "ImGuiCol_PlotLinesHovered", ImGuiCol_PlotLinesHovered);
+    lua_setfieldstringint(L, "ImGuiCol_PlotHistogram", ImGuiCol_PlotHistogram);
+    lua_setfieldstringint(L, "ImGuiCol_PlotHistogramHovered", ImGuiCol_PlotHistogramHovered);
+    lua_setfieldstringint(L, "ImGuiCol_TableHeaderBg", ImGuiCol_TableHeaderBg);
+    lua_setfieldstringint(L, "ImGuiCol_TableBorderStrong", ImGuiCol_TableBorderStrong);
+    lua_setfieldstringint(L, "ImGuiCol_TableBorderLight", ImGuiCol_TableBorderLight);
+    lua_setfieldstringint(L, "ImGuiCol_TableRowBg", ImGuiCol_TableRowBg);
+    lua_setfieldstringint(L, "ImGuiCol_TableRowBgAlt", ImGuiCol_TableRowBgAlt);
+    lua_setfieldstringint(L, "ImGuiCol_TextSelectedBg", ImGuiCol_TextSelectedBg);
+    lua_setfieldstringint(L, "ImGuiCol_DragDropTarget", ImGuiCol_DragDropTarget);
+    lua_setfieldstringint(L, "ImGuiCol_NavHighlight", ImGuiCol_NavHighlight);
+    lua_setfieldstringint(L, "ImGuiCol_NavWindowingHighlight", ImGuiCol_NavWindowingHighlight);
+    lua_setfieldstringint(L, "ImGuiCol_NavWindowingDimBg", ImGuiCol_NavWindowingDimBg);
+    lua_setfieldstringint(L, "ImGuiCol_ModalWindowDimBg", ImGuiCol_ModalWindowDimBg);
+
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
 }
