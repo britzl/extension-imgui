@@ -1,6 +1,47 @@
+local function set_style()
+	imgui.set_style_window_rounding(6)
+	imgui.set_style_frame_rounding(3)
+	imgui.set_style_scrollbar_rounding(10)
+	imgui.set_style_color(imgui.ImGuiCol_Text, 0.90, 0.90, 0.90, 0.90)
+	imgui.set_style_color(imgui.ImGuiCol_TextDisabled, 0.60, 0.60, 0.60, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_WindowBg, 0.09, 0.09, 0.15, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_PopupBg, 0.05, 0.05, 0.10, 0.85)
+	imgui.set_style_color(imgui.ImGuiCol_Border, 0.70, 0.70, 0.70, 0.65)
+	imgui.set_style_color(imgui.ImGuiCol_BorderShadow, 0.00, 0.00, 0.00, 0.00)
+	imgui.set_style_color(imgui.ImGuiCol_FrameBg, 0.00, 0.00, 0.01, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_FrameBgHovered, 0.90, 0.80, 0.80, 0.40)
+	imgui.set_style_color(imgui.ImGuiCol_FrameBgActive, 0.90, 0.65, 0.65, 0.45)
+	imgui.set_style_color(imgui.ImGuiCol_TitleBg, 0.00, 0.00, 0.00, 0.83)
+	imgui.set_style_color(imgui.ImGuiCol_TitleBgCollapsed, 0.40, 0.40, 0.80, 0.20)
+	imgui.set_style_color(imgui.ImGuiCol_TitleBgActive, 0.00, 0.00, 0.00, 0.87)
+	imgui.set_style_color(imgui.ImGuiCol_MenuBarBg, 0.01, 0.01, 0.02, 0.80)
+	imgui.set_style_color(imgui.ImGuiCol_ScrollbarBg, 0.20, 0.25, 0.30, 0.60)
+	imgui.set_style_color(imgui.ImGuiCol_ScrollbarGrab, 0.55, 0.53, 0.55, 0.51)
+	imgui.set_style_color(imgui.ImGuiCol_ScrollbarGrabHovered, 0.56, 0.56, 0.56, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_ScrollbarGrabActive, 0.56, 0.56, 0.56, 0.91)
+	imgui.set_style_color(imgui.ImGuiCol_CheckMark, 0.90, 0.90, 0.90, 0.83)
+	imgui.set_style_color(imgui.ImGuiCol_SliderGrab, 0.70, 0.70, 0.70, 0.62)
+	imgui.set_style_color(imgui.ImGuiCol_SliderGrabActive, 0.30, 0.30, 0.30, 0.84)
+	imgui.set_style_color(imgui.ImGuiCol_Button, 0.48, 0.72, 0.89, 0.49)
+	imgui.set_style_color(imgui.ImGuiCol_ButtonHovered, 0.50, 0.69, 0.99, 0.68)
+	imgui.set_style_color(imgui.ImGuiCol_ButtonActive, 0.80, 0.50, 0.50, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_Header, 0.30, 0.69, 1.00, 0.53)
+	imgui.set_style_color(imgui.ImGuiCol_HeaderHovered, 0.44, 0.61, 0.86, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_HeaderActive, 0.38, 0.62, 0.83, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_ResizeGrip, 1.00, 1.00, 1.00, 0.85)
+	imgui.set_style_color(imgui.ImGuiCol_ResizeGripHovered, 1.00, 1.00, 1.00, 0.60)
+	imgui.set_style_color(imgui.ImGuiCol_ResizeGripActive, 1.00, 1.00, 1.00, 0.90)
+	imgui.set_style_color(imgui.ImGuiCol_PlotLines, 1.00, 1.00, 1.00, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_PlotLinesHovered, 0.90, 0.70, 0.00, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_PlotHistogram, 0.90, 0.70, 0.00, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_PlotHistogramHovered, 1.00, 0.60, 0.00, 1.00)
+	imgui.set_style_color(imgui.ImGuiCol_TextSelectedBg, 0.00, 0.00, 1.00, 0.35)
+end
+
 function init(self)
 	self.counter = 0
 	self.show_demo_window = false
+	set_style()
 end
 
 
@@ -20,7 +61,7 @@ local function update_tab1(self)
 	imgui.text(("counter = %d"):format(self.counter))
 
 	imgui.separator()
-	
+
 	local pos = go.get_position("object")
 	local changed, x, y, z = imgui.input_float3("pos", pos.x, pos.y, pos.z)
 	if changed then
@@ -41,13 +82,17 @@ local function update_tab2(self)
 		imgui.tree_pop()
 	end
 
-	
+
 	local JEDI = { "Luke", "Anakin", "Yoda" }
+
+	-- this is the old way of creating combo boxes
+	-- it still exists in the ImGUI API since it's a quick way ti create a combo box
 	local changed, jedi = imgui.combo("Jedi##array", self.selected_jedi or 1, JEDI)
 	if changed then
 		self.selected_jedi = jedi
 	end
 
+	-- new way of creating combo boxes with a begin and end function
 	if imgui.begin_combo("Jedi##selectable", "Select a Jedi") then
 		for i=1,#JEDI do
 			if imgui.selectable(JEDI[i], i == (self.selected_jedi or 1)) then
@@ -67,7 +112,7 @@ function update(self, dt)
 
 	imgui.begin_window("Hello, world!")
 	imgui.begin_tab_bar("tabs")
-	
+
 	local tab1_open = imgui.begin_tab_item("Tab1")
 	if tab1_open then
 		update_tab1(self)
@@ -79,7 +124,7 @@ function update(self, dt)
 		update_tab2(self)
 		imgui.end_tab_item()
 	end
-		
+
 	imgui.end_tab_bar()
 	imgui.end_window()
 end
