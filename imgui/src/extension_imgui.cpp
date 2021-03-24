@@ -5,6 +5,11 @@
 
 #include <stdlib.h>
 
+#include "imgui/imconfig.h"
+#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+#include <GL/gl3w.h>
+#endif
+
 // include the Defold SDK
 #include <dmsdk/sdk.h>
 
@@ -633,6 +638,13 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 
 static void imgui_Init(float width, float height)
 {
+#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+    int r = gl3wInit();
+    if (r != GL3W_OK) {
+        dmLogError("Failed to initialize OpenGL: %d", r);
+    }
+#endif
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 

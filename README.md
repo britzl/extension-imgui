@@ -18,10 +18,10 @@ The current state of platform support:
 
 * macOS - supported
 * Linux - unknown
-* Windows - unknown
+* Windows - supported
 * Android - unknown
 * iOS - unknown
-* HTML5 - not working
+* HTML5 - supported
 
 
 ## Usage
