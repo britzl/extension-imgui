@@ -17,7 +17,7 @@ Projects such as [cimgui](https://github.com/cimgui/cimgui) offers Dear ImGUI bi
 The current state of platform support:
 
 * macOS - supported
-* Linux - unknown
+* Linux - supported
 * Windows - supported
 * Android - unknown
 * iOS - unknown
