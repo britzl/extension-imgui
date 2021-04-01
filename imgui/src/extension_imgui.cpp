@@ -305,6 +305,13 @@ static int imgui_EndTable(lua_State* L)
     ImGui::EndTable();
     return 0;
 }
+static int imgui_TableHeadersRow(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::TableHeadersRow();
+    return 0;
+}
 static int imgui_TableSetupColumn(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -774,6 +781,7 @@ static const luaL_reg Module_methods[] =
     {"table_next_column", imgui_TableNextColumn},
     {"table_set_column_index", imgui_TableSetColumnIndex},
     {"table_setup_column", imgui_TableSetupColumn},
+    {"table_headers_row", imgui_TableHeadersRow},
 
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
