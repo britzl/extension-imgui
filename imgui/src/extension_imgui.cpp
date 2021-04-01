@@ -284,6 +284,64 @@ static int imgui_Combo(lua_State* L)
     return 2;
 }
 
+
+// ----------------------------
+// ----- TABLES ---------
+// ----------------------------
+static int imgui_BeginTable(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* id = luaL_checkstring(L, 1);
+    int column = luaL_checkinteger(L, 2);
+    bool result = ImGui::BeginTable(id, column);
+    lua_pushboolean(L, result);
+    return 1;
+}
+static int imgui_EndTable(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::EndTable();
+    return 0;
+}
+static int imgui_TableSetupColumn(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    uint32_t flags = 0;
+    if (lua_isnumber(L, 2))
+    {
+        flags = luaL_checkint(L, 2);
+    }
+    ImGui::TableSetupColumn(label, flags);
+    return 0;
+}
+static int imgui_TableSetColumnIndex(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    int column = luaL_checkinteger(L, 1);
+    ImGui::TableSetColumnIndex(column);
+    return 0;
+}
+static int imgui_TableNextColumn(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::TableNextColumn();
+    return 0;
+}
+static int imgui_TableNextRow(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::TableNextRow();
+    return 0;
+}
+
+
 // ----------------------------
 // ----- TAB BAR ---------
 // ----------------------------
@@ -710,6 +768,13 @@ static const luaL_reg Module_methods[] =
     {"end_combo", imgui_EndCombo},
     {"combo", imgui_Combo},
 
+    {"begin_table", imgui_BeginTable},
+    {"end_table", imgui_EndTable},
+    {"table_next_row", imgui_TableNextRow},
+    {"table_next_column", imgui_TableNextColumn},
+    {"table_set_column_index", imgui_TableSetColumnIndex},
+    {"table_setup_column", imgui_TableSetupColumn},
+
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
 
@@ -865,6 +930,25 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "ImGuiCol_NavWindowingHighlight", ImGuiCol_NavWindowingHighlight);
     lua_setfieldstringint(L, "ImGuiCol_NavWindowingDimBg", ImGuiCol_NavWindowingDimBg);
     lua_setfieldstringint(L, "ImGuiCol_ModalWindowDimBg", ImGuiCol_ModalWindowDimBg);
+
+    lua_setfieldstringint(L, "TABLECOLUMN_NONE", ImGuiTableColumnFlags_None);
+    lua_setfieldstringint(L, "TABLECOLUMN_DEFAULTHIDE", ImGuiTableColumnFlags_DefaultHide);   // Default as a hidden/disabled column.
+    lua_setfieldstringint(L, "TABLECOLUMN_DEFAULTSORT", ImGuiTableColumnFlags_DefaultSort);   // Default as a sorting column.
+    lua_setfieldstringint(L, "TABLECOLUMN_WIDTHSTRETCH", ImGuiTableColumnFlags_WidthStretch);   // Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
+    lua_setfieldstringint(L, "TABLECOLUMN_WIDTHFIXED", ImGuiTableColumnFlags_WidthFixed);   // Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
+    lua_setfieldstringint(L, "TABLECOLUMN_NORESIZE", ImGuiTableColumnFlags_NoResize);   // Disable manual resizing.
+    lua_setfieldstringint(L, "TABLECOLUMN_NOREORDER", ImGuiTableColumnFlags_NoReorder);   // Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+    lua_setfieldstringint(L, "TABLECOLUMN_NOHIDE", ImGuiTableColumnFlags_NoHide);   // Disable ability to hide/disable this column.
+    lua_setfieldstringint(L, "TABLECOLUMN_NOCLIP", ImGuiTableColumnFlags_NoClip);   // Disable clipping for this column (all NoClip columns will render in a same draw command).
+    lua_setfieldstringint(L, "TABLECOLUMN_NOSORT", ImGuiTableColumnFlags_NoSort);   // Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
+    lua_setfieldstringint(L, "TABLECOLUMN_NOSORTASCENDING", ImGuiTableColumnFlags_NoSortAscending);   // Disable ability to sort in the ascending direction.
+    lua_setfieldstringint(L, "TABLECOLUMN_NOSORTDESCENDING", ImGuiTableColumnFlags_NoSortDescending);  // Disable ability to sort in the descending direction.
+    lua_setfieldstringint(L, "TABLECOLUMN_NOHEADERWIDTH", ImGuiTableColumnFlags_NoHeaderWidth);  // Disable header text width contribution to automatic column width.
+    lua_setfieldstringint(L, "TABLECOLUMN_PREFERSORTASCENDING", ImGuiTableColumnFlags_PreferSortAscending);  // Make the initial sort direction Ascending when first sorting on this column (default).
+    lua_setfieldstringint(L, "TABLECOLUMN_PREFERSORTDESCENDING", ImGuiTableColumnFlags_PreferSortDescending);  // Make the initial sort direction Descending when first sorting on this column.
+    lua_setfieldstringint(L, "TABLECOLUMN_INDENTENABLE", ImGuiTableColumnFlags_IndentEnable);  // Use current Indent value when entering cell (default for column 0).
+    lua_setfieldstringint(L, "TABLECOLUMN_INDENTDISABLE", ImGuiTableColumnFlags_IndentDisable);  // Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
