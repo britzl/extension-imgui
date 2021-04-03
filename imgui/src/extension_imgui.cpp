@@ -433,6 +433,25 @@ static int imgui_InputText(lua_State* L)
     return 2;
 }
 
+static int imgui_InputInt(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    int value = luaL_checkinteger(L, 2);
+    bool changed = ImGui::InputInt(label, &value);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushinteger(L, value);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+    return 2;
+}
+
 static int imgui_InputFloat3(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 4);
@@ -789,6 +808,7 @@ static const luaL_reg Module_methods[] =
     {"selectable", imgui_Selectable},
     {"text", imgui_Text},
     {"input_text", imgui_InputText},
+    {"input_int", imgui_InputInt},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
     {"button", imgui_Button},

@@ -70,6 +70,11 @@ local function update_tab1(self)
 		pos.z = z
 		go.set_position(pos, "object")
 	end
+
+	local changed, int = imgui.input_int("test int", self.int or 0)
+	if changed then
+		self.int = int
+	end
 end
 
 local function update_tab2(self)
