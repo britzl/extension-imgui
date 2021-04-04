@@ -162,12 +162,24 @@ static int imgui_TreePop(lua_State* L)
 // ----------------------------
 static int imgui_Begin(lua_State* L)
 {
-    DM_LUA_STACK_CHECK(L, 1);
+    DM_LUA_STACK_CHECK(L, 2);
     imgui_NewFrame();
     const char* title = luaL_checkstring(L, 1);
-    bool result = ImGui::Begin(title);
+    bool is_open = true;
+    bool* is_open_ptr = NULL;
+    if (lua_isboolean(L, 2) && lua_toboolean(L, 2))
+    {
+        is_open_ptr = &is_open;
+    }
+    uint32_t flags = 0;
+    if (lua_isnumber(L, 3))
+    {
+        flags = luaL_checkint(L, 3);
+    }
+    bool result = ImGui::Begin(title, is_open_ptr, flags);
     lua_pushboolean(L, result);
-    return 1;
+    lua_pushboolean(L, is_open);
+    return 2;
 }
 static int imgui_End(lua_State* L)
 {
@@ -977,6 +989,30 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "TABLECOLUMN_INDENTENABLE", ImGuiTableColumnFlags_IndentEnable);  // Use current Indent value when entering cell (default for column 0).
     lua_setfieldstringint(L, "TABLECOLUMN_INDENTDISABLE", ImGuiTableColumnFlags_IndentDisable);  // Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
 
+    lua_setfieldstringint(L, "WINDOWFLAGS_NONE", ImGuiWindowFlags_None);
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOTITLEBAR", ImGuiWindowFlags_NoTitleBar); // Disable title-bar
+    lua_setfieldstringint(L, "WINDOWFLAGS_NORESIZE", ImGuiWindowFlags_NoResize); // Disable user resizing with the lower-right grip
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOMOVE", ImGuiWindowFlags_NoMove); // Disable user moving the window
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOSCROLLBAR", ImGuiWindowFlags_NoScrollbar); // Disable scrollbars (window can still scroll with mouse or programmatically)
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOSCROLLWITHMOUSE", ImGuiWindowFlags_NoScrollWithMouse); // Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOCOLLAPSE", ImGuiWindowFlags_NoCollapse); // Disable user collapsing window by double-clicking on it
+    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSAUTORESIZE", ImGuiWindowFlags_AlwaysAutoResize); // Resize every window to its content every frame
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOBACKGROUND", ImGuiWindowFlags_NoBackground); // Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOSAVEDSETTINGS", ImGuiWindowFlags_NoSavedSettings); // Never load/save settings in .ini file
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOMOUSEINPUTS", ImGuiWindowFlags_NoMouseInputs); // Disable catching mouse, hovering test with pass through.
+    lua_setfieldstringint(L, "WINDOWFLAGS_MENUBAR", ImGuiWindowFlags_MenuBar); // Has a menu-bar
+    lua_setfieldstringint(L, "WINDOWFLAGS_HORIZONTALSCROLLBAR", ImGuiWindowFlags_HorizontalScrollbar); // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOFOCUSONAPPEARING", ImGuiWindowFlags_NoFocusOnAppearing); // Disable taking focus when transitioning from hidden to visible state
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOBRINGTOFRONTONFOCUS", ImGuiWindowFlags_NoBringToFrontOnFocus); // Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
+    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR", ImGuiWindowFlags_AlwaysVerticalScrollbar); // Always show vertical scrollbar (even if ContentSize.y < Size.y)
+    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR", ImGuiWindowFlags_AlwaysHorizontalScrollbar); // Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSUSEWINDOWPADDING", ImGuiWindowFlags_AlwaysUseWindowPadding); // Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
+    lua_setfieldstringint(L, "WINDOWFLAGS_NONAVINPUTS", ImGuiWindowFlags_NoNavInputs); // No gamepad/keyboard navigation within the window
+    lua_setfieldstringint(L, "WINDOWFLAGS_NONAVFOCUS", ImGuiWindowFlags_NoNavFocus); // No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
+    lua_setfieldstringint(L, "WINDOWFLAGS_UNSAVEDDOCUMENT", ImGuiWindowFlags_UnsavedDocument); // Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. When used in a tab/docking context, tab is selected on closure and closure is deferred by one frame to allow code to cancel the closure (with a confirmation popup, etc.) without flicker.
+    lua_setfieldstringint(L, "WINDOWFLAGS_NONAV", ImGuiWindowFlags_NoNav); // ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+    lua_setfieldstringint(L, "WINDOWFLAGS_NODECORATION", ImGuiWindowFlags_NoDecoration); // ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse,
+    lua_setfieldstringint(L, "WINDOWFLAGS_NOINPUTS", ImGuiWindowFlags_NoInputs); // ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
@@ -1005,7 +1041,7 @@ dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
 
 dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
 {
-    dmLogInfo("FinalizeDefoldImGui\n");
+    dmLogInfo("FinalizeDefoldImGui");
     imgui_Shutdown();
     imgui_ExtensionShutdown();
     return dmExtension::RESULT_OK;

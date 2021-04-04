@@ -41,9 +41,22 @@ end
 function init(self)
 	self.counter = 0
 	self.show_demo_window = false
+	self.show_close_window = false
 	set_style()
 end
 
+local function close_window(self)
+	local flags = imgui.WINDOWFLAGS_NOMOVE
+	local full, open = imgui.begin_window("Close window", true, flags)
+	if full then
+		imgui.text("You can close this window, but cannot move")
+	end
+	imgui.end_window()
+	
+	if not open then
+		self.show_close_window = false
+	end
+end
 
 local function update_tab1(self)
 	imgui.text("This is some useful text.")
@@ -74,6 +87,10 @@ local function update_tab1(self)
 	local changed, int = imgui.input_int("test int", self.int or 0)
 	if changed then
 		self.int = int
+	end
+
+	if imgui.button("open window with close button") then
+		self.show_close_window = true;
 	end
 end
 
@@ -113,6 +130,10 @@ end
 function update(self, dt)
 	if self.show_demo_window then
 		imgui.demo()
+	end
+
+	if self.show_close_window then
+		close_window(self)
 	end
 
 	imgui.begin_window("Hello, world!")
