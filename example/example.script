@@ -42,6 +42,8 @@ function init(self)
 	self.counter = 0
 	self.show_demo_window = false
 	self.show_close_window = false
+
+	imgui.set_ini_filename()
 	set_style()
 end
 

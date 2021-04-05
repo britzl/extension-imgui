@@ -5,7 +5,7 @@
   members:
 
 #*****************************************************************************************************
-#***** WINDOW ************************************************************************************************
+#***** WINDOW ****************************************************************************************
 #*****************************************************************************************************
 
   - name: set_next_window_size
@@ -65,7 +65,7 @@
     type: function
 
 #*****************************************************************************************************
-#***** COMBO ************************************************************************************************
+#***** COMBO *****************************************************************************************
 #*****************************************************************************************************
 
   - name: begin_combo
@@ -108,7 +108,7 @@
         type: number
 
 #*****************************************************************************************************
-#***** TABLE ************************************************************************************************
+#***** TABLE *****************************************************************************************
 #*****************************************************************************************************
 
   - name: begin_table
@@ -168,7 +168,7 @@
     type: function
 
 #*****************************************************************************************************
-#***** TAB BAR ************************************************************************************************
+#***** TAB BAR ***************************************************************************************
 #*****************************************************************************************************
 
   - name: begin_tab_bar
@@ -207,7 +207,7 @@
         type: boolean
 
 #*****************************************************************************************************
-#***** COMPONENTS ************************************************************************************************
+#***** COMPONENTS ************************************************************************************
 #*****************************************************************************************************
 
   - name: text
@@ -338,7 +338,7 @@
         type: boolean
 
 #*****************************************************************************************************
-#***** LAYOUT ************************************************************************************************
+#***** LAYOUT ****************************************************************************************
 #*****************************************************************************************************
 
   - name: same_line
@@ -379,7 +379,7 @@
     type: function
 
 #*****************************************************************************************************
-#***** INPUT ************************************************************************************************
+#***** INPUT *****************************************************************************************
 #*****************************************************************************************************
 
   - name: is_mouse_double_clicked
@@ -430,7 +430,7 @@
         type: boolean
 
 #*****************************************************************************************************
-#***** STYLE ************************************************************************************************
+#***** STYLE *****************************************************************************************
 #*****************************************************************************************************
 
   - name: set_style_window_rounding
@@ -477,18 +477,28 @@
         type: number
 
 #*****************************************************************************************************
+#***** CONFIG ****************************************************************************************
+#*****************************************************************************************************
 
+  - name: set_ini_filename
+    type: function
 
-  - name: STATE_OPEN
-    type: number
+    parameters:
+      - name: filename
+        type: string
+
+#*****************************************************************************************************
+
   - name: MOUSEBUTTON_LEFT
   - name: MOUSEBUTTON_RIGHT
   - name: MOUSEBUTTON_MIDDLE
+
   - name: SELECTABLE_DONT_CLOSE_POPUPS
   - name: SELECTABLE_SPAN_ALL_COLUMNS
   - name: SELECTABLE_ALLOW_DOUBLE_CLICK
   - name: SELECTABLE_DISABLED
   - name: SELECTABLE_ALLOW_ITEM_OVERLAP
+
   - name: TABITEM_UNSAVED_DOCUMENT
   - name: TABITEM_SET_SELECTED
   - name: TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
@@ -497,10 +507,12 @@
   - name: TABITEM_NO_REORDER
   - name: TABITEM_LEADING
   - name: TABITEM_TRAILING
+
   - name: FOCUSED_CHILD_WINDOWS
   - name: FOCUSED_ROOT_WINDOW
   - name: FOCUSED_ANY_WINDOW
   - name: FOCUSED_ROOT_AND_CHILD_WINDOWS
+
   - name: TREENODE_SELECTED
   - name: TREENODE_FRAMED
   - name: TREENODE_ALLOW_ITEM_OVERLAP
@@ -515,6 +527,7 @@
   - name: TREENODE_SPAN_AVAILABLE_WIDTH
   - name: TREENODE_SPAN_FULL_WIDTH
   - name: TREENODE_NAV_LEFT_JUMPS_BACK_HERE
+
   - name: ImGuiCol_Text
   - name: ImGuiCol_TextDisabled
   - name: ImGuiCol_WindowBg
@@ -568,6 +581,7 @@
   - name: ImGuiCol_NavWindowingHighlight
   - name: ImGuiCol_NavWindowingDimBg
   - name: ImGuiCol_ModalWindowDimBg
+
   - name: TABLECOLUMN_NONE
   - name: TABLECOLUMN_DEFAULTHIDE
   - name: TABLECOLUMN_DEFAULTSORT
@@ -585,3 +599,28 @@
   - name: TABLECOLUMN_PREFERSORTDESCENDING
   - name: TABLECOLUMN_INDENTENABLE
   - name: TABLECOLUMN_INDENTDISABLE
+
+  - name: WINDOWFLAGS_NONE
+  - name: WINDOWFLAGS_NOTITLEBAR
+  - name: WINDOWFLAGS_NORESIZE
+  - name: WINDOWFLAGS_NOMOVE
+  - name: WINDOWFLAGS_NOSCROLLBAR
+  - name: WINDOWFLAGS_NOSCROLLWITHMOUSE
+  - name: WINDOWFLAGS_NOCOLLAPSE
+  - name: WINDOWFLAGS_ALWAYSAUTORESIZE
+  - name: WINDOWFLAGS_NOBACKGROUND
+  - name: WINDOWFLAGS_NOSAVEDSETTINGS
+  - name: WINDOWFLAGS_NOMOUSEINPUTS
+  - name: WINDOWFLAGS_MENUBAR
+  - name: WINDOWFLAGS_HORIZONTALSCROLLBAR
+  - name: WINDOWFLAGS_NOFOCUSONAPPEARING
+  - name: WINDOWFLAGS_NOBRINGTOFRONTONFOCUS
+  - name: WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR
+  - name: WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR
+  - name: WINDOWFLAGS_ALWAYSUSEWINDOWPADDING
+  - name: WINDOWFLAGS_NONAVINPUTS
+  - name: WINDOWFLAGS_NONAVFOCUS
+  - name: WINDOWFLAGS_UNSAVEDDOCUMENT
+  - name: WINDOWFLAGS_NONAV
+  - name: WINDOWFLAGS_NODECORATION
+  - name: WINDOWFLAGS_NOINPUTS

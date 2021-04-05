@@ -719,6 +719,23 @@ static int imgui_SetStyleColor(lua_State* L)
 
 
 // ----------------------------
+// ----- CONFIG -----------------
+// ----------------------------
+static int imgui_SetIniFilename(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+
+    const char *filename = 0;
+    if (lua_isstring(L, 1)) {
+        filename = luaL_checkstring(L, 1);
+    }
+
+    ImGui::GetIO().IniFilename = filename;
+
+    return 0;
+}
+
+// ----------------------------
 // ----- DRAW -----------------
 // ----------------------------
 static dmExtension::Result imgui_Draw(dmExtension::Params* params)
@@ -853,6 +870,9 @@ static const luaL_reg Module_methods[] =
     {"set_style_frame_rounding", imgui_SetStyleFrameRounding},
     {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
     {"set_style_color", imgui_SetStyleColor},
+
+    {"set_ini_filename", imgui_SetIniFilename},
+
     {0, 0}
 };
 
