@@ -4,8 +4,11 @@
 #define MODULE_NAME "imgui"
 
 #include <stdlib.h>
+#include <vector>
 
+#include "imgui/imgui.h"
 #include "imgui/imconfig.h"
+
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
 #include <GL/gl3w.h>
 #endif
@@ -13,11 +16,12 @@
 // include the Defold SDK
 #include <dmsdk/sdk.h>
 
-
+#if defined(DM_PLATFORM_ANDROID)
+#include "imgui/imgui_impl_android.h"
+#endif
 #include "imgui/imgui_impl_opengl3.h"
 
-
-
+#define MAX_HISTOGRAM_VALUES        1000 * 1024     
 
 #define TEXTBUFFER_SIZE sizeof(char) * 1000 * 1024
 
@@ -425,6 +429,20 @@ static int imgui_Text(lua_State* L)
     return 0;
 }
 
+static int imgui_TextColored(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    const char* text = luaL_checkstring(L, 1);
+    float r = (float)luaL_checknumber(L, 2);
+    float g = (float)luaL_checknumber(L, 3);
+    float b = (float)luaL_checknumber(L, 4);
+    float a = (float)luaL_checknumber(L, 5);
+    ImVec4    color(r, g, b, a);
+    ImGui::TextColored(color, "%s", text);
+    return 0;
+}
+
 static int imgui_InputText(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 2);
@@ -463,6 +481,37 @@ static int imgui_InputInt(lua_State* L)
     }
     return 2;
 }
+
+static int imgui_InputInt4(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 5);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    int v[4];
+    v[0]  = luaL_checkinteger(L, 2);
+    v[1]  = luaL_checkinteger(L, 3);
+    v[2]  = luaL_checkinteger(L, 4);
+    v[3]  = luaL_checkinteger(L, 5);
+
+    bool changed = ImGui::InputInt4(label, v);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushnumber(L, v[0]);
+        lua_pushnumber(L, v[1]);
+        lua_pushnumber(L, v[2]);
+        lua_pushnumber(L, v[3]);
+    }
+    else
+    {
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
+    }
+    return 5;
+}
+
 
 static int imgui_InputFloat3(lua_State* L)
 {
@@ -624,6 +673,63 @@ static int imgui_Separator(lua_State* L)
     return 0;
 }
 
+
+// ----------------------------
+// ----- IMGUI PLOT -----------
+// ----------------------------
+
+static float     values_lines[MAX_HISTOGRAM_VALUES];
+
+static int imgui_PlotLines(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    const char *lbl = luaL_checkstring(L, 1); 
+    int valoff = luaL_checkinteger(L, 2);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+    luaL_checktype(L, 5, LUA_TTABLE);
+
+    // Table is at idx 5
+    lua_pushnil(L);
+    int valct = 0;
+    // Build a number array matching the buffer. They are all assumed to be type float (for the time being)
+    while(( lua_next( L, 5 ) != 0) && (valct < MAX_HISTOGRAM_VALUES)) {
+        values_lines[valct++] = (float)lua_tonumber( L, -1 );
+        lua_pop( L, 1 );
+    }
+
+    imgui_NewFrame();
+    ImVec2    gsize(width, height);
+    ImGui::PlotLines(lbl, values_lines, valct, valoff, NULL, FLT_MAX, FLT_MAX, gsize);
+    return 0;
+}
+
+// Keep a label mapped histograms. This minimised alloc and realloc of value mem
+static float     values_hist[MAX_HISTOGRAM_VALUES];
+
+static int imgui_PlotHistogram(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    const char *lbl = luaL_checkstring(L, 1); 
+    int valoff = luaL_checkinteger(L, 2);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+    luaL_checktype(L, 5, LUA_TTABLE);
+    
+    // Table is at idx 5
+    lua_pushnil(L);
+    int valct = 0;
+    // Build a number array matching the buffer. They are all assumed to be type float (for the time being)
+    while(( lua_next( L, 5 ) != 0) && (valct < MAX_HISTOGRAM_VALUES)) {
+        values_hist[valct++] = (float)lua_tonumber( L, -1 );
+        lua_pop( L, 1 );
+    }
+    
+    imgui_NewFrame();
+    ImVec2    gsize(width, height);
+    ImGui::PlotHistogram(lbl, values_hist, valct, valoff, NULL, FLT_MAX, FLT_MAX, gsize);
+    return 0;
+}
 
 // ----------------------------
 // ----- IMGUI DEMO -----------
@@ -836,8 +942,10 @@ static const luaL_reg Module_methods[] =
 
     {"selectable", imgui_Selectable},
     {"text", imgui_Text},
+    {"text_colored", imgui_TextColored},
     {"input_text", imgui_InputText},
     {"input_int", imgui_InputInt},
+    {"input_int4", imgui_InputInt4},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
     {"button", imgui_Button},
@@ -850,6 +958,9 @@ static const luaL_reg Module_methods[] =
     {"spacing", imgui_Spacing},
     {"separator", imgui_Separator},
 
+    {"plot_lines", imgui_PlotLines},
+    {"plot_histogram", imgui_PlotHistogram},
+    
     {"demo", imgui_Demo},
 
     {"set_mouse_input", imgui_SetMouseInput},

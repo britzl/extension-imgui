@@ -38,13 +38,28 @@ local function set_style()
 	imgui.set_style_color(imgui.ImGuiCol_TextSelectedBg, 0.00, 0.00, 1.00, 0.35)
 end
 
+local function makeData(self)
+	self.values_line = {}
+	self.values_hist = {}
+	for i=1, 60 do 
+		local data = math.random(1, 30)
+		self.values_hist[data] = (self.values_hist[data] or 0) + 1
+		table.insert(self.values_line, data)
+	end
+end
+
 function init(self)
 	self.counter = 0
 	self.show_demo_window = false
 	self.show_close_window = false
+	self.show_live_data = false
 
 	imgui.set_ini_filename()
 	set_style()
+
+	self.values_line = {}
+	self.values_hist = {}
+	makeData(self)
 end
 
 local function close_window(self)
@@ -86,6 +101,14 @@ local function update_tab1(self)
 		go.set_position(pos, "object")
 	end
 
+	local changed, x, y, z = imgui.input_int4("posi", pos.x, pos.y, pos.z, 0)
+	if changed then
+		pos.x = x
+		pos.y = y
+		pos.z = z
+		go.set_position(pos, "object")
+	end
+	
 	local changed, int = imgui.input_int("test int", self.int or 0)
 	if changed then
 		self.int = int
@@ -151,6 +174,28 @@ local function update_tab2(self)
 	end
 end
 
+local function update_tab3(self)
+
+	local changed, checked = imgui.checkbox("Live Data", self.show_live_data)
+	if changed then
+		self.show_live_data = checked
+	end
+
+	if(self.show_live_data == true) then 
+		makeData(self)
+	end
+	imgui.separator()
+	
+	imgui.text_colored(" Data Plot ", 1, 0, 0, 1 )
+	imgui.plot_lines( "Data", 0, 150, 40, self.values_line )
+
+	imgui.separator()
+	
+	imgui.text_colored(" Data Histogram ", 0, 1, 0, 1 )
+	imgui.plot_histogram( "Histogram", 0, 150, 40, self.values_hist )
+
+	imgui.separator()
+end
 
 
 function update(self, dt)
@@ -177,6 +222,12 @@ function update(self, dt)
 		imgui.end_tab_item()
 	end
 
+	local tab2_open = imgui.begin_tab_item("Tab3")
+	if tab2_open then
+		update_tab3(self)
+		imgui.end_tab_item()
+	end
+	
 	imgui.end_tab_bar()
 	imgui.end_window()
 end
