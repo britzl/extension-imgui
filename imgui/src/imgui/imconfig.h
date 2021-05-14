@@ -5,6 +5,8 @@
 #define IMGUI_IMPL_OPENGL_LOADER_GL3W
 #elif defined(DM_PLATFORM_LINUX)
 #define IMGUI_IMPL_OPENGL_LOADER_GL3W
+#elif defined(DM_PLATFORM_ANDROID)
+#define IMGUI_IMPL_OPENGL_ES2
 #else
 #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM "dummy_loader.h"
 #endif

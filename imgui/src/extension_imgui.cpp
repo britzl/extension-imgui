@@ -4,8 +4,11 @@
 #define MODULE_NAME "imgui"
 
 #include <stdlib.h>
+#include <vector>
 
+#include "imgui/imgui.h"
 #include "imgui/imconfig.h"
+
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
 #include <GL/gl3w.h>
 #endif
@@ -13,17 +16,19 @@
 // include the Defold SDK
 #include <dmsdk/sdk.h>
 
-
+#if defined(DM_PLATFORM_ANDROID)
+#include "imgui/imgui_impl_android.h"
+#endif
 #include "imgui/imgui_impl_opengl3.h"
 
-
-
+#define MAX_HISTOGRAM_VALUES        1000 * 1024     
 
 #define TEXTBUFFER_SIZE sizeof(char) * 1000 * 1024
 
 static bool g_imgui_NewFrame = false;
 static char* g_imgui_TextBuffer = 0;
 
+static std::vector<ImFont *>      fonts;
 
 static void imgui_NewFrame()
 {
@@ -425,6 +430,36 @@ static int imgui_Text(lua_State* L)
     return 0;
 }
 
+static int imgui_TextGetSize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    int argc = lua_gettop(L);
+    const char* text = luaL_checkstring(L, 1);
+    float font_size = luaL_checknumber(L, 2);
+    int fontid = 0;
+    if(argc > 2) fontid = luaL_checkinteger(L, 3);
+    ImFont *font = fonts[fontid];
+    ImVec2 sz = font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, text);
+
+    lua_pushnumber(L, sz.x);
+    lua_pushnumber(L, sz.y);
+    return 2;
+}
+
+static int imgui_TextColored(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    const char* text = luaL_checkstring(L, 1);
+    float r = (float)luaL_checknumber(L, 2);
+    float g = (float)luaL_checknumber(L, 3);
+    float b = (float)luaL_checknumber(L, 4);
+    float a = (float)luaL_checknumber(L, 5);
+    ImVec4    color(r, g, b, a);
+    ImGui::TextColored(color, "%s", text);
+    return 0;
+}
+
 static int imgui_InputText(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 2);
@@ -463,6 +498,37 @@ static int imgui_InputInt(lua_State* L)
     }
     return 2;
 }
+
+static int imgui_InputInt4(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 5);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    int v[4];
+    v[0]  = luaL_checkinteger(L, 2);
+    v[1]  = luaL_checkinteger(L, 3);
+    v[2]  = luaL_checkinteger(L, 4);
+    v[3]  = luaL_checkinteger(L, 5);
+
+    bool changed = ImGui::InputInt4(label, v);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushnumber(L, v[0]);
+        lua_pushnumber(L, v[1]);
+        lua_pushnumber(L, v[2]);
+        lua_pushnumber(L, v[3]);
+    }
+    else
+    {
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
+    }
+    return 5;
+}
+
 
 static int imgui_InputFloat3(lua_State* L)
 {
@@ -540,9 +606,20 @@ static int imgui_Selectable(lua_State* L)
 static int imgui_Button(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
+    int argc = lua_gettop(L);
     imgui_NewFrame();
     const char* text = luaL_checkstring(L, 1);
-    bool pushed = ImGui::Button(text);
+    bool pushed = false;
+    if(argc > 1) 
+    {
+        int width = luaL_checkinteger(L, 2);
+        int height = luaL_checkinteger(L, 3);
+        pushed = ImGui::Button(text, ImVec2(width, height));
+    }
+    else
+    {
+        pushed = ImGui::Button(text);
+    }
     lua_pushboolean(L, pushed);
     return 1;
 }
@@ -624,6 +701,63 @@ static int imgui_Separator(lua_State* L)
     return 0;
 }
 
+
+// ----------------------------
+// ----- IMGUI PLOT -----------
+// ----------------------------
+
+static float     values_lines[MAX_HISTOGRAM_VALUES];
+
+static int imgui_PlotLines(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    const char *lbl = luaL_checkstring(L, 1); 
+    int valoff = luaL_checkinteger(L, 2);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+    luaL_checktype(L, 5, LUA_TTABLE);
+
+    // Table is at idx 5
+    lua_pushnil(L);
+    int valct = 0;
+    // Build a number array matching the buffer. They are all assumed to be type float (for the time being)
+    while(( lua_next( L, 5 ) != 0) && (valct < MAX_HISTOGRAM_VALUES)) {
+        values_lines[valct++] = (float)lua_tonumber( L, -1 );
+        lua_pop( L, 1 );
+    }
+
+    imgui_NewFrame();
+    ImVec2    gsize(width, height);
+    ImGui::PlotLines(lbl, values_lines, valct, valoff, NULL, FLT_MAX, FLT_MAX, gsize);
+    return 0;
+}
+
+// Keep a label mapped histograms. This minimised alloc and realloc of value mem
+static float     values_hist[MAX_HISTOGRAM_VALUES];
+
+static int imgui_PlotHistogram(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    const char *lbl = luaL_checkstring(L, 1); 
+    int valoff = luaL_checkinteger(L, 2);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+    luaL_checktype(L, 5, LUA_TTABLE);
+
+    // Table is at idx 5
+    lua_pushnil(L);
+    int valct = 0;
+    // Build a number array matching the buffer. They are all assumed to be type float (for the time being)
+    while(( lua_next( L, 5 ) != 0) && (valct < MAX_HISTOGRAM_VALUES)) {
+        values_hist[valct++] = (float)lua_tonumber( L, -1 );
+        lua_pop( L, 1 );
+    }
+
+    imgui_NewFrame();
+    ImVec2    gsize(width, height);
+    ImGui::PlotHistogram(lbl, values_hist, valct, valoff, NULL, FLT_MAX, FLT_MAX, gsize);
+    return 0;
+}
 
 // ----------------------------
 // ----- IMGUI DEMO -----------
@@ -717,14 +851,40 @@ static int imgui_SetStyleColor(lua_State* L)
     return 0;
 }
 
+static int imgui_SetWindowFontScale(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float scale = luaL_checknumber(L, 1);
+    ImGui::SetWindowFontScale(scale);
+    return 0;
+}
+
+static int imgui_SetCursorPos(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int posx = luaL_checkinteger(L, 1);
+    int posy = luaL_checkinteger(L, 2);
+    ImVec2     pos(posx, posy);
+    ImGui::SetCursorPos(pos);
+    return 0;
+}
 
 // ----------------------------
 // ----- CONFIG -----------------
 // ----------------------------
-static int imgui_SetIniFilename(lua_State* L)
+static int imgui_SetDefaults(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
 
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont * def = io.Fonts->AddFontDefault();
+    fonts.push_back(def);
+    return 0;
+}
+
+static int imgui_SetIniFilename(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
     const char *filename = 0;
     if (lua_isstring(L, 1)) {
         filename = luaL_checkstring(L, 1);
@@ -732,6 +892,65 @@ static int imgui_SetIniFilename(lua_State* L)
 
     ImGui::GetIO().IniFilename = filename;
 
+    return 0;
+}
+
+static int imgui_FontAddTTFFile(lua_State * L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    const char * ttf_filename = luaL_checkstring(L, 1);
+    float font_size = luaL_checknumber(L, 2);
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* font = io.Fonts->AddFontFromFileTTF(ttf_filename, font_size);    
+    // Put font in map. 
+    if(font != NULL) 
+    {
+        fonts.push_back(font);
+        lua_pushinteger(L, fonts.size() - 1);
+    }
+    else 
+    {
+        lua_pushnil(L);
+    }
+    return 1;
+}
+
+static int imgui_FontAddTTFData(lua_State * L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    const char * ttf_data = luaL_checkstring(L, 1);
+    float font_size = luaL_checknumber(L, 2);
+    int font_pixels = luaL_checknumber(L, 3);
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data, font_size, font_pixels);    
+    // Put font in map. 
+    if(font != NULL) 
+    {
+        fonts.push_back(font);
+        lua_pushinteger(L, fonts.size() - 1);
+    }
+    else 
+    {
+        lua_pushnil(L);
+    }
+    return 1;
+}
+
+static int imgui_FontPush(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int fontid = luaL_checkinteger(L, 1);
+    if(fontid >= 0 && fontid < fonts.size())
+    ImGui::PushFont(fonts[fontid]);
+    return 0;
+}
+
+static int imgui_FontPop(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGui::PopFont();
     return 0;
 }
 
@@ -751,12 +970,12 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 
 static void imgui_Init(float width, float height)
 {
-#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+    #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
     int r = gl3wInit();
     if (r != GL3W_OK) {
         dmLogError("Failed to initialize OpenGL: %d", r);
     }
-#endif
+    #endif
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -801,9 +1020,59 @@ static void imgui_ExtensionShutdown()
     }
 }
 
+static int imgui_DrawLine(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int x1 = luaL_checkinteger(L, 1);
+    int y1 = luaL_checkinteger(L, 2);
+    int x2 = luaL_checkinteger(L, 3);
+    int y2 = luaL_checkinteger(L, 4);
+    unsigned int col = (unsigned int)luaL_checkinteger(L, 5);
+    ImDrawList *dl = ImGui::GetWindowDrawList();
+    ImVec2 p1(x1, y1);
+    ImVec2 p2(x2, y2);
+    dl->AddLine(p1, p2, col);
+    return 0;
+}
+
+static int imgui_DrawRect(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    int w = luaL_checkinteger(L, 3);
+    int h = luaL_checkinteger(L, 4);
+    unsigned int col = (unsigned int)luaL_checkinteger(L, 5);
+    ImDrawList *dl = ImGui::GetWindowDrawList();
+    ImVec2 minv(x, y);
+    ImVec2 maxv(x + w, y + h);
+    dl->AddRect(minv, maxv, col);
+    return 0;
+}
+
+static int imgui_DrawRectFilled(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    int w = luaL_checkinteger(L, 3);
+    int h = luaL_checkinteger(L, 4);
+    unsigned int col = (unsigned int)luaL_checkinteger(L, 5);
+    ImDrawList *dl = ImGui::GetWindowDrawList();
+    ImVec2 minv(x, y);
+    ImVec2 maxv(x + w, y + h);
+    dl->AddRectFilled(minv, maxv, col);
+    return 0;
+}
+
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
+    {"font_add_ttf_file", imgui_FontAddTTFFile},
+    {"font_add_ttf_data", imgui_FontAddTTFData},
+    {"font_push", imgui_FontPush},
+    {"font_pop", imgui_FontPop},
+
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
     {"begin_window", imgui_Begin},
@@ -836,8 +1105,10 @@ static const luaL_reg Module_methods[] =
 
     {"selectable", imgui_Selectable},
     {"text", imgui_Text},
+    {"text_colored", imgui_TextColored},
     {"input_text", imgui_InputText},
     {"input_int", imgui_InputInt},
+    {"input_int4", imgui_InputInt4},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
     {"button", imgui_Button},
@@ -850,6 +1121,15 @@ static const luaL_reg Module_methods[] =
     {"spacing", imgui_Spacing},
     {"separator", imgui_Separator},
 
+    {"plot_lines", imgui_PlotLines},
+    {"plot_histogram", imgui_PlotHistogram},
+
+    {"text_getsize", imgui_TextGetSize},
+
+    {"draw_rect", imgui_DrawRect},
+    {"draw_rect_filled", imgui_DrawRectFilled},
+    {"draw_line", imgui_DrawLine},
+    
     {"demo", imgui_Demo},
 
     {"set_mouse_input", imgui_SetMouseInput},
@@ -871,7 +1151,12 @@ static const luaL_reg Module_methods[] =
     {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
     {"set_style_color", imgui_SetStyleColor},
 
+    {"set_cursor_pos", imgui_SetCursorPos},
+
+    {"set_defaults", imgui_SetDefaults},
     {"set_ini_filename", imgui_SetIniFilename},
+
+    {"set_window_font_scale", imgui_SetWindowFontScale},
 
     {0, 0}
 };
@@ -1077,20 +1362,20 @@ void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* e
     switch(event->m_Event)
     {
         case dmExtension::EVENT_ID_ACTIVATEAPP:
-            //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ACTIVATEAPP\n");
-            break;
+        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ACTIVATEAPP\n");
+        break;
         case dmExtension::EVENT_ID_DEACTIVATEAPP:
-            //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEACTIVATEAPP\n");
-            break;
+        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEACTIVATEAPP\n");
+        break;
         case dmExtension::EVENT_ID_ICONIFYAPP:
-            //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ICONIFYAPP\n");
-            break;
+        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ICONIFYAPP\n");
+        break;
         case dmExtension::EVENT_ID_DEICONIFYAPP:
-            //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEICONIFYAPP\n");
-            break;
+        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEICONIFYAPP\n");
+        break;
         default:
-            //dmLogWarning("OnEventDefoldImGui - Unknown event id\n");
-            break;
+        //dmLogWarning("OnEventDefoldImGui - Unknown event id\n");
+        break;
     }
 }
 
