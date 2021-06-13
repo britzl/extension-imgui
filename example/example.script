@@ -60,6 +60,24 @@ function init(self)
 	self.values_line = {}
 	self.values_hist = {}
 	makeData(self)
+
+	local fontsize 		= 12.0
+	local fontsizebase 	= 12.0
+	self.fonts 	= {}
+	local regular_data, error = sys.load_resource("/example/fonts/Montserrat-Regular.ttf")
+	self.fonts["Regular"] = imgui.font_add_ttf_data(regular_data, #regular_data, fontsize, fontsizebase)
+	local bold_data, error = sys.load_resource("/example/fonts/Montserrat-Bold.ttf")
+	self.fonts["Bold"] = imgui.font_add_ttf_data(bold_data, #bold_data, fontsize, fontsizebase)
+	local italic_data, error = sys.load_resource("/example/fonts/Montserrat-Italic.ttf")
+	self.fonts["Italic"] = imgui.font_add_ttf_data(italic_data, #italic_data, fontsize, fontsizebase)
+	local bolditalic_data, error = sys.load_resource("/example/fonts/Montserrat-BoldItalic.ttf")
+	self.fonts["BoldItalic"] = imgui.font_add_ttf_data(bolditalic_data, #bolditalic_data, fontsize, fontsizebase)
+
+	-- File based Image
+	self.image1 = imgui.image_load("example/images/image1.png")
+	-- Resource based Image 
+	local img2_data, error =  sys.load_resource("/example/images/image2.png") 
+	self.image2 = imgui.image_load_data( "image2", img2_data, #img2_data )
 end
 
 local function close_window(self)
@@ -197,6 +215,35 @@ local function update_tab3(self)
 	imgui.separator()
 end
 
+-- Example images and font styles
+local function update_tab4(self)
+
+	imgui.font_push(self.fonts["Regular"])
+	imgui.text_colored("Example Text Regular", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+	imgui.font_push(self.fonts["Bold"])
+	imgui.text_colored("Example Text Bold", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+	imgui.font_push(self.fonts["Italic"])
+	imgui.text_colored("Example Text Italic", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+	imgui.font_push(self.fonts["BoldItalic"])
+	imgui.text_colored("Example Text Bold Italic", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+
+	imgui.font_push(self.fonts["Regular"])
+	imgui.text_colored("image stretched", 1, 1, 1, 1 )
+	imgui.image_add(self.image1, 150,20)
+
+	imgui.text_colored("image original aspect", 1, 1, 1, 1 )
+	imgui.image_add(self.image2, 150,150)
+	imgui.font_pop()
+end
+
 
 function update(self, dt)
 	if self.show_demo_window then
@@ -222,9 +269,15 @@ function update(self, dt)
 		imgui.end_tab_item()
 	end
 
-	local tab2_open = imgui.begin_tab_item("Tab3")
-	if tab2_open then
+	local tab3_open = imgui.begin_tab_item("Tab3")
+	if tab3_open then
 		update_tab3(self)
+		imgui.end_tab_item()
+	end
+
+	local tab4_open = imgui.begin_tab_item("Tab4")
+	if tab4_open then
+		update_tab4(self)
 		imgui.end_tab_item()
 	end
 	

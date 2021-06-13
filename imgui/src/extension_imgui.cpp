@@ -21,14 +21,195 @@
 #endif
 #include "imgui/imgui_impl_opengl3.h"
 
-#define MAX_HISTOGRAM_VALUES        1000 * 1024     
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
+#include "imgui/stb_image.h"
 
-#define TEXTBUFFER_SIZE sizeof(char) * 1000 * 1024
+#define MAX_HISTOGRAM_VALUES    1000 * 1024     
+#define MAX_IMAGE_NAME          256
 
-static bool g_imgui_NewFrame = false;
-static char* g_imgui_TextBuffer = 0;
+#define TEXTBUFFER_SIZE         sizeof(char) * 1000 * 1024
+
+#include "imgui/base64.h"
+
+static bool g_imgui_NewFrame        = false;
+static char* g_imgui_TextBuffer     = 0;
+
+// ----------------------------
+// ----- IMAGES ---------------
+// ----------------------------
+
+// extern unsigned char *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp);
+// 
+typedef struct ImgObject 
+{
+    int                w;
+    int                h;
+    int                comp;
+    GLuint             tid;
+    char               name[MAX_IMAGE_NAME];
+    unsigned char *    data;
+} ImgObject;
 
 static std::vector<ImFont *>      fonts;
+static std::vector<ImgObject>     images;
+
+static int imgui_ImageB64Decode(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    const char *data = luaL_checkstring(L,1);
+    size_t datalen = 0;
+    char *datastr = (char *)base64_decode((char *)data, &datalen);
+    lua_pushlstring(L, datastr, datalen);
+    return 1;
+}
+
+
+static int imgui_ImageInternalLoad(const char *filename, ImgObject *iobj)
+{
+    if(iobj->data == nullptr)
+    {
+        printf("Error loading image: %s\n", filename);
+        return -1;
+    }
+
+    glGenTextures(1, &iobj->tid);
+    glBindTexture(GL_TEXTURE_2D, iobj->tid);
+
+    strcpy(iobj->name, filename);
+    images.push_back(*iobj);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // This is required on WebGL for non power-of-two textures
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Same
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iobj->w, iobj->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, iobj->data);
+
+    return images.size()-1;
+}    
+
+
+// Image handling needs to be smarter, but this will do for the time being.
+static int imgui_ImageLoadData(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    const char * filename = luaL_checkstring(L, 1);
+
+    // If its already in the vector, return the id
+    for(int i=0; i<images.size(); i++)
+    {
+        if(strcmp(images[i].name, filename) == 0) 
+        {
+            lua_pushinteger(L, i);
+            return 1;
+        }
+    }
+
+    ImgObject     iobj;
+    unsigned char *strdata = (unsigned char *)luaL_checkstring(L, 2);
+    int lendata = luaL_checkinteger(L, 3);
+    iobj.data = stbi_load_from_memory( strdata, lendata, &iobj.w, &iobj.h, NULL, STBI_rgb_alpha);
+    //printf("Loaded Image: %s %d %d \n", filename, iobj.w, iobj.h);
+    
+    if(iobj.data == nullptr)
+    {
+        printf("Error loading image: %s\n", filename);
+        lua_pushnil(L);
+        return 1;
+    }
+        
+    int idx = imgui_ImageInternalLoad(filename, &iobj);
+    if(idx < 0) 
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+    
+    stbi_image_free(iobj.data);
+    iobj.data = NULL;
+    lua_pushinteger(L, idx);
+    return 1;
+}
+
+// Image handling needs to be smarter, but this will do for the time being.
+static int imgui_ImageLoad(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    const char * filename = luaL_checkstring(L, 1);
+
+    // If its already in the vector, return the id
+    for(int i=0; i<images.size(); i++)
+    {
+        if(strcmp(images[i].name, filename) == 0) 
+        {
+            lua_pushinteger(L, i);
+            return 1;
+        }
+    }
+
+    ImgObject     iobj;
+    iobj.data = stbi_load(filename, &iobj.w, &iobj.h, NULL, STBI_rgb_alpha);
+    if(iobj.data == nullptr)
+    {
+        printf("Error loading image: %s\n", filename);
+        lua_pushnil(L);
+        return 1;
+    }
+    
+    int idx = imgui_ImageInternalLoad(filename, &iobj);
+    if(idx < 0) 
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+    
+    stbi_image_free(iobj.data);
+    iobj.data = NULL;
+    lua_pushinteger(L, idx);
+    return 1;
+}
+
+static int imgui_ImageGet( lua_State *L )
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    int id = luaL_checkinteger(L, 1);
+    if(id>=0 && id <images.size())
+    {
+        if(images[id].tid >= 0)
+            lua_pushinteger(L, id);
+        else 
+            lua_pushnil(L);
+    }
+    else 
+        lua_pushnil(L);
+    return 1;
+}
+
+static int imgui_ImageAdd( lua_State *L )
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int tid = luaL_checkinteger(L, 1);
+    int w = luaL_checkinteger(L, 2);
+    int h = luaL_checkinteger(L, 3);
+    if(tid<0 || tid >=images.size()) 
+        return 0;
+    ImgObject iobj = images[tid];
+    ImGui::Image((void*)(intptr_t)iobj.tid, ImVec2(w, h));
+    return 0;
+}
+
+static int imgui_ImageFree( lua_State *L )
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int tid = luaL_checkinteger(L, 1);
+    assert(tid>=0 && tid <images.size());
+    images[tid].tid = -1;
+    return 0;
+}
+
+// ----------------------------
+// ----- FRAMES ---------------
+// ----------------------------
 
 static void imgui_NewFrame()
 {
@@ -237,8 +418,12 @@ static int imgui_BeginChild(lua_State* L)
     const char* title = luaL_checkstring(L, 1);
     float width = luaL_checknumber(L, 2);
     float height = luaL_checknumber(L, 3);
+    bool border = false;
+    if (lua_isnumber(L, 4)) border = luaL_checkinteger(L, 4) == 1;
+    int flags = 0;
+    if (lua_isnumber(L, 5)) flags = luaL_checknumber(L, 5);
 
-    bool result = ImGui::BeginChild(title, ImVec2(width, height));
+    bool result = ImGui::BeginChild(title, ImVec2(width, height), border, flags);
     lua_pushboolean(L, result);
 
     return 1;
@@ -426,7 +611,13 @@ static int imgui_Text(lua_State* L)
     DM_LUA_STACK_CHECK(L, 0);
     imgui_NewFrame();
     const char* text = luaL_checkstring(L, 1);
-    ImGui::Text("%s", text);
+    int wrapped =  0;
+    if(lua_isnumber(L, 2)) wrapped = luaL_checknumber(L, 2);
+
+    if(wrapped == 1)
+        ImGui::TextWrapped("%s", text);
+    else
+        ImGui::Text("%s", text);
     return 0;
 }
 
@@ -619,6 +810,28 @@ static int imgui_Button(lua_State* L)
     else
     {
         pushed = ImGui::Button(text);
+    }
+    lua_pushboolean(L, pushed);
+    return 1;
+}
+
+static int imgui_ButtonImage(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    int argc = lua_gettop(L);
+    imgui_NewFrame();
+    int tid = luaL_checknumber(L, 1);
+    ImgObject iobj = images[tid];
+    bool pushed = false;
+    if(argc > 1) 
+    {
+        int width = luaL_checkinteger(L, 2);
+        int height = luaL_checkinteger(L, 3);
+        pushed = ImGui::ImageButton((void*)(intptr_t)iobj.tid, ImVec2(width, height));
+    }
+    else
+    {
+        pushed = ImGui::ImageButton((void*)(intptr_t)iobj.tid, ImVec2(0,0));
     }
     lua_pushboolean(L, pushed);
     return 1;
@@ -818,6 +1031,22 @@ static int imgui_IsItemHovered(lua_State* L)
 // ----- STYLE ----------------
 // ----------------------------
 
+static int imgui_SetStyleWindowBorderSize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowBorderSize = luaL_checknumber(L, 1);
+    return 0;
+}
+
+static int imgui_SetStyleChildBorderSize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.ChildBorderSize = luaL_checknumber(L, 1);
+    return 0;
+}
+
 static int imgui_SetStyleWindowRounding(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -830,6 +1059,13 @@ static int imgui_SetStyleFrameRounding(lua_State* L)
     DM_LUA_STACK_CHECK(L, 0);
     ImGuiStyle& style = ImGui::GetStyle();
     style.FrameRounding = luaL_checknumber(L, 1);
+    return 0;
+}
+static int imgui_SetStyleTabRounding(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.TabRounding = luaL_checknumber(L, 1);
     return 0;
 }
 static int imgui_SetStyleScrollbarRounding(lua_State* L)
@@ -920,11 +1156,15 @@ static int imgui_FontAddTTFData(lua_State * L)
 {
     DM_LUA_STACK_CHECK(L, 1);
     const char * ttf_data = luaL_checkstring(L, 1);
-    float font_size = luaL_checknumber(L, 2);
-    int font_pixels = luaL_checknumber(L, 3);
+    int ttf_data_size = luaL_checknumber(L, 2);
+    float font_size = luaL_checknumber(L, 3);
+    int font_pixels = luaL_checknumber(L, 4);
+
+    char *ttf_data_cpy = (char *)calloc(ttf_data_size, sizeof(char));
+    memcpy(ttf_data_cpy, ttf_data, ttf_data_size);
 
     ImGuiIO& io = ImGui::GetIO();
-    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data, font_size, font_pixels);    
+    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data_cpy, font_size, font_pixels);    
     // Put font in map. 
     if(font != NULL) 
     {
@@ -952,6 +1192,19 @@ static int imgui_FontPop(lua_State *L)
     DM_LUA_STACK_CHECK(L, 0);
     ImGui::PopFont();
     return 0;
+}
+
+static int imgui_FontScale(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    float oldscale = 1.0f;
+    int fontid = luaL_checkinteger(L, 1);
+    float fontscale = luaL_checknumber(L, 2);
+    if(fontid >= 0 && fontid < fonts.size())
+    oldscale = fonts[fontid]->Scale;
+    fonts[fontid]->Scale = fontscale;
+    lua_pushnumber(L, oldscale);
+    return 1;
 }
 
 // ----------------------------
@@ -997,7 +1250,10 @@ static void imgui_Init(float width, float height)
 static void imgui_Shutdown()
 {
     dmLogInfo("imgui_Shutdown");
-    ImGui_ImplOpenGL3_Shutdown();
+    fonts.clear();
+    images.clear();
+
+    ImGui_ImplOpenGL3_Shutdown();   
     ImGui::DestroyContext();
 }
 
@@ -1068,10 +1324,19 @@ static int imgui_DrawRectFilled(lua_State* L)
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
+    {"image_load", imgui_ImageLoad},
+    {"image_load_data", imgui_ImageLoadData},
+    {"image_get", imgui_ImageGet},
+    {"image_free", imgui_ImageFree},
+    {"image_add", imgui_ImageAdd},
+
+    {"image_b64_decode", imgui_ImageB64Decode},
+    
     {"font_add_ttf_file", imgui_FontAddTTFFile},
     {"font_add_ttf_data", imgui_FontAddTTFData},
     {"font_push", imgui_FontPush},
     {"font_pop", imgui_FontPop},
+    {"font_scale", imgui_FontScale},
 
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
@@ -1112,6 +1377,7 @@ static const luaL_reg Module_methods[] =
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
     {"button", imgui_Button},
+    {"button_image", imgui_ButtonImage}, 
     {"checkbox", imgui_Checkbox},
     {"same_line", imgui_SameLine},
     {"new_line", imgui_NewLine},
@@ -1147,7 +1413,10 @@ static const luaL_reg Module_methods[] =
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},
 
     {"set_style_window_rounding", imgui_SetStyleWindowRounding},
+    {"set_style_window_bordersize", imgui_SetStyleWindowBorderSize},
+    {"set_style_child_bordersize", imgui_SetStyleChildBorderSize},
     {"set_style_frame_rounding", imgui_SetStyleFrameRounding},
+    {"set_style_tab_rounding", imgui_SetStyleTabRounding},
     {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
     {"set_style_color", imgui_SetStyleColor},
 
