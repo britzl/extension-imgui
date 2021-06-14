@@ -15,6 +15,7 @@
 
 // include the Defold SDK
 #include <dmsdk/sdk.h>
+#include  <dmsdk/dlib/crypt.h>
 
 #if defined(DM_PLATFORM_ANDROID)
 #include "imgui/imgui_impl_android.h"
@@ -30,7 +31,6 @@
 
 #define TEXTBUFFER_SIZE         sizeof(char) * 1000 * 1024
 
-#include "imgui/base64.h"
 
 static bool g_imgui_NewFrame        = false;
 static char* g_imgui_TextBuffer     = 0;
@@ -58,9 +58,15 @@ static int imgui_ImageB64Decode(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 1);
     const char *data = luaL_checkstring(L,1);
-    size_t datalen = 0;
-    char *datastr = (char *)base64_decode((char *)data, &datalen);
-    lua_pushlstring(L, datastr, datalen);
+    uint32_t datalen = luaL_checknumber(L,2);
+    uint32_t dstlen  = 4*(datalen/3 + 1);
+
+    char *datastr = (char *)malloc(dstlen);
+    bool result;
+    result = dmCrypt::Base64Decode((const uint8_t*)data, datalen, (uint8_t*)datastr, &dstlen);
+    
+    lua_pushlstring(L, datastr, dstlen);
+    free(datastr);
     return 1;
 }
 
