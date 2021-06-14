@@ -19,13 +19,13 @@
 
 #*****************************************************************************************************
 
-  - name: set_next_window_size
+  - name: set_next_window_pos
     type: function
 
     parameters:
-      - name: width
+      - name: x
         type: number
-      - name: height
+      - name: y
         type: number
 
 #*****************************************************************************************************
@@ -227,6 +227,21 @@
         type: string
       - name: text
         type: string
+
+    return:
+      - name: changed
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: input_int
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: value
+        type: number
 
     return:
       - name: changed
