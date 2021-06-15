@@ -75,7 +75,7 @@ static int imgui_ImageInternalLoad(const char *filename, ImgObject *iobj)
 {
     if(iobj->data == nullptr)
     {
-        printf("Error loading image: %s\n", filename);
+        dmLogError("Error loading image: %s\n", filename);
         return -1;
     }
 
@@ -115,11 +115,11 @@ static int imgui_ImageLoadData(lua_State* L)
     unsigned char *strdata = (unsigned char *)luaL_checkstring(L, 2);
     int lendata = luaL_checkinteger(L, 3);
     iobj.data = stbi_load_from_memory( strdata, lendata, &iobj.w, &iobj.h, NULL, STBI_rgb_alpha);
-    //printf("Loaded Image: %s %d %d \n", filename, iobj.w, iobj.h);
+    //dmLogError("Loaded Image: %s %d %d \n", filename, iobj.w, iobj.h);
     
     if(iobj.data == nullptr)
     {
-        printf("Error loading image: %s\n", filename);
+        dmLogError("Error loading image: %s\n", filename);
         lua_pushnil(L);
         return 1;
     }
@@ -157,7 +157,7 @@ static int imgui_ImageLoad(lua_State* L)
     iobj.data = stbi_load(filename, &iobj.w, &iobj.h, NULL, STBI_rgb_alpha);
     if(iobj.data == nullptr)
     {
-        printf("Error loading image: %s\n", filename);
+        dmLogError("Error loading image: %s\n", filename);
         lua_pushnil(L);
         return 1;
     }
