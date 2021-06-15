@@ -185,13 +185,13 @@
 
 #*****************************************************************************************************
 
-  - name: set_next_window_size
+  - name: set_next_window_pos
     type: function
 
     parameters:
-      - name: width
+      - name: x
         type: number
-      - name: height
+      - name: y
         type: number
 
 
@@ -448,89 +448,13 @@
     parameters:
       - name: label
         type: string
-      - name: integer
+      - name: value
         type: number
 
     return:
-      - name: new_integer
-        type: number
+      - name: changed
+        type: boolean
 
-#*****************************************************************************************************
-
-  - name: input_int4
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: integer1
-        type: number
-      - name: integer2
-        type: number
-      - name: integer3
-        type: number
-      - name: integer4
-        type: number
-
-    return:
-      - name: new_integer1
-        type: number
-      - name: new_integer2
-        type: number
-      - name: new_integer3
-        type: number
-      - name: new_integer4
-        type: number
-
-#*****************************************************************************************************
-
-  - name: input_float3
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: float1
-        type: number
-      - name: float2
-        type: number
-      - name: float3
-        type: number
-
-    return:
-      - name: new_float1
-        type: number
-      - name: new_float2
-        type: number
-      - name: new_float3
-        type: number
-
-#*****************************************************************************************************
-
-  - name: input_float4
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: float1
-        type: number
-      - name: float2
-        type: number
-      - name: float3
-        type: number
-      - name: float4
-        type: number
-
-    return:
-      - name: new_float1
-        type: number
-      - name: new_float2
-        type: number
-      - name: new_float3
-        type: number
-      - name: new_float4
-        type: number
 
 #*****************************************************************************************************
 
