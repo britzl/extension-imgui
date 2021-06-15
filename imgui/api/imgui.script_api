@@ -5,9 +5,175 @@
   members:
 
 #*****************************************************************************************************
+#***** IMAGE ****************************************************************************************
+#*****************************************************************************************************
+
+  - name: image_load
+    type: function
+
+    parameters:
+      - name: filename
+        type: string
+
+    return:
+      - name: imageid
+        type: number
+
+#*****************************************************************************************************
+
+  - name: image_load_data
+    type: function
+
+    parameters:
+      - name: imagename
+        type: string
+      - name: image_data
+        type: string
+      - name: image_data_len
+        type: number
+
+    return:
+      - name: imageid
+        type: number
+
+#*****************************************************************************************************
+
+  - name: image_get
+    type: function
+
+    parameters:
+      - name: imagename
+        type: string
+
+    return:
+      - name: imageid
+        type: number
+
+#*****************************************************************************************************
+
+  - name: image_free
+    type: function
+
+    parameters:
+      - name: imageid
+        type: number
+
+#*****************************************************************************************************
+
+  - name: image_add
+    type: function
+
+    parameters:
+      - name: imageid
+        type: number
+      - name: pixel_width
+        type: number 
+      - name: pixel_height 
+        type: number 
+
+#*****************************************************************************************************
+
+  - name: image_b64_decode
+    type: function
+
+    parameters:
+      - name: image_data_base64
+        type: string 
+      - name: image_data_len
+        type: number
+
+    return:
+      - name: image_data_raw
+        type: string
+
+#*****************************************************************************************************
+#***** FONTS *****************************************************************************************
+#*****************************************************************************************************
+
+  - name: font_add_ttf_file
+    type: function
+
+    parameters:
+      - name: ttf_filename
+        type: string 
+      - name: fontsize
+        type: number
+
+    return:
+      - name: fontid 
+        type: number
+
+#*****************************************************************************************************
+
+  - name: font_add_ttf_data
+    type: function
+
+    parameters:
+      - name: ttf_data
+        type: string 
+      - name: ttf_data_size
+        type: number
+      - name: fontsize
+        type: number
+      - name: fontpixels
+        type: number
+
+    return:
+      - name: fontid 
+        type: number
+
+#*****************************************************************************************************
+
+  - name: font_push
+    type: function
+
+    parameters:
+      - name: fontid
+        type: number
+
+#*****************************************************************************************************
+
+  - name: font_pop
+    type: function
+
+
+#*****************************************************************************************************
+
+  - name: font_scale
+    type: function
+
+    parameters:
+      - name: fontid
+        type: number
+      - name: fontscale
+        type: number
+
+#*****************************************************************************************************
 #***** WINDOW ****************************************************************************************
 #*****************************************************************************************************
 
+  - name: set_cursor_pos
+    type: function
+
+    parameters:
+      - name: x
+        type: number
+      - name: y
+        type: number
+
+#*****************************************************************************************************
+
+  - name: set_display_size
+    type: function
+
+    parameters:
+      - name: width 
+        type: number
+      - name: height
+        type: number
+        
+#*****************************************************************************************************
+
   - name: set_next_window_size
     type: function
 
@@ -27,6 +193,31 @@
         type: number
       - name: height
         type: number
+
+
+#*****************************************************************************************************
+
+  - name: window_begin
+    type: function
+
+    parameters:
+      - name: title
+        type: string
+      - name: open
+        type: boolean
+      - name: flags
+        type: number
+
+    return:
+      - name: result
+        type: boolean
+      - name: isopen
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: window_end
+    type: function
 
 #*****************************************************************************************************
 
@@ -219,6 +410,23 @@
 
 #*****************************************************************************************************
 
+  - name: text_colored
+    type: function
+
+    parameters:
+      - name: text
+        type: string
+      - name: Red
+        type: number
+      - name: Green
+        type: number
+      - name: Blue
+        type: number
+      - name: Alpha
+        type: number
+
+#*****************************************************************************************************
+
   - name: input_text
     type: function
 
@@ -231,6 +439,98 @@
     return:
       - name: changed
         type: boolean
+
+#*****************************************************************************************************
+
+  - name: input_int
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: integer
+        type: number
+
+    return:
+      - name: new_integer
+        type: number
+
+#*****************************************************************************************************
+
+  - name: input_int4
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: integer1
+        type: number
+      - name: integer2
+        type: number
+      - name: integer3
+        type: number
+      - name: integer4
+        type: number
+
+    return:
+      - name: new_integer1
+        type: number
+      - name: new_integer2
+        type: number
+      - name: new_integer3
+        type: number
+      - name: new_integer4
+        type: number
+
+#*****************************************************************************************************
+
+  - name: input_float3
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: float1
+        type: number
+      - name: float2
+        type: number
+      - name: float3
+        type: number
+
+    return:
+      - name: new_float1
+        type: number
+      - name: new_float2
+        type: number
+      - name: new_float3
+        type: number
+
+#*****************************************************************************************************
+
+  - name: input_float4
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: float1
+        type: number
+      - name: float2
+        type: number
+      - name: float3
+        type: number
+      - name: float4
+        type: number
+
+    return:
+      - name: new_float1
+        type: number
+      - name: new_float2
+        type: number
+      - name: new_float3
+        type: number
+      - name: new_float4
+        type: number
 
 #*****************************************************************************************************
 
@@ -318,6 +618,22 @@
       - name: pushed
         type: boolean
 
+#*****************************************************************************************************
+
+  - name: button_image
+    type: function
+
+    parameters:
+      - name: imageid 
+        type: number
+      - name: width(opt) 
+        type: number
+      - name: height(opt)
+        type: number
+
+    return:
+      - name: pushed
+        type: boolean
 
 
 #*****************************************************************************************************
@@ -379,7 +695,180 @@
     type: function
 
 #*****************************************************************************************************
+
+  - name: plot_lines
+    type: function
+
+    parameters:
+      - name: label
+        type: string 
+      - name: valueoffset
+        type: number
+      - name: width
+        type: number
+      - name: height
+        type: number
+      - name: plotdata
+        type: table
+
+
+#*****************************************************************************************************
+
+  - name: plot_histogram
+    type: function
+
+    parameters:
+      - name: label
+        type: string 
+      - name: valueoffset
+        type: number
+      - name: width
+        type: number
+      - name: height
+        type: number
+      - name: plotdata
+        type: table
+
+#*****************************************************************************************************
+
+  - name: text_getsize
+    type: function
+
+    return:
+      - name: textpixelsize 
+        type: number
+
+#*****************************************************************************************************
+#***** DRAWING ***************************************************************************************
+#*****************************************************************************************************
+
+  - name: draw_line
+    type: function
+
+    parameters:
+      - name: x1
+        type: number
+      - name: y1
+        type: number
+      - name: x2
+        type: number
+      - name: y2
+        type: number
+      - name: color 
+        type: number
+
+#*****************************************************************************************************
+
+  - name: draw_rect
+    type: function
+
+    parameters:
+      - name: x
+        type: number
+      - name: y
+        type: number
+      - name: width 
+        type: number
+      - name: height
+        type: number
+      - name: color 
+        type: number
+
+#*****************************************************************************************************
+
+  - name: draw_rect_filled
+    type: function
+
+    parameters:
+      - name: x
+        type: number
+      - name: y
+        type: number
+      - name: width 
+        type: number
+      - name: height
+        type: number
+      - name: color 
+        type: number
+
+
+#*****************************************************************************************************
 #***** INPUT *****************************************************************************************
+#*****************************************************************************************************
+
+  - name: set_mouse_input
+    type: function
+
+    parameters:
+      - name: x
+        type: number
+      - name: y
+        type: number
+      - name: mouse1
+        type: number
+      - name: mouse2
+        type: number
+      - name: mouse3
+        type: number
+      - name: mousewheel
+        type: number
+
+#*****************************************************************************************************
+
+  - name: set_key_down
+    type: function
+
+    parameters:
+      - name: keyid
+        type: number
+      - name: state
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: set_key_modifier_ctrl
+    type: function
+
+    parameters:
+      - name: state
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: set_key_modifier_shift
+    type: function
+
+    parameters:
+      - name: state
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: set_key_modifier_alt
+    type: function
+
+    parameters:
+      - name: state
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: set_key_modifier_super
+    type: function
+
+    parameters:
+      - name: state
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: add_input_character
+    type: function
+
+    parameters:
+      - name: character
+        type: string 
+
 #*****************************************************************************************************
 
   - name: is_mouse_double_clicked
@@ -442,6 +931,23 @@
 
 #*****************************************************************************************************
 
+  - name: set_style_window_bordersize
+    type: function
+
+    parameters:
+      - name: bordersize
+        type: number
+
+#*****************************************************************************************************
+
+  - name: set_style_child_bordersize
+    type: function
+
+    parameters:
+      - name: bordersize
+        type: number
+
+#*****************************************************************************************************
 
   - name: set_style_frame_rounding
     type: function
@@ -449,6 +955,16 @@
     parameters:
       - name: rounding
         type: number
+
+#*****************************************************************************************************
+
+  - name: set_style_tab_rounding
+    type: function
+
+    parameters:
+      - name: rounding
+        type: number
+
 
 #*****************************************************************************************************
 
@@ -476,8 +992,23 @@
       - name: a
         type: number
 
+
+#*****************************************************************************************************
+
+  - name: set_window_font_scale
+    type: function
+
+    parameters:
+      - name: fontscale
+        type: number
+
 #*****************************************************************************************************
 #***** CONFIG ****************************************************************************************
+#*****************************************************************************************************
+
+  - name: set_defaults
+    type: function
+
 #*****************************************************************************************************
 
   - name: set_ini_filename

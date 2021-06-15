@@ -1411,7 +1411,6 @@ static const luaL_reg Module_methods[] =
     {"set_key_modifier_alt", imgui_SetKeyModifierAlt},
     {"set_key_modifier_super", imgui_SetKeyModifierSuper},
     {"add_input_character", imgui_AddInputCharacter},
-    {"set_display_size", imgui_SetDisplaySize},
 
     {"is_item_clicked", imgui_IsItemClicked},
     {"is_item_hovered", imgui_IsItemHovered},
@@ -1426,11 +1425,11 @@ static const luaL_reg Module_methods[] =
     {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
     {"set_style_color", imgui_SetStyleColor},
 
-    {"set_cursor_pos", imgui_SetCursorPos},
-
     {"set_defaults", imgui_SetDefaults},
     {"set_ini_filename", imgui_SetIniFilename},
 
+    {"set_cursor_pos", imgui_SetCursorPos},
+    {"set_display_size", imgui_SetDisplaySize},
     {"set_window_font_scale", imgui_SetWindowFontScale},
 
     {0, 0}
