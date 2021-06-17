@@ -530,6 +530,26 @@
       - name: v4
         type: number
 
+#*****************************************************************************************************
+
+  - name: input_double
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: double
+        type: number
+      - name: step
+        type: number
+      - name: step_fast
+        type: number
+      - name: double_precision
+        type: number
+
+    return:
+      - name: new_double
+        type: number
 
 #*****************************************************************************************************
 

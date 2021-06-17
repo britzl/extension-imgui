@@ -704,7 +704,7 @@ static int imgui_InputFloat(lua_State* L)
     float value = luaL_checknumber(L, 2);
     float step = 0.01f;
     float step_fast = 1.0f;
-    char float_precision[20] = { "%.10f" };
+    char float_precision[20] = { "%.6f" };
 
     // check if the third argument is a number
     if (lua_isnumber(L, 3))
@@ -724,6 +724,46 @@ static int imgui_InputFloat(lua_State* L)
         }
     }    
     bool changed = ImGui::InputFloat(label, &value, step, step_fast, float_precision);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushnumber(L, value);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+    return 2;
+}
+
+static int imgui_InputDouble(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    double value = luaL_checknumber(L, 2);
+    double step = 0.01f;
+    double step_fast = 1.0f;
+    char dbl_precision[20] = { "%.6f" };
+
+    // check if the third argument is a number
+    if (lua_isnumber(L, 3))
+    {
+        step = luaL_checknumber(L, 3);
+        // Only accept 4th if we have 3rd param
+        if (lua_isnumber(L, 4))
+        {
+            step_fast = luaL_checknumber(L, 4);
+
+            // Only accept 5th if we have 4th param
+            if (lua_isnumber(L, 5))
+            {
+                int precision_count = lua_tointeger(L, 5);
+                dmSnPrintf(dbl_precision, sizeof(dbl_precision), "%%.%df", precision_count );
+            }
+        }
+    }    
+    bool changed = ImGui::InputDouble(label, &value, step, step_fast, dbl_precision);
     lua_pushboolean(L, changed);
     if (changed)
     {
@@ -1435,7 +1475,7 @@ static const luaL_reg Module_methods[] =
     {"input_int", imgui_InputInt},
     {"input_int4", imgui_InputInt4},
     {"input_float", imgui_InputFloat},
-//    {"input_double", imgui_InputDouble},
+    {"input_double", imgui_InputDouble},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
     {"button", imgui_Button},
