@@ -696,6 +696,46 @@ static int imgui_InputInt(lua_State* L)
     return 2;
 }
 
+static int imgui_InputFloat(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    float value = luaL_checknumber(L, 2);
+    float step = 0.01f;
+    float step_fast = 1.0f;
+    char float_precision[20] = { "%.10f" };
+
+    // check if the third argument is a number
+    if (lua_isnumber(L, 3))
+    {
+        step = luaL_checknumber(L, 3);
+        // Only accept 4th if we have 3rd param
+        if (lua_isnumber(L, 4))
+        {
+            step_fast = luaL_checknumber(L, 4);
+
+            // Only accept 5th if we have 4th param
+            if (lua_isnumber(L, 5))
+            {
+                int precision_count = lua_tointeger(L, 5);
+                dmSnPrintf(float_precision, sizeof(float_precision), "%%.%df", precision_count );
+            }
+        }
+    }    
+    bool changed = ImGui::InputFloat(label, &value, step, step_fast, float_precision);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushnumber(L, value);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+    return 2;
+}
+
 static int imgui_InputInt4(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 5);
@@ -1226,62 +1266,6 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
     return dmExtension::RESULT_OK;
 }
 
-
-static void imgui_Init(float width, float height)
-{
-    #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
-    int r = gl3wInit();
-    if (r != GL3W_OK) {
-        dmLogError("Failed to initialize OpenGL: %d", r);
-    }
-    #endif
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = ImVec2(width, height);
-
-    // init keymap list
-    // We will be sending the correct ImGuiKey_ enums from Lua
-    for (int i = 0; i < ImGuiKey_COUNT; i++)
-    {
-        io.KeyMap[i] = i;
-    }
-
-    ImGui_ImplOpenGL3_Init();
-}
-
-
-static void imgui_Shutdown()
-{
-    dmLogInfo("imgui_Shutdown");
-    fonts.clear();
-    images.clear();
-
-    ImGui_ImplOpenGL3_Shutdown();   
-    ImGui::DestroyContext();
-}
-
-static void imgui_ExtensionInit()
-{
-    dmExtension::RegisterCallback(dmExtension::CALLBACK_POST_RENDER, imgui_Draw );
-    if (g_imgui_TextBuffer)
-    {
-        free(g_imgui_TextBuffer);
-    }
-    g_imgui_TextBuffer = (char*)malloc(TEXTBUFFER_SIZE);
-}
-
-static void imgui_ExtensionShutdown()
-{
-    if (g_imgui_TextBuffer)
-    {
-        free(g_imgui_TextBuffer);
-        g_imgui_TextBuffer = 0;
-    }
-}
-
 static int imgui_DrawLine(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -1325,6 +1309,76 @@ static int imgui_DrawRectFilled(lua_State* L)
     ImVec2 maxv(x + w, y + h);
     dl->AddRectFilled(minv, maxv, col);
     return 0;
+}
+
+static int imgui_DrawProgressBar(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float progress = luaL_checknumber(L, 1);
+    float xsize = luaL_checknumber(L, 2);
+    float ysize = luaL_checknumber(L, 3);
+
+    ImVec2 size_param(xsize, ysize);
+    ImGui::ProgressBar(progress, size_param);
+    return 0;
+}
+
+// ----------------------------
+// ----- IMGUI INIT/SHUTDOWN --
+// ----------------------------
+
+static void imgui_Init(float width, float height)
+{
+    #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+    int r = gl3wInit();
+    if (r != GL3W_OK) {
+        dmLogError("Failed to initialize OpenGL: %d", r);
+    }
+    #endif
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2(width, height);
+
+    // init keymap list
+    // We will be sending the correct ImGuiKey_ enums from Lua
+    for (int i = 0; i < ImGuiKey_COUNT; i++)
+    {
+        io.KeyMap[i] = i;
+    }
+
+    ImGui_ImplOpenGL3_Init();
+}
+
+static void imgui_Shutdown()
+{
+    dmLogInfo("imgui_Shutdown");
+    fonts.clear();
+    images.clear();
+
+    ImGui_ImplOpenGL3_Shutdown();   
+    ImGui::DestroyContext();
+}
+
+static void imgui_ExtensionInit()
+{
+    dmExtension::RegisterCallback(dmExtension::CALLBACK_POST_RENDER, imgui_Draw );
+    if (g_imgui_TextBuffer)
+    {
+        free(g_imgui_TextBuffer);
+    }
+    g_imgui_TextBuffer = (char*)malloc(TEXTBUFFER_SIZE);
+}
+
+static void imgui_ExtensionShutdown()
+{
+    if (g_imgui_TextBuffer)
+    {
+        free(g_imgui_TextBuffer);
+        g_imgui_TextBuffer = 0;
+    }
 }
 
 // Functions exposed to Lua
@@ -1380,6 +1434,8 @@ static const luaL_reg Module_methods[] =
     {"input_text", imgui_InputText},
     {"input_int", imgui_InputInt},
     {"input_int4", imgui_InputInt4},
+    {"input_float", imgui_InputFloat},
+//    {"input_double", imgui_InputDouble},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
     {"button", imgui_Button},
@@ -1401,6 +1457,7 @@ static const luaL_reg Module_methods[] =
     {"draw_rect", imgui_DrawRect},
     {"draw_rect_filled", imgui_DrawRectFilled},
     {"draw_line", imgui_DrawLine},
+    {"draw_progress", imgui_DrawProgressBar},
     
     {"demo", imgui_Demo},
 

@@ -455,6 +455,28 @@
       - name: new_integer
         type: number
 
+
+#*****************************************************************************************************
+
+  - name: input_float
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: float
+        type: number
+      - name: step
+        type: number
+      - name: step_fast
+        type: number
+      - name: float_precision
+        type: number
+
+    return:
+      - name: new_float
+        type: number
+
 #*****************************************************************************************************
 
   - name: input_int4
@@ -791,6 +813,19 @@
       - name: color 
         type: number
 
+
+#*****************************************************************************************************
+
+  - name: draw_progress
+    type: function
+
+    parameters:
+      - name: progress
+        type: number
+      - name: sizex
+        type: number
+      - name: sizey
+        type: number
 
 #*****************************************************************************************************
 #***** INPUT *****************************************************************************************

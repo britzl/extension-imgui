@@ -190,6 +190,18 @@ local function update_tab2(self)
 		end
 		imgui.end_combo()
 	end
+
+	imgui.separator()
+	
+	local progress = self.progress or 0
+	local changed, p = imgui.input_float("progress float", progress, 0.01, 1.0, 3)
+	if changed then
+		self.progress = p
+		progress = p
+	end
+
+	imgui.separator()
+	imgui.draw_progress(progress, -1, 0.0)
 end
 
 local function update_tab3(self)
