@@ -67,9 +67,9 @@
       - name: imageid
         type: number
       - name: pixel_width
-        type: number 
-      - name: pixel_height 
-        type: number 
+        type: number
+      - name: pixel_height
+        type: number
 
 #*****************************************************************************************************
 
@@ -78,7 +78,7 @@
 
     parameters:
       - name: image_data_base64
-        type: string 
+        type: string
       - name: image_data_len
         type: number
 
@@ -95,12 +95,12 @@
 
     parameters:
       - name: ttf_filename
-        type: string 
+        type: string
       - name: fontsize
         type: number
 
     return:
-      - name: fontid 
+      - name: fontid
         type: number
 
 #*****************************************************************************************************
@@ -110,7 +110,7 @@
 
     parameters:
       - name: ttf_data
-        type: string 
+        type: string
       - name: ttf_data_size
         type: number
       - name: fontsize
@@ -119,7 +119,7 @@
         type: number
 
     return:
-      - name: fontid 
+      - name: fontid
         type: number
 
 #*****************************************************************************************************
@@ -167,11 +167,11 @@
     type: function
 
     parameters:
-      - name: width 
+      - name: width
         type: number
       - name: height
         type: number
-        
+
 #*****************************************************************************************************
 
   - name: set_next_window_size
@@ -548,9 +548,9 @@
     type: function
 
     parameters:
-      - name: imageid 
+      - name: imageid
         type: number
-      - name: width(opt) 
+      - name: width(opt)
         type: number
       - name: height(opt)
         type: number
@@ -625,7 +625,7 @@
 
     parameters:
       - name: label
-        type: string 
+        type: string
       - name: valueoffset
         type: number
       - name: width
@@ -643,7 +643,7 @@
 
     parameters:
       - name: label
-        type: string 
+        type: string
       - name: valueoffset
         type: number
       - name: width
@@ -659,7 +659,7 @@
     type: function
 
     return:
-      - name: textpixelsize 
+      - name: textpixelsize
         type: number
 
 #*****************************************************************************************************
@@ -678,7 +678,7 @@
         type: number
       - name: y2
         type: number
-      - name: color 
+      - name: color
         type: number
 
 #*****************************************************************************************************
@@ -691,11 +691,11 @@
         type: number
       - name: y
         type: number
-      - name: width 
+      - name: width
         type: number
       - name: height
         type: number
-      - name: color 
+      - name: color
         type: number
 
 #*****************************************************************************************************
@@ -708,11 +708,11 @@
         type: number
       - name: y
         type: number
-      - name: width 
+      - name: width
         type: number
       - name: height
         type: number
-      - name: color 
+      - name: color
         type: number
 
 
@@ -791,7 +791,7 @@
 
     parameters:
       - name: character
-        type: string 
+        type: string
 
 #*****************************************************************************************************
 
@@ -924,6 +924,16 @@
 
     parameters:
       - name: fontscale
+        type: number
+
+
+#*****************************************************************************************************
+
+  - name: scale_all_sizes
+    type: function
+
+    parameters:
+      - name: scale
         type: number
 
 #*****************************************************************************************************

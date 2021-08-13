@@ -1133,6 +1133,16 @@ static int imgui_SetWindowFontScale(lua_State *L)
     return 0;
 }
 
+static int imgui_ScaleAllSizes(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float scale = luaL_checknumber(L, 1);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.ScaleAllSizes(scale);
+    return 0;
+}
+
+
 static int imgui_SetCursorPos(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -1463,6 +1473,7 @@ static const luaL_reg Module_methods[] =
     {"set_cursor_pos", imgui_SetCursorPos},
     {"set_display_size", imgui_SetDisplaySize},
     {"set_window_font_scale", imgui_SetWindowFontScale},
+    {"scale_all_sizes", imgui_ScaleAllSizes},
 
     {0, 0}
 };
