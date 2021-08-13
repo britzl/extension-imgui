@@ -31,16 +31,6 @@
 
 #define TEXTBUFFER_SIZE         sizeof(char) * 1000 * 1024
 
-
-static bool g_imgui_NewFrame        = false;
-static char* g_imgui_TextBuffer     = 0;
-
-// ----------------------------
-// ----- IMAGES ---------------
-// ----------------------------
-
-// extern unsigned char *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp);
-//
 typedef struct ImgObject
 {
     int                w;
@@ -51,8 +41,22 @@ typedef struct ImgObject
     unsigned char *    data;
 } ImgObject;
 
-static std::vector<ImFont *>      fonts;
-static dmArray<ImgObject>     images;
+
+static bool g_imgui_NewFrame        = false;
+static char* g_imgui_TextBuffer     = 0;
+static dmArray<ImFont*> g_imgui_Fonts;
+static dmArray<ImgObject> g_imgui_Images;
+
+
+
+
+
+// ----------------------------
+// ----- IMAGES ---------------
+// ----------------------------
+
+// extern unsigned char *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp);
+//
 
 static int imgui_ImageB64Decode(lua_State *L)
 {
@@ -71,31 +75,34 @@ static int imgui_ImageB64Decode(lua_State *L)
 }
 
 
-static int imgui_ImageInternalLoad(const char *filename, ImgObject *iobj)
+static int imgui_ImageInternalLoad(const char *filename, ImgObject *image)
 {
-    if (iobj->data == nullptr)
+    if (image->data == 0)
     {
-        dmLogError("Error loading image: %s\n", filename);
-        return -1;
+        dmLogError("Error loading image: %s", filename);
+        return 0;
     }
 
-    glGenTextures(1, &iobj->tid);
-    glBindTexture(GL_TEXTURE_2D, iobj->tid);
+    dmLogInfo("imgui_ImageInternalLoad before %d", image->tid);
+    
+    glGenTextures(1, &image->tid);
+    dmLogInfo("imgui_ImageInternalLoad after %d", image->tid);
+    glBindTexture(GL_TEXTURE_2D, image->tid);
 
-    strcpy(iobj->name, filename);
-    if (images.Full())
+    strcpy(image->name, filename);
+    if (g_imgui_Images.Full())
     {
-        images.OffsetCapacity(2);
+        g_imgui_Images.OffsetCapacity(2);
     }
-    images.Push(*iobj);
+    g_imgui_Images.Push(*image);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // This is required on WebGL for non power-of-two textures
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Same
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iobj->w, iobj->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, iobj->data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
 
-    return images.Size() - 1;
+    return 1;
 }
 
 
@@ -104,36 +111,34 @@ static int imgui_ImageLoadData(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 3);
     const char * filename = luaL_checkstring(L, 1);
-
+    ImgObject image;
+    
     // If its already in the vector, return the id
-    for (int i=0; i<images.Size(); i++)
+    for (int i=0; i<g_imgui_Images.Size(); i++)
     {
-        if (strcmp(images[i].name, filename) == 0)
+        if (strcmp(g_imgui_Images[i].name, filename) == 0)
         {
-            lua_pushinteger(L, i);
-            lua_pushinteger(L, images[i].w);
-            lua_pushinteger(L, images[i].h);
+            image = g_imgui_Images[i];
+            lua_pushinteger(L, image.tid);
+            lua_pushinteger(L, image.w);
+            lua_pushinteger(L, image.h);
             return 3;
         }
     }
 
-    ImgObject     iobj;
     unsigned char *strdata = (unsigned char *)luaL_checkstring(L, 2);
     int lendata = luaL_checkinteger(L, 3);
-    iobj.data = stbi_load_from_memory( strdata, lendata, &iobj.w, &iobj.h, NULL, STBI_rgb_alpha);
-    //dmLogError("Loaded Image: %s %d %d \n", filename, iobj.w, iobj.h);
-
-    if (iobj.data == 0)
+    image.data = stbi_load_from_memory( strdata, lendata, &image.w, &image.h, NULL, STBI_rgb_alpha);
+    if (image.data == 0)
     {
-        dmLogError("Error loading image: %s\n", filename);
+        dmLogError("Error loading image: %s", filename);
         lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnil(L);
         return 3;
     }
 
-    int index = imgui_ImageInternalLoad(filename, &iobj);
-    if (index < 0)
+    if (!imgui_ImageInternalLoad(filename, &image))
     {
         lua_pushnil(L);
         lua_pushnil(L);
@@ -141,11 +146,11 @@ static int imgui_ImageLoadData(lua_State* L)
         return 3;
     }
 
-    stbi_image_free(iobj.data);
-    iobj.data = 0;
-    lua_pushinteger(L, index);
-    lua_pushinteger(L, iobj.w);
-    lua_pushinteger(L, iobj.h);
+    stbi_image_free(image.data);
+    image.data = 0;
+    lua_pushinteger(L, image.tid);
+    lua_pushinteger(L, image.w);
+    lua_pushinteger(L, image.h);
     return 3;
 }
 
@@ -154,32 +159,33 @@ static int imgui_ImageLoad(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 3);
     const char * filename = luaL_checkstring(L, 1);
-
+    dmLogInfo("imgui_ImageLoad %s", filename);
+    ImgObject image;
+    
     // If its already in the vector, return the id
-    for(int i=0; i<images.Size(); i++)
+    for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        if(strcmp(images[i].name, filename) == 0)
+        if(strcmp(g_imgui_Images[i].name, filename) == 0)
         {
-            lua_pushinteger(L, i);
-            lua_pushinteger(L, images[i].w);
-            lua_pushinteger(L, images[i].h);
+            image = g_imgui_Images[i];
+            lua_pushinteger(L, image.tid);
+            lua_pushinteger(L, image.w);
+            lua_pushinteger(L, image.h);
             return 3;
         }
     }
 
-    ImgObject     iobj;
-    iobj.data = stbi_load(filename, &iobj.w, &iobj.h, NULL, STBI_rgb_alpha);
-    if (iobj.data == 0)
+    image.data = stbi_load(filename, &image.w, &image.h, NULL, STBI_rgb_alpha);
+    if (image.data == 0)
     {
-        dmLogError("Error loading image: %s\n", filename);
+        dmLogError("Error loading image: %s", filename);
         lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnil(L);
         return 3;
     }
 
-    int index = imgui_ImageInternalLoad(filename, &iobj);
-    if (index < 0)
+    if (!imgui_ImageInternalLoad(filename, &image))
     {
         lua_pushnil(L);
         lua_pushnil(L);
@@ -187,25 +193,27 @@ static int imgui_ImageLoad(lua_State* L)
         return 3;
     }
 
-    stbi_image_free(iobj.data);
-    iobj.data = 0;
-    lua_pushinteger(L, index);
-    lua_pushinteger(L, iobj.w);
-    lua_pushinteger(L, iobj.h);
-    return 1;
+    stbi_image_free(image.data);
+    image.data = 0;
+    lua_pushinteger(L, image.tid);
+    lua_pushinteger(L, image.w);
+    lua_pushinteger(L, image.h);
+    return 3;
 }
 
 static int imgui_ImageGet( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 3);
-    int index = luaL_checkinteger(L, 1);
-    if(index >= 0 && index < images.Size())
+    GLuint tid = (GLuint)luaL_checkinteger(L, 1);
+
+    for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        if(images[index].tid >= 0)
+        if (g_imgui_Images[i].tid == tid)
         {
-            lua_pushinteger(L, index);
-            lua_pushinteger(L, images[index].w);
-            lua_pushinteger(L, images[index].h);
+            ImgObject image = g_imgui_Images[i];
+            lua_pushinteger(L, image.tid);
+            lua_pushinteger(L, image.w);
+            lua_pushinteger(L, image.h);
             return 3;
         }
     }
@@ -219,29 +227,26 @@ static int imgui_ImageGet( lua_State *L )
 static int imgui_ImageAdd( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
-    int index = luaL_checkinteger(L, 1);
+    GLuint tid = (GLuint)luaL_checkinteger(L, 1);
     int w = luaL_checkinteger(L, 2);
     int h = luaL_checkinteger(L, 3);
-    if (index < 0 || index >= images.Size())
-    {
-        return 0;
-    }
-    ImgObject iobj = images[index];
-    ImGui::Image((void*)(intptr_t)iobj.tid, ImVec2(w, h));
+    ImGui::Image((void*)(intptr_t)tid, ImVec2(w, h));
     return 0;
 }
 
 static int imgui_ImageFree( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
-    int index = luaL_checkinteger(L, 1);
-    if (index < 0 || index >= images.Size())
+    GLuint tid = (GLuint)luaL_checkinteger(L, 1);
+    for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        return 0;
+        if (g_imgui_Images[i].tid == tid)
+        {
+            glDeleteTextures(1, &tid);
+            g_imgui_Images.EraseSwap(i);
+            break;
+        }
     }
-    ImgObject iobj = images[index];
-    glDeleteTextures(1, &iobj.tid);
-    images.EraseSwap(index);
     return 0;
 }
 
@@ -644,6 +649,7 @@ static int imgui_EndTabItem(lua_State* L)
 // ----------------------------
 // ----- WIDGETS ---------
 // ----------------------------
+
 static int imgui_Text(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -666,8 +672,11 @@ static int imgui_TextGetSize(lua_State* L)
     const char* text = luaL_checkstring(L, 1);
     float font_size = luaL_checknumber(L, 2);
     int fontid = 0;
-    if(argc > 2) fontid = luaL_checkinteger(L, 3);
-    ImFont *font = fonts[fontid];
+    if(argc > 2)
+    {
+        fontid = luaL_checkinteger(L, 3);
+    }
+    ImFont *font = g_imgui_Fonts[fontid];
     ImVec2 sz = font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, text);
 
     lua_pushnumber(L, sz.x);
@@ -938,18 +947,17 @@ static int imgui_ButtonImage(lua_State* L)
     DM_LUA_STACK_CHECK(L, 1);
     int argc = lua_gettop(L);
     imgui_NewFrame();
-    int tid = luaL_checknumber(L, 1);
-    ImgObject iobj = images[tid];
+    GLuint tid = (GLuint)luaL_checknumber(L, 1);
     bool pushed = false;
     if(argc > 1)
     {
         int width = luaL_checkinteger(L, 2);
         int height = luaL_checkinteger(L, 3);
-        pushed = ImGui::ImageButton((void*)(intptr_t)iobj.tid, ImVec2(width, height));
+        pushed = ImGui::ImageButton((void*)(intptr_t)tid, ImVec2(width, height));
     }
     else
     {
-        pushed = ImGui::ImageButton((void*)(intptr_t)iobj.tid, ImVec2(0,0));
+        pushed = ImGui::ImageButton((void*)(intptr_t)tid, ImVec2(0,0));
     }
     lua_pushboolean(L, pushed);
     return 1;
@@ -1233,29 +1241,27 @@ static int imgui_SetCursorPos(lua_State *L)
     return 0;
 }
 
-// ----------------------------
-// ----- CONFIG -----------------
-// ----------------------------
-static int imgui_SetDefaults(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
 
-    ImGuiIO& io = ImGui::GetIO();
-    ImFont * def = io.Fonts->AddFontDefault();
-    fonts.push_back(def);
-    return 0;
+// ----------------------------
+// ----- FONT -----------------
+// ----------------------------
+
+static int imgui_StoreFont(ImFont* font)
+{
+    if (g_imgui_Fonts.Full())
+    {
+        g_imgui_Fonts.OffsetCapacity(2);
+    }
+    g_imgui_Fonts.Push(font);
+    return g_imgui_Fonts.Size() - 1;
 }
 
-static int imgui_SetIniFilename(lua_State* L)
+static ImFont* imgui_GetFont(int index)
 {
-    DM_LUA_STACK_CHECK(L, 0);
-    const char *filename = 0;
-    if (lua_isstring(L, 1)) {
-        filename = luaL_checkstring(L, 1);
+    if (index >= 0 && index < g_imgui_Fonts.Size())
+    {
+        return g_imgui_Fonts[index];
     }
-
-    ImGui::GetIO().IniFilename = filename;
-
     return 0;
 }
 
@@ -1270,8 +1276,8 @@ static int imgui_FontAddTTFFile(lua_State * L)
     // Put font in map.
     if(font != NULL)
     {
-        fonts.push_back(font);
-        lua_pushinteger(L, fonts.size() - 1);
+        int index = imgui_StoreFont(font);
+        lua_pushinteger(L, index);
     }
     else
     {
@@ -1296,8 +1302,8 @@ static int imgui_FontAddTTFData(lua_State * L)
     // Put font in map.
     if(font != NULL)
     {
-        fonts.push_back(font);
-        lua_pushinteger(L, fonts.size() - 1);
+        int index = imgui_StoreFont(font);
+        lua_pushinteger(L, index);
     }
     else
     {
@@ -1310,8 +1316,11 @@ static int imgui_FontPush(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
     int fontid = luaL_checkinteger(L, 1);
-    if(fontid >= 0 && fontid < fonts.size())
-    ImGui::PushFont(fonts[fontid]);
+    ImFont* font = imgui_GetFont(fontid);
+    if (font)
+    {
+        ImGui::PushFont(font);
+    }
     return 0;
 }
 
@@ -1328,9 +1337,13 @@ static int imgui_FontScale(lua_State *L)
     float oldscale = 1.0f;
     int fontid = luaL_checkinteger(L, 1);
     float fontscale = luaL_checknumber(L, 2);
-    if(fontid >= 0 && fontid < fonts.size())
-    oldscale = fonts[fontid]->Scale;
-    fonts[fontid]->Scale = fontscale;
+    
+    ImFont* font = imgui_GetFont(fontid);
+    if(font)
+    {
+        oldscale = font->Scale;
+        font->Scale = fontscale;
+    }
     lua_pushnumber(L, oldscale);
     return 1;
 }
@@ -1406,6 +1419,32 @@ static int imgui_DrawProgressBar(lua_State* L)
 }
 
 // ----------------------------
+// ----- CONFIG -----------------
+// ----------------------------
+static int imgui_SetDefaults(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* def = io.Fonts->AddFontDefault();
+    imgui_StoreFont(def);
+    return 0;
+}
+
+static int imgui_SetIniFilename(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    const char *filename = 0;
+    if (lua_isstring(L, 1)) {
+        filename = luaL_checkstring(L, 1);
+    }
+
+    ImGui::GetIO().IniFilename = filename;
+
+    return 0;
+}
+
+// ----------------------------
 // ----- IMGUI INIT/SHUTDOWN --
 // ----------------------------
 
@@ -1437,8 +1476,6 @@ static void imgui_Init(float width, float height)
 static void imgui_Shutdown()
 {
     dmLogInfo("imgui_Shutdown");
-    fonts.clear();
-    //images.clear();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();
