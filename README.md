@@ -23,7 +23,7 @@ The current state of platform support:
 * Linux - supported
 * Windows - supported
 * Android - unknown
-* iOS - unknown
+* iOS - supported
 * HTML5 - supported
 
 

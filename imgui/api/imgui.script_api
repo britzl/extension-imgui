@@ -455,6 +455,26 @@
       - name: changed
         type: boolean
 
+#*****************************************************************************************************
+
+  - name: input_float
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: float
+        type: number
+      - name: step
+        type: number
+      - name: step_fast
+        type: number
+      - name: float_precision
+        type: number
+
+    return:
+      - name: new_float
+        type: number
 
 #*****************************************************************************************************
 
@@ -510,6 +530,26 @@
       - name: v4
         type: number
 
+#*****************************************************************************************************
+
+  - name: input_double
+    type: function
+
+    parameters:
+      - name: label
+        type: string
+      - name: double
+        type: number
+      - name: step
+        type: number
+      - name: step_fast
+        type: number
+      - name: double_precision
+        type: number
+
+    return:
+      - name: new_double
+        type: number
 
 #*****************************************************************************************************
 
@@ -715,6 +755,18 @@
       - name: color
         type: number
 
+#*****************************************************************************************************
+
+  - name: draw_progress
+    type: function
+
+    parameters:
+      - name: progress
+        type: number
+      - name: sizex
+        type: number
+      - name: sizey
+        type: number
 
 #*****************************************************************************************************
 #***** INPUT *****************************************************************************************
