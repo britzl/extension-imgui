@@ -259,6 +259,74 @@
 #***** COMBO *****************************************************************************************
 #*****************************************************************************************************
 
+  - name: begin_popup_context_item
+    type: function
+
+    parameters:
+      - name: id
+        type: string
+      - name: popup_flags
+        type: number
+
+    return:
+      - name: result
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: begin_popup
+    type: function
+
+    parameters:
+      - name: id
+        type: string
+      - name: window_flags
+        type: number
+
+    return:
+      - name: result
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: begin_popup_modal
+    type: function
+
+    parameters:
+      - name: name
+        type: string
+      - name: window_flags
+        type: number
+
+    return:
+      - name: result
+        type: boolean
+
+#*****************************************************************************************************
+
+  - name: open_popup
+    type: function
+
+    parameters:
+      - name: id
+        type: string
+      - name: popup_flags
+        type: number
+
+#*****************************************************************************************************
+
+  - name: close_current_popup
+    type: function
+
+#*****************************************************************************************************
+
+  - name: end_popup
+    type: function
+
+#*****************************************************************************************************
+#***** COMBO *****************************************************************************************
+#*****************************************************************************************************
+
   - name: begin_combo
     type: function
 
@@ -1141,3 +1209,15 @@
   - name: WINDOWFLAGS_NONAV
   - name: WINDOWFLAGS_NODECORATION
   - name: WINDOWFLAGS_NOINPUTS
+
+  - name: POPUPLAGS_NONE
+  - name: POPUPLAGS_MOUSEBUTTONLEFT
+  - name: POPUPLAGS_MOUSEBUTTONRIGHT
+  - name: POPUPLAGS_MOUSEBUTTONMIDDLE
+  - name: POPUPLAGS_MOUSEBUTTONMASK
+  - name: POPUPLAGS_MOUSEBUTTONDEFAULT
+  - name: POPUPLAGS_NOOPENOVEREXISTINGPOPUP
+  - name: POPUPLAGS_NOOPENOVERITEMS
+  - name: POPUPLAGS_ANYPOPUPID
+  - name: POPUPLAGS_ANYPOPUPLEVEL
+  - name: POPUPLAGS_ANYPOPUP

@@ -84,7 +84,7 @@ static int imgui_ImageInternalLoad(const char *filename, ImgObject *image)
     }
 
     dmLogInfo("imgui_ImageInternalLoad before %d", image->tid);
-    
+
     glGenTextures(1, &image->tid);
     dmLogInfo("imgui_ImageInternalLoad after %d", image->tid);
     glBindTexture(GL_TEXTURE_2D, image->tid);
@@ -112,7 +112,7 @@ static int imgui_ImageLoadData(lua_State* L)
     DM_LUA_STACK_CHECK(L, 3);
     const char * filename = luaL_checkstring(L, 1);
     ImgObject image;
-    
+
     // If its already in the vector, return the id
     for (int i=0; i<g_imgui_Images.Size(); i++)
     {
@@ -161,7 +161,7 @@ static int imgui_ImageLoad(lua_State* L)
     const char * filename = luaL_checkstring(L, 1);
     dmLogInfo("imgui_ImageLoad %s", filename);
     ImgObject image;
-    
+
     // If its already in the vector, return the id
     for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
@@ -476,6 +476,72 @@ static int imgui_EndChild(lua_State* L)
     DM_LUA_STACK_CHECK(L, 0);
     imgui_NewFrame();
     ImGui::EndChild();
+    return 0;
+}
+
+
+// ----------------------------
+// ----- POPUP ---------
+// ----------------------------
+
+static int imgui_BeginPopupContextItem(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* id = luaL_checkstring(L, 1);
+    bool result = ImGui::BeginPopupContextItem(id);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
+static int imgui_BeginPopup(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* id = luaL_checkstring(L, 1);
+    int flags = 0;
+    if (lua_isnumber(L, 2)) flags = luaL_checknumber(L, 2);
+    bool result = ImGui::BeginPopup(id, flags);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
+static int imgui_BeginPopupModal(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* name = luaL_checkstring(L, 1);
+    int flags = 0;
+    if (lua_isnumber(L, 2)) flags = luaL_checknumber(L, 2);
+    bool result = ImGui::BeginPopupModal(name, 0, flags);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
+static int imgui_OpenPopup(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    const char* id = luaL_checkstring(L, 1);
+    int flags = 0;
+    if (lua_isnumber(L, 2)) flags = luaL_checknumber(L, 2);
+    ImGui::OpenPopup(id, flags);
+    return 0;
+}
+
+static int imgui_CloseCurrentPopup(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::CloseCurrentPopup();
+    return 0;
+}
+
+static int imgui_EndPopup(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::EndPopup();
     return 0;
 }
 
@@ -1337,7 +1403,7 @@ static int imgui_FontScale(lua_State *L)
     float oldscale = 1.0f;
     int fontid = luaL_checkinteger(L, 1);
     float fontscale = luaL_checknumber(L, 2);
-    
+
     ImFont* font = imgui_GetFont(fontid);
     if(font)
     {
@@ -1543,6 +1609,13 @@ static const luaL_reg Module_methods[] =
     {"table_set_column_index", imgui_TableSetColumnIndex},
     {"table_setup_column", imgui_TableSetupColumn},
     {"table_headers_row", imgui_TableHeadersRow},
+
+    {"begin_popup_context_item", imgui_BeginPopupContextItem},
+    {"begin_popup", imgui_BeginPopup},
+    {"begin_popup_modal", imgui_BeginPopupModal},
+    {"open_popup", imgui_OpenPopup},
+    {"close_current_popup", imgui_CloseCurrentPopup},
+    {"end_popup", imgui_EndPopup},
 
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
@@ -1769,6 +1842,18 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "WINDOWFLAGS_NONAV", ImGuiWindowFlags_NoNav); // ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
     lua_setfieldstringint(L, "WINDOWFLAGS_NODECORATION", ImGuiWindowFlags_NoDecoration); // ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse,
     lua_setfieldstringint(L, "WINDOWFLAGS_NOINPUTS", ImGuiWindowFlags_NoInputs); // ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+
+    lua_setfieldstringint(L, "POPUPLAGS_NONE", ImGuiPopupFlags_None);
+    lua_setfieldstringint(L, "POPUPLAGS_MOUSEBUTTONLEFT", ImGuiPopupFlags_MouseButtonLeft);        // For BeginPopupContext*(): open on Left Mouse release. Guaranteed to always be == 0 (same as ImGuiMouseButton_Left)
+    lua_setfieldstringint(L, "POPUPLAGS_MOUSEBUTTONRIGHT", ImGuiPopupFlags_MouseButtonRight);        // For BeginPopupContext*(): open on Right Mouse release. Guaranteed to always be == 1 (same as ImGuiMouseButton_Right)
+    lua_setfieldstringint(L, "POPUPLAGS_MOUSEBUTTONMIDDLE", ImGuiPopupFlags_MouseButtonMiddle);        // For BeginPopupContext*(): open on Middle Mouse release. Guaranteed to always be == 2 (same as ImGuiMouseButton_Middle)
+    lua_setfieldstringint(L, "POPUPLAGS_MOUSEBUTTONMASK", ImGuiPopupFlags_MouseButtonMask_);
+    lua_setfieldstringint(L, "POPUPLAGS_MOUSEBUTTONDEFAULT", ImGuiPopupFlags_MouseButtonDefault_);
+    lua_setfieldstringint(L, "POPUPLAGS_NOOPENOVEREXISTINGPOPUP", ImGuiPopupFlags_NoOpenOverExistingPopup);   // For OpenPopup*(), BeginPopupContext*(): don't open if there's already a popup at the same level of the popup stack
+    lua_setfieldstringint(L, "POPUPLAGS_NOOPENOVERITEMS", ImGuiPopupFlags_NoOpenOverItems);   // For BeginPopupContextWindow(): don't return true when hovering items, only when hovering empty space
+    lua_setfieldstringint(L, "POPUPLAGS_ANYPOPUPID", ImGuiPopupFlags_AnyPopupId);   // For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
+    lua_setfieldstringint(L, "POPUPLAGS_ANYPOPUPLEVEL", ImGuiPopupFlags_AnyPopupLevel);   // For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
+    lua_setfieldstringint(L, "POPUPLAGS_ANYPOPUP", ImGuiPopupFlags_AnyPopup);
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
