@@ -27,8 +27,8 @@ function update(self, dt)
 	imgui.set_mouse_input(
 		self.mouse.x, h - self.mouse.y,
 		self.mouse.buttons[LEFT_MOUSE] or 0,
-		self.mouse.buttons[MIDDLE_MOUSE] or 0,
 		self.mouse.buttons[RIGHT_MOUSE] or 0,
+		self.mouse.buttons[MIDDLE_MOUSE] or 0,
 		self.mouse.wheel
 	)
 end
