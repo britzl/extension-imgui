@@ -545,6 +545,75 @@ static int imgui_EndPopup(lua_State* L)
     return 0;
 }
 
+// ----------------------------
+// ----- DRAG AND DROP --------
+// ----------------------------
+static int imgui_BeginDragDropSource(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    uint32_t flags = 0;
+    if (lua_isnumber(L, 1))
+    {
+        flags = luaL_checkint(L, 1);
+    }
+    bool result = ImGui::BeginDragDropSource(flags);
+    lua_pushboolean(L, result);
+    return 1;
+}
+static int imgui_EndDragDropSource(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::EndDragDropSource();
+    return 0;
+}
+static int imgui_BeginDragDropTarget(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    bool result = ImGui::BeginDragDropTarget();
+    lua_pushboolean(L, result);
+    return 1;
+}
+static int imgui_EndDragDropTarget(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::EndDragDropTarget();
+    return 0;
+}
+
+static int imgui_SetDragDropPayload(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* type = luaL_checkstring(L, 1);
+    const char* payload = luaL_checkstring(L, 2);
+
+    bool result = ImGui::SetDragDropPayload(type, payload, strlen(payload));
+    lua_pushboolean(L, result);
+    return 1;
+}
+static int imgui_AcceptDragDropPayload(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* type = luaL_checkstring(L, 1);
+    uint32_t flags = 0;
+    if (lua_isnumber(L, 2))
+    {
+        flags = luaL_checkint(L, 2);
+    }
+    const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type, flags);
+    if (payload) {
+        lua_pushlstring(L, (char*)payload->Data, payload->DataSize);
+    }
+    else {
+        lua_pushnil(L);
+    }
+    return 1;
+}
 
 // ----------------------------
 // ----- COMBO ---------
@@ -1309,6 +1378,20 @@ static int imgui_SetCursorPos(lua_State *L)
 
 
 // ----------------------------
+// ----- NAVIGATION -----------------
+// ----------------------------
+
+static int imgui_SetScrollHereY(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    float center_y_ratio = luaL_checknumber(L, 1);
+    ImGui::SetScrollHereY(center_y_ratio);
+    return 0;
+}
+
+
+// ----------------------------
 // ----- FONT -----------------
 // ----------------------------
 
@@ -1602,6 +1685,13 @@ static const luaL_reg Module_methods[] =
     {"end_combo", imgui_EndCombo},
     {"combo", imgui_Combo},
 
+    {"begin_dragdrop_source", imgui_BeginDragDropSource},
+    {"end_dragdrop_source", imgui_EndDragDropSource},
+    {"begin_dragdrop_target", imgui_BeginDragDropTarget},
+    {"end_dragdrop_target", imgui_EndDragDropTarget},
+    {"set_dragdrop_payload", imgui_SetDragDropPayload},
+    {"accept_dragdrop_payload", imgui_AcceptDragDropPayload},
+
     {"begin_table", imgui_BeginTable},
     {"end_table", imgui_EndTable},
     {"table_next_row", imgui_TableNextRow},
@@ -1682,6 +1772,7 @@ static const luaL_reg Module_methods[] =
     {"set_window_font_scale", imgui_SetWindowFontScale},
     {"scale_all_sizes", imgui_ScaleAllSizes},
 
+    {"set_scroll_here_y", imgui_SetScrollHereY},
     {0, 0}
 };
 
@@ -1854,6 +1945,19 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "POPUPLAGS_ANYPOPUPID", ImGuiPopupFlags_AnyPopupId);   // For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
     lua_setfieldstringint(L, "POPUPLAGS_ANYPOPUPLEVEL", ImGuiPopupFlags_AnyPopupLevel);   // For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
     lua_setfieldstringint(L, "POPUPLAGS_ANYPOPUP", ImGuiPopupFlags_AnyPopup);
+
+    lua_setfieldstringint(L, "DROPFLAGS_NONE", ImGuiDragDropFlags_None);
+    lua_setfieldstringint(L, "DROPFLAGS_SOURCENOPREVIEWTOOLTIP", ImGuiDragDropFlags_SourceNoPreviewTooltip);   // By default, a successful call to BeginDragDropSource opens a tooltip so you can display a preview or description of the source contents. This flag disable this behavior.
+    lua_setfieldstringint(L, "DROPFLAGS_SOURCENODISABLEHOVER", ImGuiDragDropFlags_SourceNoDisableHover);   // By default, when dragging we clear data so that IsItemHovered() will return false, to avoid subsequent user code submitting tooltips. This flag disable this behavior so you can still call IsItemHovered() on the source item.
+    lua_setfieldstringint(L, "DROPFLAGS_SOURCENOHOLDTOOPENOTHERS", ImGuiDragDropFlags_SourceNoHoldToOpenOthers);   // Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
+    lua_setfieldstringint(L, "DROPFLAGS_SOURCEALLOWNULLID", ImGuiDragDropFlags_SourceAllowNullID);   // Allow items such as Text(), Image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. This is extremely unusual within the dear imgui ecosystem and so we made it explicit.
+    lua_setfieldstringint(L, "DROPFLAGS_SOURCEEXTERN", ImGuiDragDropFlags_SourceExtern);   // External source (from outside of dear imgui), won't attempt to read current item/window info. Will always return true. Only one Extern source can be active simultaneously.
+    lua_setfieldstringint(L, "DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD", ImGuiDragDropFlags_SourceAutoExpirePayload);   // Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTBEFOREDELIVERY", ImGuiDragDropFlags_AcceptBeforeDelivery);  // AcceptDragDropPayload() will returns true even before the mouse button is released. You can then call IsDelivery() to test if the payload needs to be delivered.
+    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTNODRAWDEFAULTRECT", ImGuiDragDropFlags_AcceptNoDrawDefaultRect);  // Do not draw the default highlight rectangle when hovering over target.
+    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP", ImGuiDragDropFlags_AcceptNoPreviewTooltip);  // Request hiding the BeginDragDropSource tooltip from the BeginDragDropTarget site.
+    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTPEEKONLY", ImGuiDragDropFlags_AcceptPeekOnly);  // For peeking ahead and inspecting the payload before delivery.
+
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));

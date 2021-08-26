@@ -4,6 +4,73 @@
 
   members:
 
+
+#*****************************************************************************************************
+#***** DRAG AND DROP *********************************************************************************
+#*****************************************************************************************************
+
+  - name: begin_dragdrop_source
+    type: function
+
+    parameters:
+      - name: flags
+        type: number
+
+    return:
+      - name: result
+        type: bool
+
+#*****************************************************************************************************
+
+  - name: end_dragdrop_source
+    type: function
+
+#*****************************************************************************************************
+
+  - name: begin_dragdrop_target
+    type: function
+
+    return:
+      - name: result
+        type: bool
+
+#*****************************************************************************************************
+
+  - name: end_dragdrop_target
+    type: function
+
+#*****************************************************************************************************
+
+  - name: set_dragdrop_payload
+    type: function
+
+    parameters:
+      - name: type
+        type: string
+
+      - name: payload
+        type: string
+
+    return:
+      - name: result
+        type: bool
+
+#*****************************************************************************************************
+
+  - name: accept_dragdrop_payload
+    type: function
+
+    parameters:
+      - name: type
+        type: string
+
+      - name: flags
+        type: number
+
+    return:
+      - name: payload
+        type: string
+
 #*****************************************************************************************************
 #***** IMAGE ****************************************************************************************
 #*****************************************************************************************************
@@ -1057,6 +1124,17 @@
         type: number
 
 #*****************************************************************************************************
+#***** NAVIGATION ************************************************************************************
+#*****************************************************************************************************
+
+  - name: set_scroll_here_y
+    type: function
+
+    parameters:
+      - name: center_y_ratio
+        type: number
+
+#*****************************************************************************************************
 #***** CONFIG ****************************************************************************************
 #*****************************************************************************************************
 
@@ -1221,3 +1299,15 @@
   - name: POPUPLAGS_ANYPOPUPID
   - name: POPUPLAGS_ANYPOPUPLEVEL
   - name: POPUPLAGS_ANYPOPUP
+
+  - name: DROPFLAGS_NONE
+  - name: DROPFLAGS_SOURCENOPREVIEWTOOLTIP
+  - name: DROPFLAGS_SOURCENODISABLEHOVER
+  - name: DROPFLAGS_SOURCENOHOLDTOOPENOTHERS
+  - name: DROPFLAGS_SOURCEALLOWNULLID
+  - name: DROPFLAGS_SOURCEEXTERN
+  - name: DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD
+  - name: DROPFLAGS_ACCEPTBEFOREDELIVERY
+  - name: DROPFLAGS_ACCEPTNODRAWDEFAULTRECT
+  - name: DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP
+  - name: DROPFLAGS_ACCEPTPEEKONLY
