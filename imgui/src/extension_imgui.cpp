@@ -1252,11 +1252,12 @@ static int imgui_Demo(lua_State* L)
 // ----------------------------
 static int imgui_IsMouseDoubleClicked(lua_State* L)
 {
-    DM_LUA_STACK_CHECK(L, 0);
+    DM_LUA_STACK_CHECK(L, 1);
     imgui_NewFrame();
     uint32_t button = luaL_checknumber(L, 1);
-    ImGui::IsMouseDoubleClicked(button);
-    return 0;
+    bool clicked = ImGui::IsMouseDoubleClicked(button);
+    lua_pushboolean(L, clicked);
+    return 1;
 }
 
 static int imgui_IsMouseClicked(lua_State* L)
@@ -1276,6 +1277,17 @@ static int imgui_IsItemClicked(lua_State* L)
     uint32_t button = luaL_checknumber(L, 1);
     bool clicked = ImGui::IsItemClicked(button);
     lua_pushboolean(L, clicked);
+    return 1;
+}
+
+static int imgui_IsItemDoubleClicked(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    uint32_t button = luaL_checknumber(L, 1);
+    bool clicked = ImGui::IsItemClicked(button);
+    bool double_clicked = ImGui::IsMouseDoubleClicked(button);
+    lua_pushboolean(L, clicked && double_clicked);
     return 1;
 }
 
@@ -1761,6 +1773,7 @@ static const luaL_reg Module_methods[] =
     {"add_input_character", imgui_AddInputCharacter},
 
     {"is_item_clicked", imgui_IsItemClicked},
+    {"is_item_double_clicked", imgui_IsItemDoubleClicked},
     {"is_item_hovered", imgui_IsItemHovered},
     {"is_mouse_clicked", imgui_IsMouseClicked},
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},

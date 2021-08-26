@@ -1022,6 +1022,20 @@
 
 #*****************************************************************************************************
 
+  - name: is_mouse_double_clicked
+    type: function
+
+    parameters:
+      - name: button
+        type: number
+
+    return:
+      - name: clicked
+        type: boolean
+
+
+#*****************************************************************************************************
+
   - name: is_item_hovered
     type: function
 
