@@ -445,6 +445,8 @@
         type: string
       - name: column
         type: number
+      - name: flags
+        type: number
 
     return:
       - name: result
@@ -470,6 +472,8 @@
       - name: label
         type: string
       - name: flags
+        type: number
+      - name: init_width_or_weight
         type: number
 
 
@@ -1360,3 +1364,39 @@
   - name: DROPFLAGS_ACCEPTNODRAWDEFAULTRECT
   - name: DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP
   - name: DROPFLAGS_ACCEPTPEEKONLY
+
+  - name: TABLE_NONE
+  - name: TABLE_RESIZABLE
+  - name: TABLE_REORDERABLE
+  - name: TABLE_HIDEABLE
+  - name: TABLE_SORTABLE
+  - name: TABLE_NOSAVEDSETTINGS
+  - name: TABLE_CONTEXTMENUINBODY
+  - name: TABLE_ROWBG
+  - name: TABLE_BORDERSINNERH
+  - name: TABLE_BORDERSOUTERH
+  - name: TABLE_BORDERSINNERV
+  - name: TABLE_BORDERSOUTERV
+  - name: TABLE_BORDERSH
+  - name: TABLE_BORDERSV
+  - name: TABLE_BORDERSINNER
+  - name: TABLE_BORDERSOUTER
+  - name: TABLE_BORDERS
+  - name: TABLE_NOBORDERSINBODY
+  - name: TABLE_NOBORDERSINBODYUNTILRESIZE
+  - name: TABLE_SIZINGFIXEDFIT
+  - name: TABLE_SIZINGFIXEDSAME
+  - name: TABLE_SIZINGSTRETCHPROP
+  - name: TABLE_SIZINGSTRETCHSAME
+  - name: TABLE_NOHOSTEXTENDX
+  - name: TABLE_NOHOSTEXTENDY
+  - name: TABLE_NOKEEPCOLUMNSVISIBLE
+  - name: TABLE_PRECISEWIDTHS
+  - name: TABLE_NOCLIP
+  - name: TABLE_PADOUTERX
+  - name: TABLE_NOPADOUTERX
+  - name: TABLE_NOPADINNERX
+  - name: TABLE_SCROLLX
+  - name: TABLE_SCROLLY
+  - name: TABLE_SORTMULTI
+  - name: TABLE_SORTTRISTATE
