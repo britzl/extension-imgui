@@ -674,7 +674,12 @@ static int imgui_BeginTable(lua_State* L)
     imgui_NewFrame();
     const char* id = luaL_checkstring(L, 1);
     int column = luaL_checkinteger(L, 2);
-    bool result = ImGui::BeginTable(id, column);
+    uint32_t flags = 0;
+    if (lua_isnumber(L, 3))
+    {
+        flags = luaL_checkint(L, 3);
+    }
+    bool result = ImGui::BeginTable(id, column, flags);
     lua_pushboolean(L, result);
     return 1;
 }
@@ -702,7 +707,12 @@ static int imgui_TableSetupColumn(lua_State* L)
     {
         flags = luaL_checkint(L, 2);
     }
-    ImGui::TableSetupColumn(label, flags);
+    float weight = 0.0;
+    if (lua_isnumber(L, 3))
+    {
+        weight = luaL_checknumber(L, 3);
+    }
+    ImGui::TableSetupColumn(label, flags, weight);
     return 0;
 }
 static int imgui_TableSetColumnIndex(lua_State* L)
@@ -1359,6 +1369,28 @@ static int imgui_SetStyleColor(lua_State* L)
     style.Colors[luaL_checkinteger(L, 1)] = ImVec4(r, g, b, a);
     return 0;
 }
+static int imgui_PushStyleColor(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    double r = luaL_checknumber(L, 2);
+    double g = luaL_checknumber(L, 3);
+    double b = luaL_checknumber(L, 4);
+    double a = luaL_checknumber(L, 5);
+    ImGuiCol col = luaL_checkinteger(L, 1);
+    ImGui::PushStyleColor(col, ImVec4(r, g, b, a));
+    return 0;
+}
+static int imgui_PopStyleColor(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int count = 1;
+    if (lua_isnumber(L, 1))
+    {
+        count = luaL_checkint(L, 1);
+    }
+    ImGui::PopStyleColor(count);
+    return 0;
+}
 
 static int imgui_SetWindowFontScale(lua_State *L)
 {
@@ -1785,6 +1817,8 @@ static const luaL_reg Module_methods[] =
     {"set_style_tab_rounding", imgui_SetStyleTabRounding},
     {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
     {"set_style_color", imgui_SetStyleColor},
+    {"push_style_color", imgui_PushStyleColor},
+    {"pop_style_color", imgui_PopStyleColor},
 
     {"set_defaults", imgui_SetDefaults},
     {"set_ini_filename", imgui_SetIniFilename},

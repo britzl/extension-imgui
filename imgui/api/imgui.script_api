@@ -1117,6 +1117,32 @@
       - name: a
         type: number
 
+#*****************************************************************************************************
+
+  - name: push_style_color
+    type: function
+
+    parameters:
+      - name: color
+        type: number
+      - name: r
+        type: number
+      - name: g
+        type: number
+      - name: b
+        type: number
+      - name: a
+        type: number
+
+#*****************************************************************************************************
+
+  - name: pop_style_color
+    type: function
+
+    parameters:
+      - name: count
+        type: number
+
 
 #*****************************************************************************************************
 
