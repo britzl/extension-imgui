@@ -740,6 +740,25 @@ static int imgui_TableNextRow(lua_State* L)
 
 
 // ----------------------------
+// ----- TOOLTIP ---------
+// ----------------------------
+static int imgui_BeginTooltip(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::BeginTooltip();
+    return 0;
+}
+static int imgui_EndTooltip(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::EndTooltip();
+    return 0;
+}
+
+
+// ----------------------------
 // ----- TAB BAR ---------
 // ----------------------------
 static int imgui_BeginTabBar(lua_State* L)
@@ -1733,6 +1752,9 @@ static const luaL_reg Module_methods[] =
 
     {"begin_tab_item", imgui_BeginTabItem},
     {"end_tab_item", imgui_EndTabItem},
+
+    {"begin_tooltip", imgui_BeginTooltip},
+    {"end_tooltip", imgui_EndTooltip},
 
     {"begin_combo", imgui_BeginCombo},
     {"end_combo", imgui_EndCombo},
