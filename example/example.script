@@ -1,3 +1,7 @@
+local JEDI = { "Luke", "Obi-Wan", "Yoda" }
+local SITH = { "Maul", "Vader", "Palpatine" }
+
+
 local function set_style()
 	imgui.set_style_window_rounding(6)
 	imgui.set_style_frame_rounding(3)
@@ -56,13 +60,15 @@ function init(self)
 
 	imgui.set_ini_filename()
 	set_style()
+	local scale = 2
+	imgui.scale_all_sizes(scale)
 
 	self.values_line = {}
 	self.values_hist = {}
 	makeData(self)
 
-	local fontsize 		= 12.0
-	local fontsizebase 	= 12.0
+	local fontsize 		= 12.0 * scale
+	local fontsizebase 	= 12.0 * scale
 	self.fonts 	= {}
 	local regular_data, error = sys.load_resource("/example/fonts/Montserrat-Regular.ttf")
 	self.fonts["Regular"] = imgui.font_add_ttf_data(regular_data, #regular_data, fontsize, fontsizebase)
@@ -172,8 +178,6 @@ local function update_tab2(self)
 	end
 
 
-	local JEDI = { "Luke", "Anakin", "Yoda" }
-
 	-- this is the old way of creating combo boxes
 	-- it still exists in the ImGUI API since it's a quick way ti create a combo box
 	local changed, jedi = imgui.combo("Jedi##array", self.selected_jedi or 1, JEDI)
@@ -252,7 +256,7 @@ local function update_tab4(self)
 	imgui.text_colored("Example Text Bold Italic", 1, 1, 1, 1 )
 	imgui.font_pop()
 	imgui.separator()
-
+	
 	imgui.font_push(self.fonts["Regular"])
 	imgui.text_colored("image stretched", 1, 1, 1, 1 )
 	imgui.image_add(self.image1, 150,20)
@@ -260,6 +264,50 @@ local function update_tab4(self)
 	imgui.text_colored("image original aspect", 1, 1, 1, 1 )
 	imgui.image_add(self.image2, 150,150)
 	imgui.font_pop()
+end
+
+
+local function update_tab5(self)
+	if imgui.tree_node("Jedi vs Sith") then
+		imgui.text("Right click for some info")
+		for i=1,#JEDI do
+			imgui.tree_node(JEDI[i], imgui.TREENODE_LEAF + imgui.TREENODE_NO_TREE_PUSH_ON_OPEN)
+			if imgui.begin_dragdrop_source(imgui.DROPFLAGS_SOURCEALLOWNULLID) then
+				imgui.set_dragdrop_payload("jedi", JEDI[i])
+				imgui.end_dragdrop_source()
+			end
+			if imgui.begin_popup_context_item("jedipop" .. i) then
+				imgui.text("This is a Jedi")
+				imgui.end_popup()
+			end
+		end
+		for i=1,#SITH do
+			imgui.tree_node(SITH[i], imgui.TREENODE_LEAF + imgui.TREENODE_NO_TREE_PUSH_ON_OPEN)
+			if imgui.begin_dragdrop_source(imgui.DROPFLAGS_SOURCEALLOWNULLID) then
+				imgui.set_dragdrop_payload("sith", SITH[i])
+				imgui.end_dragdrop_source()
+			end
+			if imgui.begin_popup_context_item("sithpop" .. i) then
+				imgui.text("This is a Sith")
+				imgui.end_popup()
+			end
+		end
+		imgui.tree_pop()
+	end
+	
+	imgui.separator()
+	
+	imgui.text("Drop Jedi and Sith here")
+	if imgui.begin_dragdrop_target() then
+		if imgui.accept_dragdrop_payload("jedi") then
+			self.counter = self.counter + 1
+		elseif imgui.accept_dragdrop_payload("sith") then
+			self.counter = self.counter - 1
+		end
+		imgui.end_dragdrop_target()
+	end
+	imgui.text("Counter " .. self.counter)
+	
 end
 
 
@@ -298,7 +346,13 @@ function update(self, dt)
 		update_tab4(self)
 		imgui.end_tab_item()
 	end
-	
+
+	local tab5_open = imgui.begin_tab_item("Tab5")
+	if tab5_open then
+		update_tab5(self)
+		imgui.end_tab_item()
+	end
+		
 	imgui.end_tab_bar()
 	imgui.end_window()
 end
