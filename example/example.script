@@ -57,7 +57,7 @@ function init(self)
 	self.show_demo_window = false
 	self.show_close_window = false
 	self.show_live_data = false
-
+	
 	imgui.set_ini_filename()
 	set_style()
 	local scale = 2
@@ -70,20 +70,24 @@ function init(self)
 	local fontsize 		= 12.0 * scale
 	local fontsizebase 	= 12.0 * scale
 	self.fonts 	= {}
-	local regular_data, error = sys.load_resource("/example/fonts/Montserrat-Regular.ttf")
+	local regular_data, error = sys.load_resource("/example/bundle/fonts/Montserrat-Regular.ttf")
 	self.fonts["Regular"] = imgui.font_add_ttf_data(regular_data, #regular_data, fontsize, fontsizebase)
-	local bold_data, error = sys.load_resource("/example/fonts/Montserrat-Bold.ttf")
+	local bold_data, error = sys.load_resource("/example/bundle/fonts/Montserrat-Bold.ttf")
 	self.fonts["Bold"] = imgui.font_add_ttf_data(bold_data, #bold_data, fontsize, fontsizebase)
-	local italic_data, error = sys.load_resource("/example/fonts/Montserrat-Italic.ttf")
+	local italic_data, error = sys.load_resource("/example/bundle/fonts/Montserrat-Italic.ttf")
 	self.fonts["Italic"] = imgui.font_add_ttf_data(italic_data, #italic_data, fontsize, fontsizebase)
-	local bolditalic_data, error = sys.load_resource("/example/fonts/Montserrat-BoldItalic.ttf")
+	local bolditalic_data, error = sys.load_resource("/example/bundle/fonts/Montserrat-BoldItalic.ttf")
 	self.fonts["BoldItalic"] = imgui.font_add_ttf_data(bolditalic_data, #bolditalic_data, fontsize, fontsizebase)
 
-	-- File based Image
-	self.image1 = imgui.image_load("example/images/image1.png")
 	-- Resource based Image 
-	local img2_data, error =  sys.load_resource("/example/images/image2.png") 
-	self.image2 = imgui.image_load_data( "image2", img2_data, #img2_data )
+	local img1_data, error = sys.load_resource("/example/bundle/images/image1.png") 
+	self.image1 = imgui.image_load_data("image1", img1_data, #img1_data)
+
+	-- File based Image can be used on desktop platforms
+	-- self.image1 = imgui.image_load("example/images/image1.png")
+		
+	local img2_data, error = sys.load_resource("/example/bundle/images/image2.png") 
+	self.image2 = imgui.image_load_data("image2", img2_data, #img2_data)
 end
 
 local function close_window(self)
