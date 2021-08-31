@@ -11,7 +11,7 @@ height = 640
 
 [project]
 title = ImGui
-custom_resources = example/
+custom_resources = example/bundle/
 
 [library]
 include_dirs = imgui
@@ -19,4 +19,10 @@ include_dirs = imgui
 [input]
 game_binding = /imgui/bindings/imgui.input_bindingc
 use_accelerometer = 0
+
+[ios]
+bundle_identifier = com.defold.imgui
+
+[android]
+package = com.defold.imgui
 
