@@ -1,22 +1,10 @@
-// myextension.cpp
-// Extension lib defines
 #define LIB_NAME "ImGui"
 #define MODULE_NAME "imgui"
 
-#include <stdlib.h>
-#include <vector>
+#include <dmsdk/sdk.h>
+#include <dmsdk/dlib/crypt.h>
 
 #include "imgui/imgui.h"
-#include "imgui/imconfig.h"
-
-#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
-#include <GL/gl3w.h>
-#endif
-
-// include the Defold SDK
-#include <dmsdk/sdk.h>
-#include  <dmsdk/dlib/crypt.h>
-
 #if defined(DM_PLATFORM_ANDROID)
 #include "imgui/imgui_impl_android.h"
 #endif
@@ -24,7 +12,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
-#include "imgui/stb_image.h"
+#include "stb/stb_image.h"
 
 #define MAX_HISTOGRAM_VALUES    1000 * 1024
 #define MAX_IMAGE_NAME          256
