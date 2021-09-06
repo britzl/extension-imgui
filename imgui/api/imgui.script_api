@@ -1058,7 +1058,7 @@
 
 #*****************************************************************************************************
 
-  - name: is_mouse_double_clicked
+  - name: is_item_double_clicked
     type: function
 
     parameters:
