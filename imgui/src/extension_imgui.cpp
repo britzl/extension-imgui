@@ -1,14 +1,22 @@
 #define LIB_NAME "ImGui"
 #define MODULE_NAME "imgui"
 
-#include <dmsdk/sdk.h>
-#include <dmsdk/dlib/crypt.h>
-
 #include "imgui/imgui.h"
+#include "imgui/imconfig.h"
+
+// set in imconfig.h
+#if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+#include <GL/gl3w.h>
+#endif
+
+// imgui renderer backend and possible platform extras
 #if defined(DM_PLATFORM_ANDROID)
 #include "imgui/imgui_impl_android.h"
 #endif
 #include "imgui/imgui_impl_opengl3.h"
+
+#include <dmsdk/sdk.h>
+#include <dmsdk/dlib/crypt.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
