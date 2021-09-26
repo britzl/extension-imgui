@@ -122,6 +122,10 @@ key_trigger {
   input: KEY_S
   action: "key_s"
 }
+key_trigger {
+  input: KEY_B
+  action: "key_b"
+}
 mouse_trigger {
   input: MOUSE_WHEEL_UP
   action: "mouse_wheel_up"
