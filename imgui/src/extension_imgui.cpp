@@ -1304,6 +1304,24 @@ static int imgui_IsMouseClicked(lua_State* L)
     return 1;
 }
 
+static int imgui_IsItemActive(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    bool active = ImGui::IsItemActive();
+    lua_pushboolean(L, active);
+    return 1;
+}
+
+static int imgui_IsItemFocused(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    bool focused = ImGui::IsItemFocused();
+    lua_pushboolean(L, focused);
+    return 1;
+}
+
 static int imgui_IsItemClicked(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
@@ -1831,6 +1849,8 @@ static const luaL_reg Module_methods[] =
     {"set_key_modifier_super", imgui_SetKeyModifierSuper},
     {"add_input_character", imgui_AddInputCharacter},
 
+    {"is_item_active", imgui_IsItemActive},
+    {"is_item_focused", imgui_IsItemFocused},
     {"is_item_clicked", imgui_IsItemClicked},
     {"is_item_double_clicked", imgui_IsItemDoubleClicked},
     {"is_item_hovered", imgui_IsItemHovered},
