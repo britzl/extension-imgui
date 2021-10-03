@@ -1,10 +1,6 @@
 #define LIB_NAME "ImGui"
 #define MODULE_NAME "imgui"
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_STATIC
-#include "stb/stb_image.h"
-
 #include "imgui/imgui.h"
 #include "imgui/imconfig.h"
 
