@@ -43,38 +43,30 @@ function update(self, dt)
 	)
 end
 
--- order MUST match enums in ImGuiKey_
 local IMGUI_KEYS = {
-	"key_tab",
-	"key_left",
-	"key_right",
-	"key_up",
-	"key_down",
-	"key_pageup",
-	"key_pagedown",
-	"key_home",
-	"key_end",
-	"key_insert",
-	"key_delete",
-	"key_backspace",
-	"key_space",
-	"key_enter",
-	"key_esc",
-	"key_numpad_enter",
-	"key_a",
-	"key_c",
-	"key_v",
-	"key_x",
-	"key_y",
-	"key_z",
+	[hash("key_tab")] = imgui.KEY_TAB,
+	[hash("key_left")] = imgui.KEY_LEFT,
+	[hash("key_right")] = imgui.KEY_RIGHT,
+	[hash("key_up")] = imgui.KEY_UP,
+	[hash("key_down")] = imgui.KEY_DOWN,
+	[hash("key_pageup")] = imgui.KEY_PAGEUP,
+	[hash("key_pagedown")] = imgui.KEY_PAGEDOWN,
+	[hash("key_home")] = imgui.KEY_HOME,
+	[hash("key_end")] = imgui.KEY_END,
+	[hash("key_insert")] = imgui.KEY_INSERT,
+	[hash("key_delete")] = imgui.KEY_DELETE,
+	[hash("key_backspace")] = imgui.KEY_BACKSPACE,
+	[hash("key_space")] = imgui.KEY_SPACE,
+	[hash("key_enter")] = imgui.KEY_ENTER,
+	[hash("key_esc")] = imgui.KEY_ESC,
+	[hash("key_numpad_enter")] = imgui.KEY_NUMPAD_ENTER,
+	[hash("key_a")] = imgui.KEY_A,
+	[hash("key_c")] = imgui.KEY_C,
+	[hash("key_v")] = imgui.KEY_V,
+	[hash("key_x")] = imgui.KEY_X,
+	[hash("key_y")] = imgui.KEY_Y,
+	[hash("key_z")] = imgui.KEY_Z,
 }
-
--- map action_id (key) to ImGuiKey_ enums
-local IMGUI_KEYMAP = {}
-for i=1,#IMGUI_KEYS do
-	local key = IMGUI_KEYS[i]
-	IMGUI_KEYMAP[hash(key)] = i - 1
-end
 
 
 function on_input(self, action_id, action)
@@ -108,7 +100,7 @@ function on_input(self, action_id, action)
 		end
 	else
 		if action.pressed or action.released then
-			local key = IMGUI_KEYMAP[action_id]
+			local key = IMGUI_KEYS[action_id]
 			if key then
 				imgui.set_key_down(key, action.pressed == true)
 			end

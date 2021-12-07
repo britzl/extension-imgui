@@ -1474,3 +1474,26 @@
   - name: INPUTFLAGS_CHARSSCIENTIFIC
   - name: INPUTFLAGS_CALLBACKRESIZE
   - name: INPUTFLAGS_CALLBACKEDIT
+
+  - name: KEY_TAB
+  - name: KEY_LEFTARROW
+  - name: KEY_RIGHTARROW
+  - name: KEY_UPARROW
+  - name: KEY_DOWNARROW
+  - name: KEY_PAGEUP
+  - name: KEY_PAGEDOWN
+  - name: KEY_HOME
+  - name: KEY_END
+  - name: KEY_INSERT
+  - name: KEY_DELETE
+  - name: KEY_BACKSPACE
+  - name: KEY_SPACE
+  - name: KEY_ENTER
+  - name: KEY_ESCAPE
+  - name: KEY_KEYPADENTER
+  - name: KEY_A
+  - name: KEY_C
+  - name: KEY_V
+  - name: KEY_X
+  - name: KEY_Y
+  - name: KEY_Z

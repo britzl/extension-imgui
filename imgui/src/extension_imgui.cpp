@@ -1937,6 +1937,29 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "TREENODE_SPAN_FULL_WIDTH", ImGuiTreeNodeFlags_SpanFullWidth);
     lua_setfieldstringint(L, "TREENODE_NAV_LEFT_JUMPS_BACK_HERE", ImGuiTreeNodeFlags_NavLeftJumpsBackHere);
 
+    lua_setfieldstringint(L, "KEY_TAB", ImGuiKey_Tab);
+    lua_setfieldstringint(L, "KEY_LEFTARROW", ImGuiKey_LeftArrow);
+    lua_setfieldstringint(L, "KEY_RIGHTARROW", ImGuiKey_RightArrow);
+    lua_setfieldstringint(L, "KEY_UPARROW", ImGuiKey_UpArrow);
+    lua_setfieldstringint(L, "KEY_DOWNARROW", ImGuiKey_DownArrow);
+    lua_setfieldstringint(L, "KEY_PAGEUP", ImGuiKey_PageUp);
+    lua_setfieldstringint(L, "KEY_PAGEDOWN", ImGuiKey_PageDown);
+    lua_setfieldstringint(L, "KEY_HOME", ImGuiKey_Home);
+    lua_setfieldstringint(L, "KEY_END", ImGuiKey_End);
+    lua_setfieldstringint(L, "KEY_INSERT", ImGuiKey_Insert);
+    lua_setfieldstringint(L, "KEY_DELETE", ImGuiKey_Delete);
+    lua_setfieldstringint(L, "KEY_BACKSPACE", ImGuiKey_Backspace);
+    lua_setfieldstringint(L, "KEY_SPACE", ImGuiKey_Space);
+    lua_setfieldstringint(L, "KEY_ENTER", ImGuiKey_Enter);
+    lua_setfieldstringint(L, "KEY_ESCAPE", ImGuiKey_Escape);
+    lua_setfieldstringint(L, "KEY_KEYPADENTER", ImGuiKey_KeyPadEnter);
+    lua_setfieldstringint(L, "KEY_A", ImGuiKey_A);
+    lua_setfieldstringint(L, "KEY_C", ImGuiKey_C);
+    lua_setfieldstringint(L, "KEY_V", ImGuiKey_V);
+    lua_setfieldstringint(L, "KEY_X", ImGuiKey_X);
+    lua_setfieldstringint(L, "KEY_Y", ImGuiKey_Y);
+    lua_setfieldstringint(L, "KEY_Z", ImGuiKey_Z);
+
     lua_setfieldstringint(L, "ImGuiCol_Text", ImGuiCol_Text);
     lua_setfieldstringint(L, "ImGuiCol_TextDisabled", ImGuiCol_TextDisabled);
     lua_setfieldstringint(L, "ImGuiCol_WindowBg", ImGuiCol_WindowBg);
