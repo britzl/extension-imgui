@@ -29,3 +29,21 @@ The current state of platform support:
 
 ## Usage
 Refer to [example/example.script](/example/example.script) to learn how to use the extension. Also check the bindings in `LuaInit()` in `extension_imgui.cpp`.
+
+
+### Input
+You need to update the input state in Dear ImGUI each frame to accurately reflect user input:
+
+* `imgui.set_key_down(key, pressed)` - Set the pressed state of a key. The key must be one of the `imgui.KEY_` constants
+* `imgui.set_key_modifier_super(pressed)`
+* `imgui.set_key_modifier_alt(pressed)`
+* `imgui.set_key_modifier_ctrl(pressed)`
+* `imgui.set_key_modifier_shift(pressed)`
+* `imgui.add_input_character(text)` - Add keyboard input
+* `imgui.set_mouse_input(x, y, left, right, middle, wheel)` - Set mouse state (position, buttons and wheel)
+
+You can add the `imgui/imgui.script` to a game object and let that handle input for you (also make sure to use imgui/bindings/imgui.input_bindings).
+
+
+### Display size
+You need to let Dear ImGUI know of any changes to the window size by calling `imgui.set_display_size(w, h)` when the screen size changes.
