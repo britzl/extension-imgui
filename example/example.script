@@ -216,6 +216,18 @@ local function update_tab2(self)
 
 	imgui.separator()
 	imgui.draw_progress(progress, -1, 0.0)
+
+	imgui.push_id("first")
+	if imgui.button("Same name") then
+		pprint("first same button")
+	end
+	imgui.pop_id()
+
+	imgui.push_id("second")
+	if imgui.button("Same name") then
+		pprint("second same button")
+	end
+	imgui.pop_id()
 end
 
 local function update_tab3(self)
