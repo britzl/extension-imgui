@@ -382,6 +382,28 @@ static int imgui_TreePop(lua_State* L)
     return 0;
 }
 
+
+// ----------------------------
+// ----- Push/Pop ID ----------
+// ----------------------------
+static int imgui_PushId(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+
+    const char* text = luaL_checkstring(L, 1);
+    ImGui::PushID(text);
+
+    return 0;
+}
+
+static int imgui_PopId(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGui::PopID();
+    return 0;
+}
+
+
 // ----------------------------
 // ----- WINDOW ---------------
 // ----------------------------
@@ -1803,6 +1825,9 @@ static const luaL_reg Module_methods[] =
 
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
+
+    {"push_id", imgui_PushId},
+    {"pop_id", imgui_PopId},
 
     {"selectable", imgui_Selectable},
     {"text", imgui_Text},
