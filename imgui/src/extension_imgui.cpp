@@ -42,9 +42,19 @@ static bool g_imgui_NewFrame        = false;
 static char* g_imgui_TextBuffer     = 0;
 static dmArray<ImFont*> g_imgui_Fonts;
 static dmArray<ImgObject> g_imgui_Images;
+static bool g_VerifyGraphicsCalls   = false;
 
 
 
+static void imgui_ClearGLError()
+{
+    if (!g_VerifyGraphicsCalls) return;
+    GLint err = glGetError();
+    while (err != 0)
+    {
+        err = glGetError();
+    }
+}
 
 
 // ----------------------------
@@ -255,6 +265,7 @@ static void imgui_NewFrame()
     if (g_imgui_NewFrame == false)
     {
         ImGui_ImplOpenGL3_NewFrame();
+        imgui_ClearGLError();
         ImGui::NewFrame();
         g_imgui_NewFrame = true;
     }
@@ -1618,6 +1629,7 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
     imgui_NewFrame();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    imgui_ClearGLError();
 
     g_imgui_NewFrame = false;
     return dmExtension::RESULT_OK;
@@ -1733,6 +1745,7 @@ static void imgui_Init(float width, float height)
     }
 
     ImGui_ImplOpenGL3_Init();
+    imgui_ClearGLError();
 }
 
 static void imgui_Shutdown()
@@ -1740,6 +1753,7 @@ static void imgui_Shutdown()
     dmLogInfo("imgui_Shutdown");
 
     ImGui_ImplOpenGL3_Shutdown();
+    imgui_ClearGLError();
     ImGui::DestroyContext();
 }
 
@@ -2178,6 +2192,14 @@ dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
 
 dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
 {
+    // This is actually more complex than this,
+    // but that value is buried deep in the private internals of dmGraphics_OpenGL
+    #ifdef DM_RELEASE
+    g_VerifyGraphicsCalls = false;
+    #else
+    g_VerifyGraphicsCalls = true;
+    #endif
+
     LuaInit(params->m_L);
     float displayWidth = dmConfigFile::GetFloat(params->m_ConfigFile, "display.width", 960.0f);
     float displayHeight = dmConfigFile::GetFloat(params->m_ConfigFile, "display.height", 540.0f);
