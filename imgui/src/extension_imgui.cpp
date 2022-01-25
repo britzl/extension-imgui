@@ -234,9 +234,20 @@ static int imgui_ImageAdd( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
     GLuint tid = (GLuint)luaL_checkinteger(L, 1);
-    int w = luaL_checkinteger(L, 2);
-    int h = luaL_checkinteger(L, 3);
-    ImGui::Image((void*)(intptr_t)tid, ImVec2(w, h));
+    int w = luaL_checknumber(L, 2);
+    int h = luaL_checknumber(L, 3);
+
+    ImVec2 uv0 = ImVec2(0, 0);
+    if (lua_isnumber(L, 4) && lua_isnumber(L, 5)) {
+        uv0.x = luaL_checknumber(L, 4);
+        uv0.y = luaL_checknumber(L, 5);
+    }
+    ImVec2 uv1 = ImVec2(1, 1);
+    if (lua_isnumber(L, 6) && lua_isnumber(L, 7)) {
+        uv1.x = luaL_checknumber(L, 6);
+        uv1.y = luaL_checknumber(L, 7);
+    }
+    ImGui::Image((void*)(intptr_t)tid, ImVec2(w, h), uv0, uv1);
     return 0;
 }
 

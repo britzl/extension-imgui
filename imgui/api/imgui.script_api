@@ -137,6 +137,14 @@
         type: number
       - name: pixel_height
         type: number
+      - name: uv0x
+        type: number
+      - name: uv0y
+        type: number
+      - name: uv1x
+        type: number
+      - name: uv1y
+        type: number
 
 #*****************************************************************************************************
 
