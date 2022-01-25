@@ -1765,6 +1765,8 @@ static void imgui_Shutdown()
 
     ImGui_ImplOpenGL3_Shutdown();
     imgui_ClearGLError();
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->Clear();
     ImGui::DestroyContext();
 }
 
@@ -1785,6 +1787,14 @@ static void imgui_ExtensionShutdown()
         free(g_imgui_TextBuffer);
         g_imgui_TextBuffer = 0;
     }
+
+    while (!g_imgui_Images.Empty())
+    {
+        glDeleteTextures(1, &g_imgui_Images.Back().tid);
+        g_imgui_Images.Pop();
+    }
+
+    g_imgui_Fonts.SetSize(0);
 }
 
 // Functions exposed to Lua
