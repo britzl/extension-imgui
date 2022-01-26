@@ -855,6 +855,73 @@
 
 #*****************************************************************************************************
 
+  - name: get_cursor_screen_pos
+    type: function
+
+    return:
+      - name: x
+        type: number
+      - name: y
+        type: number
+
+
+#*****************************************************************************************************
+#***** PRIMITIVES ************************************************************************************
+#*****************************************************************************************************
+
+  - name: add_line
+    type: function
+
+    parameters:
+      - name: x1
+        type: number
+      - name: y1
+        type: number
+      - name: x2
+        type: number
+      - name: y2
+        type: number
+      - name: r
+        type: number
+      - name: g
+        type: number
+      - name: b
+        type: number
+      - name: a
+        type: number
+      - name: thickness
+        type: number
+
+#*****************************************************************************************************
+
+  - name: add_rect
+    type: function
+
+    parameters:
+      - name: x1
+        type: number
+      - name: y1
+        type: number
+      - name: x2
+        type: number
+      - name: y2
+        type: number
+      - name: r
+        type: number
+      - name: g
+        type: number
+      - name: b
+        type: number
+      - name: a
+        type: number
+      - name: thickness
+        type: number
+
+
+#*****************************************************************************************************
+#***** PLOTS *****************************************************************************************
+#*****************************************************************************************************
+
   - name: plot_lines
     type: function
 

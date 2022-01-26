@@ -268,6 +268,58 @@ static int imgui_ImageFree( lua_State *L )
 }
 
 // ----------------------------
+// ----- PRIMITIVES -----------
+// ----------------------------
+
+static int imgui_DrawListAddLine(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float x1 = luaL_checknumber(L, 1);
+    float y1 = luaL_checknumber(L, 2);
+    float x2 = luaL_checknumber(L, 3);
+    float y2 = luaL_checknumber(L, 4);
+
+    float r = (float)luaL_checknumber(L, 5);
+    float g = (float)luaL_checknumber(L, 6);
+    float b = (float)luaL_checknumber(L, 7);
+    float a = (float)luaL_checknumber(L, 8);
+
+    float thickness = 1.0f;
+    if (lua_isnumber(L, 9))
+    {
+        thickness = luaL_checknumber(L, 9);
+    }
+
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(x1, y1), ImVec2(x2, y2), IM_COL32(r, g, b, a), thickness);
+    return 0;
+}
+
+static int imgui_DrawListAddRect(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float x1 = luaL_checknumber(L, 1);
+    float y1 = luaL_checknumber(L, 2);
+    float x2 = luaL_checknumber(L, 3);
+    float y2 = luaL_checknumber(L, 4);
+
+    float r = (float)luaL_checknumber(L, 5);
+    float g = (float)luaL_checknumber(L, 6);
+    float b = (float)luaL_checknumber(L, 7);
+    float a = (float)luaL_checknumber(L, 8);
+
+    float thickness = 1.0f;
+    if (lua_isnumber(L, 9))
+    {
+        thickness = luaL_checknumber(L, 9);
+    }
+    float rounding = 0.0f;
+    int flags = 0;
+
+    ImGui::GetWindowDrawList()->AddRect(ImVec2(x1, y1), ImVec2(x2, y2), IM_COL32(r, g, b, a), rounding, flags, thickness);
+    return 0;
+}
+
+// ----------------------------
 // ----- FRAMES ---------------
 // ----------------------------
 
@@ -1249,6 +1301,15 @@ static int imgui_Separator(lua_State* L)
     return 0;
 }
 
+static int imgui_GetCursorScreenPos(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+
+    ImVec2 p = ImGui::GetCursorScreenPos();
+    lua_pushnumber(L, p.x);
+    lua_pushnumber(L, p.y);
+    return 2;
+}
 
 // ----------------------------
 // ----- IMGUI PLOT -----------
@@ -1877,6 +1938,7 @@ static const luaL_reg Module_methods[] =
     {"button", imgui_Button},
     {"button_image", imgui_ButtonImage},
     {"checkbox", imgui_Checkbox},
+
     {"same_line", imgui_SameLine},
     {"new_line", imgui_NewLine},
     {"bullet", imgui_Bullet},
@@ -1884,6 +1946,10 @@ static const luaL_reg Module_methods[] =
     {"unindent", imgui_Unindent},
     {"spacing", imgui_Spacing},
     {"separator", imgui_Separator},
+    {"get_cursor_screen_pos", imgui_GetCursorScreenPos},
+
+    {"add_line", imgui_DrawListAddLine},
+    {"add_rect", imgui_DrawListAddRect},
 
     {"plot_lines", imgui_PlotLines},
     {"plot_histogram", imgui_PlotHistogram},
