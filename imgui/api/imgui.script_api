@@ -819,6 +819,7 @@
   - name: begin_menu_bar
     type: function
 
+
     returns:
       - name: result
         type: boolean
@@ -832,6 +833,7 @@
 
   - name: begin_main_menu_bar
     type: function
+
 
     returns:
       - name: result
@@ -847,12 +849,15 @@
   - name: begin_menu
     type: function
 
+
     parameters:
       - name: label
         type: string
+
       - name: enabled
         optional: true
         type: bool
+
 
     returns:
       - name: result
@@ -868,18 +873,23 @@
   - name: menu_item
     type: function
 
+
     parameters:
       - name: label
         type: string
+
       - name: shortcut
         type: string
         optional: true
+
       - name: selected
         type: boolean
         optional: true
+
       - name: enabled
         type: boolean
         optional: true
+
 
     returns:
       - name: activated
