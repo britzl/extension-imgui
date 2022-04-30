@@ -373,9 +373,10 @@ local function menu_bar(self)
 			-- Shortcuts are only visual, ImGui doesn't currently use them
 			imgui.menu_item("Has Shortcut", "Ctrl+A")
 
-			if imgui.menu_item("Toggleable Item", nil, self.item_toggled) then
-				self.item_toggled = not self.item_toggled
-				print("'Toggleable Item' is " .. (self.item_toggled and "on" or "off"))
+			local changed, active = imgui.menu_item("Toggleable Item", nil, self.toggle_item_active)
+			if changed then
+				self.toggle_item_active = active
+				print("'Toggleable Item' is " .. (self.toggle_item_active and "on" or "off"))
 			end
 
 			imgui.menu_item("Disabled Item", nil, nil, false)

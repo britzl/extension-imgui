@@ -892,7 +892,10 @@
 
 
     returns:
-      - name: activated
+      - name: changed
+        type: boolean
+
+      - name: selected
         type: boolean
 
 #*****************************************************************************************************

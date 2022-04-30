@@ -1308,7 +1308,7 @@ static int imgui_EndMenu(lua_State* L)
 
 static int imgui_MenuItem(lua_State* L)
 {
-    DM_LUA_STACK_CHECK(L, 1);
+    DM_LUA_STACK_CHECK(L, 2);
     imgui_NewFrame();
 
     const char* label = luaL_checkstring(L, 1);
@@ -1320,10 +1320,11 @@ static int imgui_MenuItem(lua_State* L)
         enabled = true;
     }
 
-    bool result = ImGui::MenuItem(label, shortcut, selected, enabled);
+    bool result = ImGui::MenuItem(label, shortcut, &selected, enabled);
     lua_pushboolean(L, result);
+    lua_pushboolean(L, selected);
 
-    return 1;
+    return 2;
 }
 
 // ----------------------------
