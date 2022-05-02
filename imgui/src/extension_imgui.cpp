@@ -1236,6 +1236,96 @@ static int imgui_Checkbox(lua_State* L)
     return 2;
 }
 
+static int imgui_BeginMenuBar(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+
+    bool result = ImGui::BeginMenuBar();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int imgui_EndMenuBar(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+
+    ImGui::EndMenuBar();
+
+    return 0;
+}
+
+static int imgui_BeginMainMenuBar(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+
+    bool result = ImGui::BeginMainMenuBar();
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int imgui_EndMainMenuBar(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+
+    ImGui::EndMainMenuBar();
+
+    return 0;
+}
+
+static int imgui_BeginMenu(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+
+    const char* label = luaL_checkstring(L, 1);
+    bool enabled = true;
+
+    if (lua_isboolean(L, 2)) {
+        enabled = lua_toboolean(L, 2);
+    }
+
+    bool result = ImGui::BeginMenu(label, enabled);
+    lua_pushboolean(L, result);
+
+    return 1;
+}
+
+static int imgui_EndMenu(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+
+    ImGui::EndMenu();
+
+    return 0;
+}
+
+static int imgui_MenuItem(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+
+    const char* label = luaL_checkstring(L, 1);
+    const char* shortcut = lua_tostring(L, 2);
+    bool selected = lua_toboolean(L, 3);
+    bool enabled = true;
+
+    if (lua_isboolean(L, 4)) {
+        enabled = lua_toboolean(L, 4);
+    }
+
+    bool result = ImGui::MenuItem(label, shortcut, &selected, enabled);
+    lua_pushboolean(L, result);
+    lua_pushboolean(L, selected);
+
+    return 2;
+}
 
 // ----------------------------
 // ----- LAYOUT ---------
@@ -1938,6 +2028,13 @@ static const luaL_reg Module_methods[] =
     {"button", imgui_Button},
     {"button_image", imgui_ButtonImage},
     {"checkbox", imgui_Checkbox},
+    {"begin_menu_bar", imgui_BeginMenuBar},
+    {"end_menu_bar", imgui_EndMenuBar},
+    {"begin_main_menu_bar", imgui_BeginMainMenuBar},
+    {"end_main_menu_bar", imgui_EndMainMenuBar},
+    {"begin_menu", imgui_BeginMenu},
+    {"end_menu", imgui_EndMenu},
+    {"menu_item", imgui_MenuItem},
 
     {"same_line", imgui_SameLine},
     {"new_line", imgui_NewLine},

@@ -326,8 +326,89 @@ local function update_tab5(self)
 	
 end
 
+local function main_menu_bar(self)
+	if imgui.begin_main_menu_bar() then
+		if imgui.begin_menu("File") then
+			if imgui.menu_item("Quit", "Ctrl+Q") then
+				sys.exit(0)
+			end
+
+			imgui.end_menu()
+		end
+
+		if imgui.begin_menu("View") then
+			local clicked = imgui.menu_item("Show Demo Window", nil, self.show_demo_window)
+			if clicked then
+				self.show_demo_window = not self.show_demo_window
+			end
+
+			imgui.end_menu()
+		end
+
+		if imgui.begin_menu("About") then
+			imgui.menu_item("Defold v" .. sys.get_engine_info().version, nil, nil, false)
+
+			imgui.end_menu()
+		end
+
+		imgui.end_main_menu_bar()
+	end
+end
+
+local function nested_menu(self)
+	if imgui.begin_menu("Nested Menu") then
+		imgui.menu_item("Nested Item")
+		nested_menu(self)
+		imgui.end_menu()
+	end
+end
+
+local function menu_bar(self)
+	if imgui.begin_menu_bar() then
+		if imgui.begin_menu("Menu") then
+			if imgui.menu_item("Menu Item") then
+				print("Clicked 'Menu Item'")
+			end
+
+			-- Shortcuts are only visual, ImGui doesn't currently use them
+			imgui.menu_item("Has Shortcut", "Ctrl+A")
+
+			local changed, active = imgui.menu_item("Toggleable Item", nil, self.toggle_item_active)
+			if changed then
+				self.toggle_item_active = active
+				print("'Toggleable Item' is " .. (self.toggle_item_active and "on" or "off"))
+			end
+
+			imgui.menu_item("Disabled Item", nil, nil, false)
+
+			if imgui.begin_menu("Nested Menu") then
+				imgui.menu_item("Item")
+				nested_menu(self)
+				imgui.end_menu()
+			end
+
+			if imgui.menu_item("Click Me!") then
+				sys.exit(0)
+			end
+
+			imgui.end_menu()
+		end
+
+		if imgui.begin_menu("Other Menu") then
+			if imgui.menu_item("Other Menu Item") then
+				print("Clicked 'Other Menu Item'")
+			end
+			imgui.end_menu()
+		end
+
+		imgui.end_menu_bar()
+	end
+end
+
 
 function update(self, dt)
+	main_menu_bar(self)
+
 	if self.show_demo_window then
 		imgui.demo()
 	end
@@ -336,7 +417,8 @@ function update(self, dt)
 		close_window(self)
 	end
 
-	imgui.begin_window("Hello, world!")
+	imgui.begin_window("Hello, world!", nil, imgui.WINDOWFLAGS_MENUBAR)
+	menu_bar(self)
 	imgui.begin_tab_bar("tabs")
 
 	local tab1_open = imgui.begin_tab_item("Tab1")
