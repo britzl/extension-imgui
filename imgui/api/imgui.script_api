@@ -1439,7 +1439,7 @@
 #***** CAPTURE ***************************************************************************************
 #*****************************************************************************************************
 
-  - name: want_capture_mouse
+  - name: want_mouse_input
     type: function
 
     return:
@@ -1447,7 +1447,7 @@
         type: boolean
 
 
-  - name: want_capture_keyboard
+  - name: want_keyboard_input
     type: function
 
     return:
@@ -1455,7 +1455,7 @@
         type: boolean
 
 
-  - name: want_capture_text
+  - name: want_text_input
     type: function
 
     return:

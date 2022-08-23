@@ -2126,9 +2126,9 @@ static const luaL_reg Module_methods[] =
     {"set_key_modifier_alt", imgui_SetKeyModifierAlt},
     {"set_key_modifier_super", imgui_SetKeyModifierSuper},
     {"add_input_character", imgui_AddInputCharacter},
-    {"want_capture_mouse", imgui_WantCaptureMouse},
-    {"want_capture_keyboard", imgui_WantCaptureKeyboard},
-    {"want_capture_text", imgui_WantCaptureText},
+    {"want_mouse_input", imgui_WantCaptureMouse},
+    {"want_keyboard_input", imgui_WantCaptureKeyboard},
+    {"want_text_input", imgui_WantCaptureText},
     
     {"is_item_active", imgui_IsItemActive},
     {"is_item_focused", imgui_IsItemFocused},
