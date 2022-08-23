@@ -1885,6 +1885,34 @@ static int imgui_DrawProgressBar(lua_State* L)
 }
 
 // ----------------------------
+// ----- INPUT CAPTURE -----------------
+// ----------------------------
+
+static int imgui_WantCaptureMouse(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    ImGuiIO& io = ImGui::GetIO();
+    lua_pushboolean(L, io.WantCaptureMouse);
+    return 1;
+}
+
+static int imgui_WantCaptureKeyboard(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    ImGuiIO& io = ImGui::GetIO();
+    lua_pushboolean(L, io.WantCaptureKeyboard);
+    return 1;
+}
+
+static int imgui_WantCaptureText(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    ImGuiIO& io = ImGui::GetIO();
+    lua_pushboolean(L, io.WantTextInput);
+    return 1;
+}
+
+// ----------------------------
 // ----- CONFIG -----------------
 // ----------------------------
 static int imgui_SetDefaults(lua_State* L)
@@ -2098,7 +2126,10 @@ static const luaL_reg Module_methods[] =
     {"set_key_modifier_alt", imgui_SetKeyModifierAlt},
     {"set_key_modifier_super", imgui_SetKeyModifierSuper},
     {"add_input_character", imgui_AddInputCharacter},
-
+    {"want_capture_mouse", imgui_WantCaptureMouse},
+    {"want_capture_keyboard", imgui_WantCaptureKeyboard},
+    {"want_capture_text", imgui_WantCaptureText},
+    
     {"is_item_active", imgui_IsItemActive},
     {"is_item_focused", imgui_IsItemFocused},
     {"is_item_clicked", imgui_IsItemClicked},
