@@ -1166,6 +1166,36 @@ static int imgui_InputFloat4(lua_State* L)
     return 5;
 }
 
+static int imgui_SliderFloat(lua_State* L)
+{
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    float value = luaL_checknumber(L, 2);
+    float min = luaL_checknumber(L, 3);
+    float max = luaL_checknumber(L, 4);
+    char float_precision[20] = { "%.6f" };
+
+    // Only accept 5th if we have 4th param
+    if (lua_isnumber(L, 5))
+    {
+        int precision_count = lua_tointeger(L, 5);
+        dmSnPrintf(float_precision, sizeof(float_precision), "%%.%df", precision_count );
+    }
+
+    bool changed = ImGui::SliderFloat(label, &value, min, max, float_precision);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushnumber(L, value);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+    return 2;
+}
+    
+
 static int imgui_Selectable(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
@@ -2025,6 +2055,7 @@ static const luaL_reg Module_methods[] =
     {"input_double", imgui_InputDouble},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
+    {"slider_float", imgui_SliderFloat},
     {"button", imgui_Button},
     {"button_image", imgui_ButtonImage},
     {"checkbox", imgui_Checkbox},
