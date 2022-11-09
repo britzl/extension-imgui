@@ -527,6 +527,15 @@ static int imgui_SetNextWindowPos(lua_State* L)
     ImGui::SetNextWindowPos(ImVec2(x, y));
     return 0;
 }
+static int imgui_GetWindowSize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    ImVec2 size = ImGui::GetWindowSize();
+    lua_pushnumber(L, size.x);
+    lua_pushnumber(L, size.y);
+    return 2;
+}
 static int imgui_IsWindowFocused(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
@@ -1813,6 +1822,16 @@ static int imgui_FontScale(lua_State *L)
     return 1;
 }
 
+
+static int imgui_GetFrameHeight(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    lua_pushnumber(L, ImGui::GetFrameHeight());
+    return 1;
+}
+
+
 // ----------------------------
 // ----- DRAW -----------------
 // ----------------------------
@@ -2025,6 +2044,7 @@ static const luaL_reg Module_methods[] =
 
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
+    {"get_window_size", imgui_GetWindowSize},
     {"begin_window", imgui_Begin},
     {"end_window", imgui_End},
     {"is_window_focused", imgui_IsWindowFocused},
@@ -2156,6 +2176,8 @@ static const luaL_reg Module_methods[] =
     {"set_window_font_scale", imgui_SetWindowFontScale},
     {"set_global_font_scale", imgui_SetGlobalFontScale},
     {"scale_all_sizes", imgui_ScaleAllSizes},
+
+    {"get_frame_height", imgui_GetFrameHeight},
 
     {"set_scroll_here_y", imgui_SetScrollHereY},
     {0, 0}
