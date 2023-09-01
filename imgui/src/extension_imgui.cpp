@@ -515,7 +515,12 @@ static int imgui_SetNextWindowSize(lua_State* L)
     imgui_NewFrame();
     float width = luaL_checknumber(L, 1);
     float height = luaL_checknumber(L, 2);
-    ImGui::SetNextWindowSize(ImVec2(width, height));
+    uint32_t cond = ImGuiCond_None;
+    if (lua_isnumber(L, 3))
+    {
+        cond = luaL_checkint(L, 3);
+    }
+    ImGui::SetNextWindowSize(ImVec2(width, height), cond);
     return 0;
 }
 static int imgui_SetNextWindowPos(lua_State* L)
@@ -524,7 +529,12 @@ static int imgui_SetNextWindowPos(lua_State* L)
     imgui_NewFrame();
     float x = luaL_checknumber(L, 1);
     float y = luaL_checknumber(L, 2);
-    ImGui::SetNextWindowPos(ImVec2(x, y));
+    uint32_t cond = ImGuiCond_None;
+    if (lua_isnumber(L, 3))
+    {
+        cond = luaL_checkint(L, 3);
+    }
+    ImGui::SetNextWindowPos(ImVec2(x, y), cond);
     return 0;
 }
 static int imgui_GetWindowSize(lua_State* L)
@@ -2447,6 +2457,11 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKRESIZE", ImGuiInputTextFlags_CallbackResize);  // Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKEDIT", ImGuiInputTextFlags_CallbackEdit);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
 
+    lua_setfieldstringint(L, "COND_NONE", ImGuiCond_None);  // No condition (always set the variable), same as _Always
+    lua_setfieldstringint(L, "COND_ALWAYS", ImGuiCond_Always);  // No condition (always set the variable)
+    lua_setfieldstringint(L, "COND_ONCE", ImGuiCond_Once);  // Set the variable once per runtime session (only the first call will succeed)
+    lua_setfieldstringint(L, "COND_FIRSTUSEEVER", ImGuiCond_FirstUseEver);  // Set the variable if the object/window has no persistently saved data (no entry in .ini file)
+    lua_setfieldstringint(L, "COND_APPEARING", ImGuiCond_Appearing);  // Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
