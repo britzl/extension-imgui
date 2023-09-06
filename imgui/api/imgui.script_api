@@ -266,6 +266,9 @@
         type: number
       - name: height
         type: number
+      - name: cond
+        type: number
+        optional: true
 
 #*****************************************************************************************************
 
@@ -277,6 +280,9 @@
         type: number
       - name: y
         type: number
+      - name: cond
+        type: number
+        optional: true
 
 #*****************************************************************************************************
 
