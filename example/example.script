@@ -54,6 +54,7 @@ end
 
 function init(self)
 	self.counter = 0
+	self.radio = 1
 	self.show_demo_window = false
 	self.show_close_window = false
 	self.show_live_data = false
@@ -108,6 +109,18 @@ local function update_tab1(self)
 	local changed, checked = imgui.checkbox("Demo window", self.show_demo_window)
 	if changed then
 		self.show_demo_window = checked
+	end
+
+	imgui.separator()
+
+	if imgui.radio_button("Option 1", self.radio == 1) then
+		self.radio  = 1
+	end
+	if imgui.radio_button("Option 2", self.radio == 2) then
+		self.radio  = 2
+	end
+	if imgui.radio_button("Option 3", self.radio == 3) then
+		self.radio  = 3
 	end
 
 	imgui.separator()

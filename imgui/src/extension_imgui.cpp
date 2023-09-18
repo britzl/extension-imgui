@@ -1285,6 +1285,18 @@ static int imgui_Checkbox(lua_State* L)
     return 2;
 }
 
+static int imgui_RadioButton(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    const char* text = luaL_checkstring(L, 1);
+    bool checked = lua_toboolean(L, 2);
+    bool changed = ImGui::RadioButton(text, checked);
+    lua_pushboolean(L, changed);
+    lua_pushboolean(L, checked);
+    return 2;
+}
+
 static int imgui_BeginMenuBar(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
@@ -2117,6 +2129,7 @@ static const luaL_reg Module_methods[] =
     {"button", imgui_Button},
     {"button_image", imgui_ButtonImage},
     {"checkbox", imgui_Checkbox},
+    {"radio_button", imgui_RadioButton},
     {"begin_menu_bar", imgui_BeginMenuBar},
     {"end_menu_bar", imgui_EndMenuBar},
     {"begin_main_menu_bar", imgui_BeginMainMenuBar},
