@@ -546,6 +546,15 @@ static int imgui_GetWindowSize(lua_State* L)
     lua_pushnumber(L, size.y);
     return 2;
 }
+static int imgui_GetWindowPos(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    ImVec2 pos = ImGui::GetWindowPos();
+    lua_pushnumber(L, pos.x);
+    lua_pushnumber(L, pos.y);
+    return 2;
+}
 static int imgui_IsWindowFocused(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
@@ -559,7 +568,15 @@ static int imgui_IsWindowFocused(lua_State* L)
     lua_pushboolean(L, focused);
     return 1;
 }
-
+static int imgui_GetWindowContentRegionMax(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    ImVec2 region = ImGui::GetWindowContentRegionMax();
+    lua_pushnumber(L, region.x);
+    lua_pushnumber(L, region.y);
+    return 2;
+}
 
 // ----------------------------
 // ----- CHILD WINDOW ---------
@@ -1592,6 +1609,16 @@ static int imgui_IsItemHovered(lua_State* L)
     return 1;
 }
 
+static int imgui_GetItemRectMax(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    ImVec2 rect = ImGui::GetItemRectMax();
+    lua_pushnumber(L, rect.x);
+    lua_pushnumber(L, rect.y);
+    return 2;
+}
+
 // ----------------------------
 // ----- STYLE ----------------
 // ----------------------------
@@ -1673,7 +1700,15 @@ static int imgui_PopStyleColor(lua_State* L)
     ImGui::PopStyleColor(count);
     return 0;
 }
-
+static int imgui_GetStyleItemSpacing(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImVec2 spacing = style.ItemSpacing;
+    lua_pushnumber(L, spacing.x);
+    lua_pushnumber(L, spacing.y);
+    return 2;
+}
 static int imgui_SetWindowFontScale(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -2055,9 +2090,11 @@ static const luaL_reg Module_methods[] =
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
     {"get_window_size", imgui_GetWindowSize},
+    {"get_window_pos", imgui_GetWindowPos},
     {"begin_window", imgui_Begin},
     {"end_window", imgui_End},
     {"is_window_focused", imgui_IsWindowFocused},
+    {"get_window_content_region_max", imgui_GetWindowContentRegionMax},
 
     {"begin_child", imgui_BeginChild},
     {"end_child", imgui_EndChild},
@@ -2165,6 +2202,7 @@ static const luaL_reg Module_methods[] =
     {"is_item_clicked", imgui_IsItemClicked},
     {"is_item_double_clicked", imgui_IsItemDoubleClicked},
     {"is_item_hovered", imgui_IsItemHovered},
+    {"get_item_rect_max", imgui_GetItemRectMax},
     {"is_mouse_clicked", imgui_IsMouseClicked},
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},
 
@@ -2177,7 +2215,8 @@ static const luaL_reg Module_methods[] =
     {"set_style_color", imgui_SetStyleColor},
     {"push_style_color", imgui_PushStyleColor},
     {"pop_style_color", imgui_PopStyleColor},
-
+    {"get_style_item_spacing", imgui_GetStyleItemSpacing},
+    
     {"set_defaults", imgui_SetDefaults},
     {"set_ini_filename", imgui_SetIniFilename},
 

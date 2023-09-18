@@ -169,6 +169,29 @@ local function update_tab1(self)
 	imgui.text("51")
 	
 	imgui.end_table()
+
+	imgui.separator()
+
+	-- Manual wrapping
+	imgui.text("Manual wrapping:")
+
+	local button_count = 20
+	local button_size = 60
+	local window_pos_x, window_pos_y = imgui.get_window_pos()
+	local region_x, region_y = imgui.get_window_content_region_max()
+	local window_visible_x = window_pos_x + region_x
+	local spacing_x, spacing_y = imgui.get_style_item_spacing()
+
+	for n = 1, button_count do
+		imgui.push_id(tostring(n))
+		imgui.button("Box", button_size, button_size)
+		local last_button_x, last_button_y = imgui.get_item_rect_max()
+		local next_button_x = last_button_x + spacing_x + button_size
+		if (n  < button_count and next_button_x < window_visible_x) then
+			imgui.same_line()
+		end
+		imgui.pop_id()
+	end
 end
 
 local function update_tab2(self)
