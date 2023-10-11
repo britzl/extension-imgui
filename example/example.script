@@ -365,6 +365,10 @@ local function update_tab5(self)
 		imgui.end_dragdrop_target()
 	end
 	imgui.text("Counter " .. self.counter)
+
+	imgui.separator()
+	local x,y = imgui.get_mouse_pos()
+	imgui.text(tostring(x) .. ":" .. tostring(y))
 	
 end
 

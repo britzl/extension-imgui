@@ -3,6 +3,7 @@
 
 #include "imgui/imgui.h"
 #include "imgui/imconfig.h"
+#include "netimgui/NetImgui_Api.h"
 
 // set in imconfig.h
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -329,7 +330,8 @@ static void imgui_NewFrame()
     {
         ImGui_ImplOpenGL3_NewFrame();
         imgui_ClearGLError();
-        ImGui::NewFrame();
+        //ImGui::NewFrame();
+        NetImgui::NewFrame();
         g_imgui_NewFrame = true;
     }
 }
@@ -1631,6 +1633,15 @@ static int imgui_GetItemRectMax(lua_State* L)
     return 2;
 }
 
+static int imgui_GetMousePos(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    ImVec2 pos = ImGui::GetMousePos();
+    lua_pushnumber(L, pos.x);
+    lua_pushnumber(L, pos.y);
+    return 2;
+}
 // ----------------------------
 // ----- STYLE ----------------
 // ----------------------------
@@ -1895,7 +1906,8 @@ static int imgui_GetFrameHeight(lua_State* L)
 static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 {
     imgui_NewFrame();
-    ImGui::Render();
+    //ImGui::Render();
+    NetImgui::EndFrame();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     imgui_ClearGLError();
 
@@ -2040,6 +2052,9 @@ static void imgui_Init(float width, float height)
         io.KeyMap[i] = i;
     }
 
+    NetImgui::Startup();
+    NetImgui::ConnectToApp("Defold", "localhost");
+    
     ImGui_ImplOpenGL3_Init();
     imgui_ClearGLError();
 }
@@ -2218,6 +2233,7 @@ static const luaL_reg Module_methods[] =
     {"get_item_rect_max", imgui_GetItemRectMax},
     {"is_mouse_clicked", imgui_IsMouseClicked},
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},
+    {"get_mouse_pos", imgui_GetMousePos},
 
     {"set_style_window_rounding", imgui_SetStyleWindowRounding},
     {"set_style_window_bordersize", imgui_SetStyleWindowBorderSize},
