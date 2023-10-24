@@ -1783,6 +1783,37 @@ static int imgui_SetScrollHereY(lua_State *L)
     return 0;
 }
 
+// ----------------------------
+// ----- NETIMGUI -----------------
+// ----------------------------
+
+static int imgui_NetConnectToApp(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    const char* client_name = luaL_checkstring(L, 1);
+    const char* server_host = luaL_checkstring(L, 2);
+    NetImgui::ConnectToApp(client_name, server_host);
+    return 0;
+}
+
+static int imgui_NetConnectFromApp(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    const char* client_name = luaL_checkstring(L, 1);
+    NetImgui::ConnectFromApp(client_name);
+    return 0;
+}
+
+static int imgui_NetIsConnected(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    bool is_connected = NetImgui::IsConnected();
+    lua_pushboolean(L, is_connected);
+    return 1;
+}
 
 // ----------------------------
 // ----- FONT -----------------
@@ -1908,7 +1939,11 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
     imgui_NewFrame();
     //ImGui::Render();
     NetImgui::EndFrame();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (!NetImgui::IsConnected())
+    {
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
     imgui_ClearGLError();
 
     g_imgui_NewFrame = false;
@@ -2053,7 +2088,8 @@ static void imgui_Init(float width, float height)
     }
 
     NetImgui::Startup();
-    NetImgui::ConnectToApp("Defold", "localhost");
+    //NetImgui::ConnectToApp("Defold", "192.168.86.37");
+    //NetImgui::ConnectFromApp("Defold");
     
     ImGui_ImplOpenGL3_Init();
     imgui_ClearGLError();
@@ -2258,6 +2294,10 @@ static const luaL_reg Module_methods[] =
     {"get_frame_height", imgui_GetFrameHeight},
 
     {"set_scroll_here_y", imgui_SetScrollHereY},
+
+    {"net_connect_to_app", imgui_NetConnectToApp},
+    {"net_connect_from_app", imgui_NetConnectFromApp},
+    {"net_is_connected", imgui_NetIsConnected},
     {0, 0}
 };
 

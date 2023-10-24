@@ -31,16 +31,18 @@ function final(self)
 end
 
 function update(self, dt)
-	local w, h = window.get_size()
-	imgui.set_display_size(w, h)
+	if not imgui.net_is_connected() then
+		local w, h = window.get_size()
+		imgui.set_display_size(w, h)
 
-	imgui.set_mouse_input(
-		self.mouse.x, h - self.mouse.y,
-		self.mouse.buttons[LEFT_MOUSE] or 0,
-		self.mouse.buttons[RIGHT_MOUSE] or 0,
-		self.mouse.buttons[MIDDLE_MOUSE] or 0,
-		self.mouse.wheel
-	)
+		imgui.set_mouse_input(
+			self.mouse.x, h - self.mouse.y,
+			self.mouse.buttons[LEFT_MOUSE] or 0,
+			self.mouse.buttons[RIGHT_MOUSE] or 0,
+			self.mouse.buttons[MIDDLE_MOUSE] or 0,
+			self.mouse.wheel
+		)
+	end
 end
 
 local IMGUI_KEYS = {

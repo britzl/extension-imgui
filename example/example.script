@@ -391,6 +391,18 @@ local function main_menu_bar(self)
 			imgui.end_menu()
 		end
 
+		if imgui.begin_menu("Network") then
+			if imgui.menu_item("Connect to server") then
+				imgui.net_connect_to_app("Defold", "localhost")
+			end
+
+			if imgui.menu_item("Connect from server") then
+				imgui.net_connect_from_app("Defold")
+			end
+
+			imgui.end_menu()
+		end
+
 		if imgui.begin_menu("About") then
 			imgui.menu_item("Defold v" .. sys.get_engine_info().version, nil, nil, false)
 
