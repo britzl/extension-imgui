@@ -89,6 +89,8 @@ function init(self)
 		
 	local img2_data, error = sys.load_resource("/example/bundle/images/image2.png") 
 	self.image2 = imgui.image_load_data("image2", img2_data, #img2_data)
+
+	self.netimgui_server = "localhost"
 end
 
 local function close_window(self)
@@ -185,25 +187,19 @@ local function update_tab1(self)
 
 	imgui.separator()
 
-	-- Manual wrapping
-	imgui.text("Manual wrapping:")
-
-	local button_count = 20
-	local button_size = 60
-	local window_pos_x, window_pos_y = imgui.get_window_pos()
-	local region_x, region_y = imgui.get_window_content_region_max()
-	local window_visible_x = window_pos_x + region_x
-	local spacing_x, spacing_y = imgui.get_style_item_spacing()
-
-	for n = 1, button_count do
-		imgui.push_id(tostring(n))
-		imgui.button("Box", button_size, button_size)
-		local last_button_x, last_button_y = imgui.get_item_rect_max()
-		local next_button_x = last_button_x + spacing_x + button_size
-		if (n  < button_count and next_button_x < window_visible_x) then
-			imgui.same_line()
-		end
-		imgui.pop_id()
+	local changed, v = imgui.input_text("Server", self.netimgui_server)
+	if changed then
+		self.netimgui_server = v
+	end
+	
+	if imgui.button("Connect to Netimgui server") then
+		imgui.net_connect_to_app("Defold", self.netimgui_server)
+	end
+	
+	imgui.spacing()
+	
+	if imgui.button("Accept Netimgui server connection") then
+		imgui.net_connect_from_app("Defold")
 	end
 end
 
@@ -270,6 +266,27 @@ local function update_tab2(self)
 		pprint("second same button")
 	end
 	imgui.pop_id()
+
+	-- Manual wrapping
+	imgui.text("Manual wrapping:")
+
+	local button_count = 20
+	local button_size = 60
+	local window_pos_x, window_pos_y = imgui.get_window_pos()
+	local region_x, region_y = imgui.get_window_content_region_max()
+	local window_visible_x = window_pos_x + region_x
+	local spacing_x, spacing_y = imgui.get_style_item_spacing()
+
+	for n = 1, button_count do
+		imgui.push_id(tostring(n))
+		imgui.button("Box", button_size, button_size)
+		local last_button_x, last_button_y = imgui.get_item_rect_max()
+		local next_button_x = last_button_x + spacing_x + button_size
+		if (n  < button_count and next_button_x < window_visible_x) then
+			imgui.same_line()
+		end
+		imgui.pop_id()
+	end
 end
 
 local function update_tab3(self)
@@ -386,18 +403,6 @@ local function main_menu_bar(self)
 			local clicked = imgui.menu_item("Show Demo Window", nil, self.show_demo_window)
 			if clicked then
 				self.show_demo_window = not self.show_demo_window
-			end
-
-			imgui.end_menu()
-		end
-
-		if imgui.begin_menu("Network") then
-			if imgui.menu_item("Connect to server") then
-				imgui.net_connect_to_app("Defold", "localhost")
-			end
-
-			if imgui.menu_item("Connect from server") then
-				imgui.net_connect_from_app("Defold")
 			end
 
 			imgui.end_menu()
