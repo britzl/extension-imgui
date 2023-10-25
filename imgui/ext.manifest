@@ -17,6 +17,10 @@ platforms:
         context:
             flags:  ["-std=c++11"]
 
+    arm64-osx:
+         context:
+            flags:  ["-std=c++11"]
+
     arm64-ios:
         context:
             flags:  ["-std=c++11"]
