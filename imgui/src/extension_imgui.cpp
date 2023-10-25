@@ -330,7 +330,6 @@ static void imgui_NewFrame()
     {
         ImGui_ImplOpenGL3_NewFrame();
         imgui_ClearGLError();
-        //ImGui::NewFrame();
         NetImgui::NewFrame();
         g_imgui_NewFrame = true;
     }
@@ -1937,7 +1936,6 @@ static int imgui_GetFrameHeight(lua_State* L)
 static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 {
     imgui_NewFrame();
-    //ImGui::Render();
     NetImgui::EndFrame();
 
     if (!NetImgui::IsConnected())
@@ -2088,8 +2086,6 @@ static void imgui_Init(float width, float height)
     }
 
     NetImgui::Startup();
-    //NetImgui::ConnectToApp("Defold", "192.168.86.37");
-    //NetImgui::ConnectFromApp("Defold");
     
     ImGui_ImplOpenGL3_Init();
     imgui_ClearGLError();
