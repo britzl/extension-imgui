@@ -2095,6 +2095,7 @@ static void imgui_Shutdown()
 {
     dmLogInfo("imgui_Shutdown");
 
+    NetImgui::Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
     imgui_ClearGLError();
     ImGuiIO& io = ImGui::GetIO();
