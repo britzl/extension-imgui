@@ -12,8 +12,6 @@ Projects such as [cimgui](https://github.com/cimgui/cimgui) offers Dear ImGUI bi
 ## IMPORTANT
 * The project currently only has bindings for a small subset of the Dear ImGUI API.
   * More bindings are added as I need them. Pull requests are accepted!
-* The project is not cross-platform - See below for list of supported platforms
-  * The current version uses the `imgui_impl_opengl3.cpp`
 
 
 ## Platforms support
