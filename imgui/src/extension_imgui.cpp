@@ -43,7 +43,7 @@ static char* g_imgui_TextBuffer     = 0;
 static dmArray<ImFont*> g_imgui_Fonts;
 static dmArray<ImgObject> g_imgui_Images;
 static bool g_VerifyGraphicsCalls   = false;
-
+static bool g_RenderingEnabled      = true;
 
 
 static void imgui_ClearGLError()
@@ -1896,7 +1896,12 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 {
     imgui_NewFrame();
     ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (g_RenderingEnabled)
+    {
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+    
     imgui_ClearGLError();
 
     g_imgui_NewFrame = false;
@@ -1957,6 +1962,14 @@ static int imgui_DrawProgressBar(lua_State* L)
 
     ImVec2 size_param(xsize, ysize);
     ImGui::ProgressBar(progress, size_param);
+    return 0;
+}
+
+static int imgui_SetRenderingEnabled(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    bool enabled = lua_toboolean(L, 1);
+    g_RenderingEnabled = enabled;
     return 0;
 }
 
@@ -2196,7 +2209,7 @@ static const luaL_reg Module_methods[] =
     {"draw_rect_filled", imgui_DrawRectFilled},
     {"draw_line", imgui_DrawLine},
     {"draw_progress", imgui_DrawProgressBar},
-
+    {"set_rendering_enabled", imgui_SetRenderingEnabled},
     {"demo", imgui_Demo},
 
     {"set_mouse_input", imgui_SetMouseInput},
