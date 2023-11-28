@@ -568,6 +568,17 @@ static int imgui_IsWindowFocused(lua_State* L)
     lua_pushboolean(L, focused);
     return 1;
 }
+
+static int imgui_GetContentRegionAvail(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+    imgui_NewFrame();
+    ImVec2 region = ImGui::GetContentRegionAvail();
+    lua_pushnumber(L, region.x);
+    lua_pushnumber(L, region.y);
+    return 2;
+}
+
 static int imgui_GetWindowContentRegionMax(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 2);
@@ -1679,6 +1690,13 @@ static int imgui_SetStyleScrollbarRounding(lua_State* L)
     style.ScrollbarRounding = luaL_checknumber(L, 1);
     return 0;
 }
+static int imgui_SetStyleScrollbarSize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.ScrollbarSize = luaL_checknumber(L, 1);
+    return 0;
+}
 static int imgui_SetStyleColor(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -1758,6 +1776,40 @@ static int imgui_SetCursorPos(lua_State *L)
     return 0;
 }
 
+// ----------------------------
+// ----- ITEM WIDTH -----------
+// ----------------------------
+
+static int imgui_PushItemWidth(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float width = luaL_checknumber(L, 1);
+    ImGui::PushItemWidth(width);
+    return 0;
+}
+
+static int imgui_PopItemWidth(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGui::PopItemWidth();
+    return 0;
+}
+
+static int imgui_SetNextItemWidth(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    float width = luaL_checknumber(L, 1);
+    ImGui::SetNextItemWidth(width);
+    return 0;
+}
+
+static int imgui_CalcItemWidth(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    float width = ImGui::CalcItemWidth();
+    lua_pushnumber(L, width);
+    return 1;
+}
 
 // ----------------------------
 // ----- NAVIGATION -----------------
@@ -2119,6 +2171,7 @@ static const luaL_reg Module_methods[] =
     {"begin_window", imgui_Begin},
     {"end_window", imgui_End},
     {"is_window_focused", imgui_IsWindowFocused},
+    {"get_content_region_avail", imgui_GetContentRegionAvail},
     {"get_window_content_region_max", imgui_GetWindowContentRegionMax},
 
     {"begin_child", imgui_BeginChild},
@@ -2238,10 +2291,16 @@ static const luaL_reg Module_methods[] =
     {"set_style_frame_rounding", imgui_SetStyleFrameRounding},
     {"set_style_tab_rounding", imgui_SetStyleTabRounding},
     {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
+    {"set_style_scrollbar_size", imgui_SetStyleScrollbarSize},
     {"set_style_color", imgui_SetStyleColor},
     {"push_style_color", imgui_PushStyleColor},
     {"pop_style_color", imgui_PopStyleColor},
     {"get_style_item_spacing", imgui_GetStyleItemSpacing},
+
+    {"push_item_width", imgui_PushItemWidth},
+    {"pop_item_width", imgui_PopItemWidth},
+    {"set_next_item_width", imgui_SetNextItemWidth},
+    {"calc_item_width", imgui_CalcItemWidth},
     
     {"set_defaults", imgui_SetDefaults},
     {"set_ini_filename", imgui_SetIniFilename},
