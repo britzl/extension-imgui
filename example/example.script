@@ -6,6 +6,7 @@ local function set_style()
 	imgui.set_style_window_rounding(6)
 	imgui.set_style_frame_rounding(3)
 	imgui.set_style_scrollbar_rounding(10)
+	imgui.set_style_scrollbar_size(10)
 	imgui.set_style_color(imgui.ImGuiCol_Text, 0.90, 0.90, 0.90, 0.90)
 	imgui.set_style_color(imgui.ImGuiCol_TextDisabled, 0.60, 0.60, 0.60, 1.00)
 	imgui.set_style_color(imgui.ImGuiCol_WindowBg, 0.09, 0.09, 0.15, 1.00)
@@ -368,6 +369,45 @@ local function update_tab5(self)
 	
 end
 
+-- Loosely based on "Widgets Width" part of imgui_demo
+local function update_tab6(self)
+	if not self.tab6_f then self.tab6_f = 0 end
+	
+	imgui.text("SetNextItemWidth(200)")
+	imgui.same_line()
+	imgui.set_next_item_width(200)
+	local changed, f = imgui.input_float("float##1", self.tab6_f)
+	if changed then
+		self.tab6_f = f
+	end
+	
+	imgui.text("SetNextItemWidth(GetWindowWidth() * 0.5f)")
+	imgui.same_line()
+	local w,h = imgui.get_window_size()
+	imgui.set_next_item_width(w * 0.5)
+	local changed, f = imgui.input_float("float##2", self.tab6_f)
+	if changed then
+		self.tab6_f = f
+	end
+	
+	imgui.text("SetNextItemWidth(GetContentRegionAvail().x * 0.5f)")
+	imgui.same_line()
+	local aw, ah = imgui.get_content_region_avail()
+	imgui.set_next_item_width(aw * 0.5)
+	local changed, f = imgui.input_float("float##3", self.tab6_f)
+	if changed then
+		self.tab6_f = f
+	end
+	
+	imgui.text("SetNextItemWidth(-200)")
+	imgui.same_line()
+	imgui.set_next_item_width(-200)
+	local changed, f = imgui.input_float("float##4", self.tab6_f)
+	if changed then
+		self.tab6_f = f
+	end
+end
+
 local function main_menu_bar(self)
 	if imgui.begin_main_menu_bar() then
 		if imgui.begin_menu("File") then
@@ -490,6 +530,12 @@ function update(self, dt)
 	local tab5_open = imgui.begin_tab_item("Tab5")
 	if tab5_open then
 		update_tab5(self)
+		imgui.end_tab_item()
+	end
+
+	local tab6_open = imgui.begin_tab_item("Tab6")
+	if tab6_open then
+		update_tab6(self)
 		imgui.end_tab_item()
 	end
 		
