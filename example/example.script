@@ -238,6 +238,9 @@ local function update_tab2(self)
 
 	imgui.separator()
 
+	if imgui.button("Push me to focus on test double") then
+		imgui.set_keyboard_focus_here(0)
+	end
 	local testdbl = self.testdbl or 0
 	local changed, value = imgui.input_double("test double", testdbl, 0.0001, 0.01, 5)
 	if changed then

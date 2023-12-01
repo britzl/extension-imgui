@@ -1644,11 +1644,11 @@ static int imgui_GetItemRectMax(lua_State* L)
 
 static int imgui_SetKeyboardFocusHere(lua_State* L)
 {
-    DM_LUA_STACK_CHECK(L, 1);
+    DM_LUA_STACK_CHECK(L, 0);
     imgui_NewFrame();
     int offset = luaL_checknumber(L, 1);
     ImGui::SetKeyboardFocusHere(offset);
-    return 1;
+    return 0;
 }
 
 // ----------------------------
