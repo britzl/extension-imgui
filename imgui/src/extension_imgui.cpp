@@ -1648,7 +1648,7 @@ static int imgui_SetKeyboardFocusHere(lua_State* L)
     imgui_NewFrame();
     int offset = luaL_checknumber(L, 1);
     ImGui::SetKeyboardFocusHere(offset);
-    return 0;
+    return 1;
 }
 
 // ----------------------------
