@@ -1642,6 +1642,15 @@ static int imgui_GetItemRectMax(lua_State* L)
     return 2;
 }
 
+static int imgui_SetKeyboardFocusHere(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    int offset = luaL_checknumber(L, 1);
+    ImGui::SetKeyboardFocusHere(offset);
+    return 0;
+}
+
 // ----------------------------
 // ----- STYLE ----------------
 // ----------------------------
@@ -2284,6 +2293,7 @@ static const luaL_reg Module_methods[] =
     {"get_item_rect_max", imgui_GetItemRectMax},
     {"is_mouse_clicked", imgui_IsMouseClicked},
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},
+    {"set_keyboard_focus_here", imgui_SetKeyboardFocusHere},
 
     {"set_style_window_rounding", imgui_SetStyleWindowRounding},
     {"set_style_window_bordersize", imgui_SetStyleWindowBorderSize},
