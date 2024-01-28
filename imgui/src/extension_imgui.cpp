@@ -374,6 +374,41 @@ static int imgui_SetMouseInput(lua_State* L)
 
     return 0;
 }
+static int imgui_SetMousePos(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    const ImVec2 mouse_pos_backup = io.MousePos;
+    io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
+
+    if (io.WantSetMousePos)
+    {
+        return luaL_error(L, "WantSetMousePos not supported yet.");
+    }
+    else
+    {
+        io.MousePos = ImVec2(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+    }
+
+    return 0;
+}
+static int imgui_SetMouseButton(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiIO& io = ImGui::GetIO();
+    int index = luaL_checknumber(L, 1);
+    io.MouseDown[index] = luaL_checknumber(L, 2);
+    return 0;
+}
+static int imgui_SetMouseWheel(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiIO& io = ImGui::GetIO();
+    io.MouseWheel += luaL_checknumber(L, 1);
+    return 0;
+}
 static int imgui_SetKeyDown(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -2275,6 +2310,9 @@ static const luaL_reg Module_methods[] =
     {"demo", imgui_Demo},
 
     {"set_mouse_input", imgui_SetMouseInput},
+    {"set_mouse_pos", imgui_SetMousePos},
+    {"set_mouse_button", imgui_SetMouseButton},
+    {"set_mouse_wheel", imgui_SetMouseWheel},
     {"set_key_down", imgui_SetKeyDown},
     {"set_key_modifier_ctrl", imgui_SetKeyModifierCtrl},
     {"set_key_modifier_shift", imgui_SetKeyModifierShift},

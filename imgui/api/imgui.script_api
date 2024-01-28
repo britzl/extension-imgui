@@ -1246,6 +1246,38 @@
 
 #*****************************************************************************************************
 
+  - name: set_mouse_button
+    type: function
+
+    parameters:
+      - name: index
+        type: number
+        desc: one of imgui.MOUSEBUTTON_LEFT, imgui.MOUSEBUTTON_MIDDLE or imgui.MOUSEBUTTON_RIGHT
+      - name: state
+        type: number
+
+#*****************************************************************************************************
+
+  - name: set_mouse_wheel
+    type: function
+
+    parameters:
+      - name: mousewheel
+        type: number
+
+#*****************************************************************************************************
+
+  - name: set_mouse_pos
+    type: function
+
+    parameters:
+      - name: x
+        type: number
+      - name: y
+        type: number
+
+#*****************************************************************************************************
+
   - name: set_key_down
     type: function
 

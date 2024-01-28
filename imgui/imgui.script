@@ -15,13 +15,6 @@ function init(self)
 	if self.acquire_input_focus then
 		msg.post(".", "acquire_input_focus")
 	end
-	self.actions = {}
-	self.mouse = {
-		x = 0,
-		y = 0,
-		wheel = 0,
-		buttons = {},
-	}
 end
 
 function final(self)
@@ -33,14 +26,6 @@ end
 function update(self, dt)
 	local w, h = window.get_size()
 	imgui.set_display_size(w, h)
-
-	imgui.set_mouse_input(
-		self.mouse.x, h - self.mouse.y,
-		self.mouse.buttons[LEFT_MOUSE] or 0,
-		self.mouse.buttons[RIGHT_MOUSE] or 0,
-		self.mouse.buttons[MIDDLE_MOUSE] or 0,
-		self.mouse.wheel
-	)
 end
 
 local IMGUI_KEYS = {
@@ -70,16 +55,28 @@ local IMGUI_KEYS = {
 
 
 function on_input(self, action_id, action)
-	if action_id == LEFT_MOUSE or action_id == MIDDLE_MOUSE or action_id == RIGHT_MOUSE then
+	if action_id == LEFT_MOUSE then
 		if action.pressed then
-			self.mouse.buttons[action_id] = 1
+			imgui.set_mouse_button(imgui.MOUSEBUTTON_LEFT, 1)
 		elseif action.released then
-			self.mouse.buttons[action_id] = 0
+			imgui.set_mouse_button(imgui.MOUSEBUTTON_LEFT, 0)
+		end
+	elseif action_id == MIDDLE_MOUSE then
+		if action.pressed then
+			imgui.set_mouse_button(imgui.MOUSEBUTTON_MIDDLE, 1)
+		elseif action.released then
+			imgui.set_mouse_button(imgui.MOUSEBUTTON_MIDDLE, 0)
+		end
+	elseif action_id == RIGHT_MOUSE then
+		if action.pressed then
+			imgui.set_mouse_button(imgui.MOUSEBUTTON_RIGHT, 1)
+		elseif action.released then
+			imgui.set_mouse_button(imgui.MOUSEBUTTON_RIGHT, 0)
 		end
 	elseif action_id == WHEEL_UP then
-		self.mouse.wheel = action.value
+		imgui.set_mouse_wheel(action.value)
 	elseif action_id == WHEEL_DOWN then
-		self.mouse.wheel = -action.value
+		imgui.set_mouse_wheel(-action.value)
 	elseif action_id == TEXT then
 		imgui.add_input_character(action.text)
 	elseif action_id == KEY_SHIFT then
@@ -108,7 +105,9 @@ function on_input(self, action_id, action)
 	end
 
 	if not action_id then
-		self.mouse.x = action.screen_x
-		self.mouse.y = action.screen_y
+		local w, h = window.get_size()
+		local x = action.screen_x
+		local y = h - action.screen_y
+		imgui.set_mouse_pos(x, y)
 	end
 end
