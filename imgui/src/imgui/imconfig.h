@@ -17,6 +17,7 @@
 #if defined(DM_PLATFORM_HTML5)
   #define IMGUI_IMPL_OPENGL_ES2
   #undef GL_ES_VERSION_2_0
+  #include <GLES2/gl2.h>
 
 #elif defined(DM_PLATFORM_WINDOWS)
   #define IMGUI_IMPL_OPENGL_LOADER_GL3W
@@ -29,12 +30,17 @@
 
 #elif defined(DM_PLATFORM_ANDROID)
   #define IMGUI_IMPL_OPENGL_ES2
+  #include <GLES2/gl2.h>
 
 #elif defined(DM_PLATFORM_IOS)
-  // autodetect in imgui_impl_opengl3.h
+  #define IMGUI_IMPL_OPENGL_ES2
+  #undef GL_ES_VERSION_2_0
+  #include <GLES2/gl2.h>
 
 #else
-  #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM "dummy_loader.h"
+  #define IMGUI_IMPL_OPENGL_ES3
+  #include <GLES3/gl3.h>
+
 #endif
 
 
