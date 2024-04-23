@@ -1891,6 +1891,12 @@
   - name: INPUTFLAGS_CALLBACKRESIZE
   - name: INPUTFLAGS_CALLBACKEDIT
 
+  - name: COND_NONE
+  - name: COND_ALWAYS
+  - name: COND_ONCE
+  - name: COND_FIRSTUSEEVER
+  - name: COND_APPEARING
+
   - name: KEY_TAB
   - name: KEY_LEFTARROW
   - name: KEY_RIGHTARROW
