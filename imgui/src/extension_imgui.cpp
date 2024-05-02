@@ -414,7 +414,7 @@ static int imgui_SetKeyDown(lua_State* L)
     DM_LUA_STACK_CHECK(L, 0);
     ImGuiIO& io = ImGui::GetIO();
     uint32_t key = luaL_checknumber(L, 1);
-    io.KeysDown[key] = lua_toboolean(L, 2);
+    io.AddKeyEvent((ImGuiKey)key, lua_toboolean(L, 2));
     return 0;
 }
 
@@ -1925,7 +1925,7 @@ static int imgui_FontAddTTFData(lua_State * L)
     memcpy(ttf_data_cpy, ttf_data, ttf_data_size);
 
     ImGuiIO& io = ImGui::GetIO();
-    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data_cpy, font_size, font_pixels);
+    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data_cpy, ttf_data_size, font_size);
     // Put font in map.
     if(font != NULL)
     {
@@ -2141,13 +2141,6 @@ static void imgui_Init(float width, float height)
 
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = ImVec2(width, height);
-
-    // init keymap list
-    // We will be sending the correct ImGuiKey_ enums from Lua
-    for (int i = 0; i < ImGuiKey_COUNT; i++)
-    {
-        io.KeyMap[i] = i;
-    }
 
     ImGui_ImplOpenGL3_Init();
     imgui_ClearGLError();
@@ -2441,7 +2434,7 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "KEY_SPACE", ImGuiKey_Space);
     lua_setfieldstringint(L, "KEY_ENTER", ImGuiKey_Enter);
     lua_setfieldstringint(L, "KEY_ESCAPE", ImGuiKey_Escape);
-    lua_setfieldstringint(L, "KEY_KEYPADENTER", ImGuiKey_KeyPadEnter);
+    lua_setfieldstringint(L, "KEY_KEYPADENTER", ImGuiKey_KeypadEnter);
     lua_setfieldstringint(L, "KEY_A", ImGuiKey_A);
     lua_setfieldstringint(L, "KEY_C", ImGuiKey_C);
     lua_setfieldstringint(L, "KEY_V", ImGuiKey_V);
@@ -2621,7 +2614,7 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "INPUTFLAGS_ALLOWTABINPUT", ImGuiInputTextFlags_AllowTabInput);  // Pressing TAB input a '\t' character into the text field
     lua_setfieldstringint(L, "INPUTFLAGS_CTRLENTERFORNEWLINE", ImGuiInputTextFlags_CtrlEnterForNewLine);  // In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
     lua_setfieldstringint(L, "INPUTFLAGS_NOHORIZONTALSCROLL", ImGuiInputTextFlags_NoHorizontalScroll);  // Disable following the cursor horizontally
-    lua_setfieldstringint(L, "INPUTFLAGS_ALWAYSINSERTMODE", ImGuiInputTextFlags_AlwaysInsertMode);  // Insert mode
+    lua_setfieldstringint(L, "INPUTFLAGS_ALWAYSINSERTMODE", ImGuiInputTextFlags_AlwaysOverwrite);  // Insert mode
     lua_setfieldstringint(L, "INPUTFLAGS_READONLY", ImGuiInputTextFlags_ReadOnly);  // Read-only mode
     lua_setfieldstringint(L, "INPUTFLAGS_PASSWORD", ImGuiInputTextFlags_Password);  // Password mode, display all characters as '*'
     lua_setfieldstringint(L, "INPUTFLAGS_NOUNDOREDO", ImGuiInputTextFlags_NoUndoRedo);  // Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
