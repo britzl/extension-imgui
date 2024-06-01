@@ -3,10 +3,48 @@ local SITH = { "Maul", "Vader", "Palpatine" }
 
 
 local function set_style()
-	imgui.set_style_window_rounding(6)
-	imgui.set_style_frame_rounding(3)
-	imgui.set_style_scrollbar_rounding(10)
-	imgui.set_style_scrollbar_size(10)
+	--[[local style = {}
+	style.ChildBorderSize = 1
+	style.PopupRounding = 0
+	style.PopupBorderSize = 1
+	style.FramePadding = vmath.vector3(4, 3, 0)
+	style.FrameRounding = 0
+	style.FrameBorderSize = 0
+	style.ItemSpacing = vmath.vector3(8, 4, 0)
+	style.ItemInnerSpacing = vmath.vector3(4, 4, 0)
+	style.CellPadding = vmath.vector3(4, 2, 0)
+	style.TouchExtraPadding = vmath.vector3(0, 0, 0)
+	style.IndentSpacing = 21
+	style.Alpha = 1
+	style.ScrollbarSize = 14
+	style.ScrollbarRounding = 9
+	style.GrabMinSize = 10
+	style.GrabRounding = 0
+	style.LogSliderDeadzone = 4
+	style.TabRounding = 4
+	style.TabBorderSize = 0
+	style.TabMinWidthForCloseButton = 0
+	style.ColorButtonPosition = 1
+	style.ButtonTextAlign = vmath.vector3(0.5, 0.5, 0)
+	style.SelectableTextAlign = vmath.vector3(0, 0, 0)
+	style.DisplayWindowPadding = vmath.vector3(19, 19, 0)
+	style.DisplaySafeAreaPadding = vmath.vector3(3, 3, 0)
+	style.MouseCursorScale = 1
+	style.CircleSegmentMaxError = 1.6
+	style.ColumnsMinSpacing = 6
+	style.AntiAliasedLines = true
+	style.AntiAliasedLinesUseTex = true
+	style.AntiAliasedFill = true
+	style.CurveTessellationTol = 1.25
+	style.WindowPadding = vmath.vector3(8, 8, 0)
+	style.WindowRounding = 0
+	style.WindowBorderSize = 1
+	style.WindowMinSize = vmath.vector3(32, 32, 0)
+	style.WindowTitleAlign = vmath.vector3(0, 0.5, 0)
+	style.WindowMenuButtonPosition = 0
+	style.ChildRounding = 0
+	imgui.set_style(style)--]]
+
 	imgui.set_style_color(imgui.ImGuiCol_Text, 0.90, 0.90, 0.90, 0.90)
 	imgui.set_style_color(imgui.ImGuiCol_TextDisabled, 0.60, 0.60, 0.60, 1.00)
 	imgui.set_style_color(imgui.ImGuiCol_WindowBg, 0.09, 0.09, 0.15, 1.00)
@@ -43,7 +81,7 @@ local function set_style()
 	imgui.set_style_color(imgui.ImGuiCol_TextSelectedBg, 0.00, 0.00, 1.00, 0.35)
 end
 
-local function makeData(self)
+local function make_data(self)
 	self.values_line = {}
 	self.values_hist = {}
 	for i=1, 60 do 
@@ -59,15 +97,17 @@ function init(self)
 	self.show_demo_window = false
 	self.show_close_window = false
 	self.show_live_data = false
-	
-	imgui.set_ini_filename()
-	set_style()
-	local scale = 2
-	imgui.scale_all_sizes(scale)
 
 	self.values_line = {}
 	self.values_hist = {}
-	makeData(self)
+	make_data(self)
+
+
+	imgui.set_ini_filename()
+	set_style()
+	self.style = imgui.get_style()
+	local scale = 2
+	imgui.scale_all_sizes(scale)
 
 	local fontsize 		= 12.0 * scale
 	local fontsizebase 	= 12.0 * scale
@@ -87,7 +127,7 @@ function init(self)
 
 	-- File based Image can be used on desktop platforms
 	-- self.image1 = imgui.image_load("example/images/image1.png")
-		
+
 	local img2_data, error = sys.load_resource("/example/bundle/images/image2.png") 
 	self.image2 = imgui.image_load_data("image2", img2_data, #img2_data)
 end
@@ -185,7 +225,7 @@ local function update_tab1(self)
 
 		imgui.end_table()
 	end
-	
+
 	imgui.separator()
 
 	-- Manual wrapping
@@ -196,7 +236,7 @@ local function update_tab1(self)
 	local window_pos_x, window_pos_y = imgui.get_window_pos()
 	local region_x, region_y = imgui.get_window_content_region_max()
 	local window_visible_x = window_pos_x + region_x
-	local spacing_x, spacing_y = imgui.get_style_item_spacing()
+	local spacing_x = self.style.ItemSpacing.x
 
 	for n = 1, button_count do
 		imgui.push_id(tostring(n))
@@ -286,7 +326,7 @@ local function update_tab3(self)
 	end
 
 	if(self.show_live_data == true) then 
-		makeData(self)
+		make_data(self)
 	end
 	imgui.separator()
 	

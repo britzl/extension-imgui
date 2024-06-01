@@ -1451,6 +1451,24 @@
 #***** STYLE *****************************************************************************************
 #*****************************************************************************************************
 
+  - name: set_style
+    type: function
+
+    parameters:
+      - name: style
+        type: table
+
+#*****************************************************************************************************
+
+  - name: get_style
+    type: function
+
+    return:
+      - name: style
+        type: table
+
+#*****************************************************************************************************
+
   - name: set_style_window_rounding
     type: function
 
@@ -1910,6 +1928,12 @@
   - name: COND_ONCE
   - name: COND_FIRSTUSEEVER
   - name: COND_APPEARING
+
+  - name: DIR_NONE
+  - name: DIR_LEFT
+  - name: DIR_RIGHT
+  - name: DIR_UP
+  - name: DIR_DOWN
 
   - name: KEY_TAB
   - name: KEY_LEFTARROW

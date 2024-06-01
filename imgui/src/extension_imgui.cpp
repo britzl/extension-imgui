@@ -1707,57 +1707,370 @@ static int imgui_SetKeyboardFocusHere(lua_State* L)
 // ----- STYLE ----------------
 // ----------------------------
 
-static int imgui_SetStyleWindowBorderSize(lua_State* L)
+static int imgui_GetStyle(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    ImGuiStyle& style = ImGui::GetStyle();
+
+    lua_newtable(L);
+
+    lua_pushliteral(L, "Alpha");        // float
+    lua_pushnumber(L, style.Alpha);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "WindowPadding");        // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.WindowPadding.x, style.WindowPadding.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "WindowRounding");       // float
+    lua_pushnumber(L, style.WindowRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "WindowBorderSize");     // float
+    lua_pushnumber(L, style.WindowBorderSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "WindowMinSize");        // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.WindowMinSize.x, style.WindowMinSize.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "WindowTitleAlign");     // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.WindowTitleAlign.x, style.WindowTitleAlign.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "WindowMenuButtonPosition");     // ImGuiDir
+    lua_pushnumber(L, style.WindowMenuButtonPosition);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ChildRounding");        // float
+    lua_pushnumber(L, style.ChildRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ChildBorderSize");      // float
+    lua_pushnumber(L, style.ChildBorderSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "PopupRounding");        // float
+    lua_pushnumber(L, style.PopupRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "PopupBorderSize");      // float
+    lua_pushnumber(L, style.PopupBorderSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "FramePadding");     // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.FramePadding.x, style.FramePadding.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "FrameRounding");        // float
+    lua_pushnumber(L, style.FrameRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "FrameBorderSize");      // float
+    lua_pushnumber(L, style.FrameBorderSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ItemSpacing");      // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.ItemSpacing.x, style.ItemSpacing.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ItemInnerSpacing");     // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.ItemInnerSpacing.x, style.ItemInnerSpacing.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "CellPadding");      // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.CellPadding.x, style.CellPadding.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "TouchExtraPadding");        // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.TouchExtraPadding.x, style.TouchExtraPadding.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "IndentSpacing");        // float
+    lua_pushnumber(L, style.IndentSpacing);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ColumnsMinSpacing");        // float
+    lua_pushnumber(L, style.ColumnsMinSpacing);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ScrollbarSize");        // float
+    lua_pushnumber(L, style.ScrollbarSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ScrollbarRounding");        // float
+    lua_pushnumber(L, style.ScrollbarRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "GrabMinSize");      // float
+    lua_pushnumber(L, style.GrabMinSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "GrabRounding");     // float
+    lua_pushnumber(L, style.GrabRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "LogSliderDeadzone");        // float
+    lua_pushnumber(L, style.LogSliderDeadzone);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "TabRounding");      // float
+    lua_pushnumber(L, style.TabRounding);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "TabBorderSize");        // float
+    lua_pushnumber(L, style.TabBorderSize);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "TabMinWidthForCloseButton");        // float
+    lua_pushnumber(L, style.TabMinWidthForCloseButton);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ColorButtonPosition");      // ImGuiDir
+    lua_pushnumber(L, style.ColorButtonPosition);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "ButtonTextAlign");      // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.ButtonTextAlign.x, style.ButtonTextAlign.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "SelectableTextAlign");      // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.SelectableTextAlign.x, style.SelectableTextAlign.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "DisplayWindowPadding");     // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.DisplayWindowPadding.x, style.DisplayWindowPadding.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "DisplaySafeAreaPadding");       // ImVec2
+    dmScript::PushVector3(L, dmVMath::Vector3(style.DisplaySafeAreaPadding.x, style.DisplaySafeAreaPadding.y, 0));
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "MouseCursorScale");     // float
+    lua_pushnumber(L, style.MouseCursorScale);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "AntiAliasedLines");     // bool
+    lua_pushboolean(L, style.AntiAliasedLines);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "AntiAliasedLinesUseTex");       // bool
+    lua_pushboolean(L, style.AntiAliasedLinesUseTex);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "AntiAliasedFill");      // bool
+    lua_pushboolean(L, style.AntiAliasedFill);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "CurveTessellationTol");     // float
+    lua_pushnumber(L, style.CurveTessellationTol);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "CircleSegmentMaxError");        // float
+    lua_pushnumber(L, style.CircleSegmentMaxError);
+    lua_rawset(L, -3);
+
+    return 1;
+}
+
+static int imgui_SetStyle(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
     ImGuiStyle& style = ImGui::GetStyle();
-    style.WindowBorderSize = luaL_checknumber(L, 1);
+    if (lua_isnil(L, 1)) {
+        return 0;
+    }
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_pushvalue(L, 1);
+    lua_pushnil(L);
+    while (lua_next(L, -2)) {
+        const char* attr = lua_tostring(L, -2);
+        if (strcmp(attr, "Alpha") == 0)
+        {
+            style.Alpha = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "WindowPadding") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.WindowPadding.x = v3->getX();
+            style.WindowPadding.y = v3->getY();
+        }
+        else if (strcmp(attr, "WindowRounding") == 0)
+        {
+            style.WindowRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "WindowBorderSize") == 0)
+        {
+            style.WindowBorderSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "WindowMinSize") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.WindowMinSize.x = v3->getX();
+            style.WindowMinSize.y = v3->getY();
+        }
+        else if (strcmp(attr, "WindowTitleAlign") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.WindowTitleAlign.x = v3->getX();
+            style.WindowTitleAlign.y = v3->getY();
+        }
+        else if (strcmp(attr, "WindowMenuButtonPosition") == 0)
+        {
+            style.WindowMenuButtonPosition = luaL_checkinteger(L, -1);
+        }
+        else if (strcmp(attr, "ChildRounding") == 0)
+        {
+            style.ChildRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "ChildBorderSize") == 0)
+        {
+            style.ChildBorderSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "PopupRounding") == 0)
+        {
+            style.PopupRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "PopupBorderSize") == 0)
+        {
+            style.PopupBorderSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "FramePadding") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.FramePadding.x = v3->getX();
+            style.FramePadding.y = v3->getY();
+        }
+        else if (strcmp(attr, "FrameRounding") == 0)
+        {
+            style.FrameRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "FrameBorderSize") == 0)
+        {
+            style.FrameBorderSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "ItemSpacing") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.ItemSpacing.x = v3->getX();
+            style.ItemSpacing.y = v3->getY();
+        }
+        else if (strcmp(attr, "ItemInnerSpacing") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.ItemInnerSpacing.x = v3->getX();
+            style.ItemInnerSpacing.y = v3->getY();
+        }
+        else if (strcmp(attr, "CellPadding") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.CellPadding.x = v3->getX();
+            style.CellPadding.y = v3->getY();
+        }
+        else if (strcmp(attr, "TouchExtraPadding") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.TouchExtraPadding.x = v3->getX();
+            style.TouchExtraPadding.y = v3->getY();
+        }
+        else if (strcmp(attr, "IndentSpacing") == 0)
+        {
+            style.IndentSpacing = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "ColumnsMinSpacing") == 0)
+        {
+            style.ColumnsMinSpacing = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "ScrollbarSize") == 0)
+        {
+            style.ScrollbarSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "ScrollbarRounding") == 0)
+        {
+            style.ScrollbarRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "GrabMinSize") == 0)
+        {
+            style.GrabMinSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "GrabRounding") == 0)
+        {
+            style.GrabRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "LogSliderDeadzone") == 0)
+        {
+            style.LogSliderDeadzone = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "TabRounding") == 0)
+        {
+            style.TabRounding = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "TabBorderSize") == 0)
+        {
+            style.TabBorderSize = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "TabMinWidthForCloseButton") == 0)
+        {
+            style.TabMinWidthForCloseButton = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "ColorButtonPosition") == 0)
+        {
+            style.ColorButtonPosition = luaL_checkinteger(L, -1);
+        }
+        else if (strcmp(attr, "ButtonTextAlign") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.ButtonTextAlign.x = v3->getX();
+            style.ButtonTextAlign.y = v3->getY();
+        }
+        else if (strcmp(attr, "SelectableTextAlign") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.SelectableTextAlign.x = v3->getX();
+            style.SelectableTextAlign.y = v3->getY();
+        }
+        else if (strcmp(attr, "DisplayWindowPadding") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.DisplayWindowPadding.x = v3->getX();
+            style.DisplayWindowPadding.y = v3->getY();
+        }
+        else if (strcmp(attr, "DisplaySafeAreaPadding") == 0)
+        {
+            dmVMath::Vector3* v3 = dmScript::CheckVector3(L, -1);
+            style.DisplaySafeAreaPadding.x = v3->getX();
+            style.DisplaySafeAreaPadding.y = v3->getY();
+        }
+        else if (strcmp(attr, "MouseCursorScale") == 0)
+        {
+            style.MouseCursorScale = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "AntiAliasedLines") == 0)
+        {
+            style.AntiAliasedLines = lua_toboolean(L, -1);
+        }
+        else if (strcmp(attr, "AntiAliasedLinesUseTex") == 0)
+        {
+            style.AntiAliasedLinesUseTex = lua_toboolean(L, -1);
+        }
+        else if (strcmp(attr, "AntiAliasedFill") == 0)
+        {
+            style.AntiAliasedFill = lua_toboolean(L, -1);
+        }
+        else if (strcmp(attr, "CurveTessellationTol") == 0)
+        {
+            style.CurveTessellationTol = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "CircleSegmentMaxError") == 0)
+        {
+            style.CircleSegmentMaxError = luaL_checknumber(L, -1);
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
     return 0;
 }
 
-static int imgui_SetStyleChildBorderSize(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ChildBorderSize = luaL_checknumber(L, 1);
-    return 0;
-}
-
-static int imgui_SetStyleWindowRounding(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.WindowRounding = luaL_checknumber(L, 1);
-    return 0;
-}
-static int imgui_SetStyleFrameRounding(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.FrameRounding = luaL_checknumber(L, 1);
-    return 0;
-}
-static int imgui_SetStyleTabRounding(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.TabRounding = luaL_checknumber(L, 1);
-    return 0;
-}
-static int imgui_SetStyleScrollbarRounding(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScrollbarRounding = luaL_checknumber(L, 1);
-    return 0;
-}
-static int imgui_SetStyleScrollbarSize(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 0);
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScrollbarSize = luaL_checknumber(L, 1);
-    return 0;
-}
 static int imgui_SetStyleColor(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -1791,15 +2104,7 @@ static int imgui_PopStyleColor(lua_State* L)
     ImGui::PopStyleColor(count);
     return 0;
 }
-static int imgui_GetStyleItemSpacing(lua_State* L)
-{
-    DM_LUA_STACK_CHECK(L, 2);
-    ImGuiStyle& style = ImGui::GetStyle();
-    ImVec2 spacing = style.ItemSpacing;
-    lua_pushnumber(L, spacing.x);
-    lua_pushnumber(L, spacing.y);
-    return 2;
-}
+
 static int imgui_SetWindowFontScale(lua_State *L)
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -2351,17 +2656,12 @@ static const luaL_reg Module_methods[] =
     {"is_mouse_double_clicked", imgui_IsMouseDoubleClicked},
     {"set_keyboard_focus_here", imgui_SetKeyboardFocusHere},
 
-    {"set_style_window_rounding", imgui_SetStyleWindowRounding},
-    {"set_style_window_bordersize", imgui_SetStyleWindowBorderSize},
-    {"set_style_child_bordersize", imgui_SetStyleChildBorderSize},
-    {"set_style_frame_rounding", imgui_SetStyleFrameRounding},
-    {"set_style_tab_rounding", imgui_SetStyleTabRounding},
-    {"set_style_scrollbar_rounding", imgui_SetStyleScrollbarRounding},
-    {"set_style_scrollbar_size", imgui_SetStyleScrollbarSize},
+    {"set_style", imgui_SetStyle},
+    {"get_style", imgui_GetStyle},
+
     {"set_style_color", imgui_SetStyleColor},
     {"push_style_color", imgui_PushStyleColor},
     {"pop_style_color", imgui_PopStyleColor},
-    {"get_style_item_spacing", imgui_GetStyleItemSpacing},
 
     {"push_item_width", imgui_PushItemWidth},
     {"pop_item_width", imgui_PopItemWidth},
@@ -2652,6 +2952,12 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "COND_ONCE", ImGuiCond_Once);  // Set the variable once per runtime session (only the first call will succeed)
     lua_setfieldstringint(L, "COND_FIRSTUSEEVER", ImGuiCond_FirstUseEver);  // Set the variable if the object/window has no persistently saved data (no entry in .ini file)
     lua_setfieldstringint(L, "COND_APPEARING", ImGuiCond_Appearing);  // Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+
+    lua_setfieldstringint(L, "DIR_NONE", ImGuiDir_None);
+    lua_setfieldstringint(L, "DIR_LEFT", ImGuiDir_Left);
+    lua_setfieldstringint(L, "DIR_RIGHT", ImGuiDir_Right);
+    lua_setfieldstringint(L, "DIR_UP", ImGuiDir_Up);
+    lua_setfieldstringint(L, "DIR_DOWN", ImGuiDir_Down);
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
