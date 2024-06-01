@@ -515,6 +515,10 @@
         type: number
       - name: flags
         type: number
+      - name: outer_size_x
+        type: number
+      - name: outer_size_y
+        type: number
 
     return:
       - name: result

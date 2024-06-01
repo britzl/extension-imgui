@@ -160,30 +160,31 @@ local function update_tab1(self)
 		self.show_close_window = true;
 	end
 
-	imgui.begin_table("table_example", 3)
-	imgui.table_setup_column("FIRST NAME")
-	imgui.table_setup_column("LAST NAME")
-	imgui.table_setup_column("AGE")
-	imgui.table_headers_row()
+	if imgui.begin_table("table_example", 3) then
+		imgui.table_setup_column("FIRST NAME")
+		imgui.table_setup_column("LAST NAME")
+		imgui.table_setup_column("AGE")
+		imgui.table_headers_row()
 
-	imgui.table_next_row()
-	imgui.table_next_column()
-	imgui.text("Bilbo")
-	imgui.table_next_column()
-	imgui.text("Baggins")
-	imgui.table_next_column()
-	imgui.text("129")
-	
-	imgui.table_next_row()
-	imgui.table_next_column()
-	imgui.text("Frodo")
-	imgui.table_next_column()
-	imgui.text("Baggins")
-	imgui.table_next_column()
-	imgui.text("51")
-	
-	imgui.end_table()
+		imgui.table_next_row()
+		imgui.table_next_column()
+		imgui.text("Bilbo")
+		imgui.table_next_column()
+		imgui.text("Baggins")
+		imgui.table_next_column()
+		imgui.text("129")
 
+		imgui.table_next_row()
+		imgui.table_next_column()
+		imgui.text("Frodo")
+		imgui.table_next_column()
+		imgui.text("Baggins")
+		imgui.table_next_column()
+		imgui.text("51")
+
+		imgui.end_table()
+	end
+	
 	imgui.separator()
 
 	-- Manual wrapping

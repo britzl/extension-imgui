@@ -853,7 +853,13 @@ static int imgui_BeginTable(lua_State* L)
     {
         flags = luaL_checkint(L, 3);
     }
-    bool result = ImGui::BeginTable(id, column, flags);
+    ImVec2 outer_size = ImVec2(0.0f, 0.0f);
+    if (lua_isnumber(L, 4) && lua_isnumber(L, 5))
+    {
+        outer_size.x = luaL_checknumber(L, 4);
+        outer_size.y = luaL_checknumber(L, 5);
+    }
+    bool result = ImGui::BeginTable(id, column, flags, outer_size);
     lua_pushboolean(L, result);
     return 1;
 }
@@ -2248,6 +2254,7 @@ static const luaL_reg Module_methods[] =
     {"table_set_column_index", imgui_TableSetColumnIndex},
     {"table_setup_column", imgui_TableSetupColumn},
     {"table_headers_row", imgui_TableHeadersRow},
+    {"table_setup_scroll_freeze", imgui_TableSetupScrollFreeze},
 
     {"begin_popup_context_item", imgui_BeginPopupContextItem},
     {"begin_popup", imgui_BeginPopup},
