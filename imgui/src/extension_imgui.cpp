@@ -919,6 +919,17 @@ static int imgui_TableNextRow(lua_State* L)
 }
 
 
+static int imgui_TableSetupScrollFreeze(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    int freeze_cols = luaL_checkinteger(L, 1);
+    int freeze_rows = luaL_checkinteger(L, 2);
+    ImGui::TableSetupScrollFreeze(freeze_cols, freeze_rows);
+    return 0;
+}
+
+
 // ----------------------------
 // ----- TOOLTIP ---------
 // ----------------------------

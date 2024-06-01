@@ -161,6 +161,7 @@ local function update_tab1(self)
 	end
 
 	if imgui.begin_table("table_example", 3) then
+		imgui.table_setup_scroll_freeze(1, 1)
 		imgui.table_setup_column("FIRST NAME")
 		imgui.table_setup_column("LAST NAME")
 		imgui.table_setup_column("AGE")
