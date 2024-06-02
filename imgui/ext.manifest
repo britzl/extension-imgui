@@ -1,10 +1,10 @@
 name: "DefoldImGui"
 
 platforms:
-    x86-win32:
+    common:
         context:
-            defines: ["STBI_NO_SIMD"]
+            flags:      ["-std=c++11"]
 
-    x86_64-win32:
+    win32:
         context:
-            defines: ["STBI_NO_SIMD"]
+            defines:    ["STBI_NO_SIMD"]

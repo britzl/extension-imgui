@@ -1707,6 +1707,7 @@ static int imgui_SetKeyboardFocusHere(lua_State* L)
 // ----- STYLE ----------------
 // ----------------------------
 
+
 static int imgui_GetStyle(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 1);
@@ -1716,6 +1717,10 @@ static int imgui_GetStyle(lua_State* L)
 
     lua_pushliteral(L, "Alpha");        // float
     lua_pushnumber(L, style.Alpha);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "DisabledAlpha");        // float
+    lua_pushnumber(L, style.DisabledAlpha);
     lua_rawset(L, -3);
 
     lua_pushliteral(L, "WindowPadding");        // ImVec2
@@ -1837,6 +1842,9 @@ static int imgui_GetStyle(lua_State* L)
     lua_pushliteral(L, "SelectableTextAlign");      // ImVec2
     dmScript::PushVector3(L, dmVMath::Vector3(style.SelectableTextAlign.x, style.SelectableTextAlign.y, 0));
     lua_rawset(L, -3);
+    // float       SeparatorTextBorderSize;    // Thickkness of border in SeparatorText()
+    // ImVec2      SeparatorTextAlign;         // Alignment of text within the separator. Defaults to (0.0f, 0.5f) (left aligned, center).
+    // ImVec2      SeparatorTextPadding;       // Horizontal offset of text from each edge of the separator + spacing on other axis. Generally small values. .y is recommended to be == FramePadding.y.
 
     lua_pushliteral(L, "DisplayWindowPadding");     // ImVec2
     dmScript::PushVector3(L, dmVMath::Vector3(style.DisplayWindowPadding.x, style.DisplayWindowPadding.y, 0));
@@ -1866,8 +1874,16 @@ static int imgui_GetStyle(lua_State* L)
     lua_pushnumber(L, style.CurveTessellationTol);
     lua_rawset(L, -3);
 
-    lua_pushliteral(L, "CircleSegmentMaxError");        // float
-    lua_pushnumber(L, style.CircleSegmentMaxError);
+    lua_pushliteral(L, "HoverStationaryDelay");        // float
+    lua_pushnumber(L, style.HoverStationaryDelay);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "HoverDelayShort");        // float
+    lua_pushnumber(L, style.HoverDelayShort);
+    lua_rawset(L, -3);
+
+    lua_pushliteral(L, "HoverDelayNormal");        // float
+    lua_pushnumber(L, style.HoverDelayNormal);
     lua_rawset(L, -3);
 
     return 1;
@@ -1888,6 +1904,10 @@ static int imgui_SetStyle(lua_State* L)
         if (strcmp(attr, "Alpha") == 0)
         {
             style.Alpha = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "DisabledAlpha") == 0)
+        {
+            style.DisabledAlpha = luaL_checknumber(L, -1);
         }
         else if (strcmp(attr, "WindowPadding") == 0)
         {
@@ -2061,9 +2081,17 @@ static int imgui_SetStyle(lua_State* L)
         {
             style.CurveTessellationTol = luaL_checknumber(L, -1);
         }
-        else if (strcmp(attr, "CircleSegmentMaxError") == 0)
+        else if (strcmp(attr, "HoverStationaryDelay") == 0)
         {
-            style.CircleSegmentMaxError = luaL_checknumber(L, -1);
+            style.HoverStationaryDelay = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "HoverDelayShort") == 0)
+        {
+            style.HoverDelayShort = luaL_checknumber(L, -1);
+        }
+        else if (strcmp(attr, "HoverDelayNormal") == 0)
+        {
+            style.HoverDelayNormal = luaL_checknumber(L, -1);
         }
         lua_pop(L, 1);
     }
@@ -2466,9 +2494,10 @@ static void imgui_Init(float width, float height)
 
     // init keymap list
     // We will be sending the correct ImGuiKey_ enums from Lua
-    for (int i = 0; i < ImGuiKey_COUNT; i++)
+    for (int i = 0; i < 512; i++)
     {
-        io.KeyMap[i] = i;
+        dmLogInfo("KEYMAP %d", i);
+        io.KeyMap[i] = 0;
     }
 
     ImGui_ImplOpenGL3_Init();
@@ -2939,13 +2968,14 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "INPUTFLAGS_ALLOWTABINPUT", ImGuiInputTextFlags_AllowTabInput);  // Pressing TAB input a '\t' character into the text field
     lua_setfieldstringint(L, "INPUTFLAGS_CTRLENTERFORNEWLINE", ImGuiInputTextFlags_CtrlEnterForNewLine);  // In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
     lua_setfieldstringint(L, "INPUTFLAGS_NOHORIZONTALSCROLL", ImGuiInputTextFlags_NoHorizontalScroll);  // Disable following the cursor horizontally
-    lua_setfieldstringint(L, "INPUTFLAGS_ALWAYSINSERTMODE", ImGuiInputTextFlags_AlwaysInsertMode);  // Insert mode
+    lua_setfieldstringint(L, "INPUTFLAGS_ALWAYSOVERWRITE", ImGuiInputTextFlags_AlwaysOverwrite);  // Insert mode
     lua_setfieldstringint(L, "INPUTFLAGS_READONLY", ImGuiInputTextFlags_ReadOnly);  // Read-only mode
     lua_setfieldstringint(L, "INPUTFLAGS_PASSWORD", ImGuiInputTextFlags_Password);  // Password mode, display all characters as '*'
     lua_setfieldstringint(L, "INPUTFLAGS_NOUNDOREDO", ImGuiInputTextFlags_NoUndoRedo);  // Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
     lua_setfieldstringint(L, "INPUTFLAGS_CHARSSCIENTIFIC", ImGuiInputTextFlags_CharsScientific);  // Allow 0123456789.+-*/eE (Scientific notation input)
     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKRESIZE", ImGuiInputTextFlags_CallbackResize);  // Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKEDIT", ImGuiInputTextFlags_CallbackEdit);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    lua_setfieldstringint(L, "INPUTFLAGS_ESCAPECLEARSALL", ImGuiInputTextFlags_EscapeClearsAll);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
 
     lua_setfieldstringint(L, "COND_NONE", ImGuiCond_None);  // No condition (always set the variable), same as _Always
     lua_setfieldstringint(L, "COND_ALWAYS", ImGuiCond_Always);  // No condition (always set the variable)
