@@ -2496,7 +2496,6 @@ static void imgui_Init(float width, float height)
     // We will be sending the correct ImGuiKey_ enums from Lua
     for (int i = 0; i < 512; i++)
     {
-        dmLogInfo("KEYMAP %d", i);
         io.KeyMap[i] = 0;
     }
 
