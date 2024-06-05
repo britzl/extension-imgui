@@ -414,7 +414,7 @@ static int imgui_SetKeyDown(lua_State* L)
     DM_LUA_STACK_CHECK(L, 0);
     ImGuiIO& io = ImGui::GetIO();
     uint32_t key = luaL_checknumber(L, 1);
-    io.KeysDown[key] = lua_toboolean(L, 2);
+    io.AddKeyEvent((ImGuiKey)key, lua_toboolean(L, 2));
     return 0;
 }
 
