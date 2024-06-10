@@ -2516,7 +2516,7 @@ static void imgui_Shutdown()
 
 static void imgui_ExtensionInit()
 {
-    dmExtension::RegisterCallback(dmExtension::CALLBACK_POST_RENDER, imgui_Draw );
+    dmExtension::RegisterCallback(dmExtension::CALLBACK_POST_RENDER, (FExtensionCallback)imgui_Draw );
     if (g_imgui_TextBuffer)
     {
         free(g_imgui_TextBuffer);
@@ -3038,16 +3038,16 @@ void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* e
 {
     switch(event->m_Event)
     {
-        case dmExtension::EVENT_ID_ACTIVATEAPP:
+        case EXTENSION_EVENT_ID_ACTIVATEAPP:
         //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ACTIVATEAPP\n");
         break;
-        case dmExtension::EVENT_ID_DEACTIVATEAPP:
+        case EXTENSION_EVENT_ID_DEACTIVATEAPP:
         //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEACTIVATEAPP\n");
         break;
-        case dmExtension::EVENT_ID_ICONIFYAPP:
+        case EXTENSION_EVENT_ID_ICONIFYAPP:
         //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ICONIFYAPP\n");
         break;
-        case dmExtension::EVENT_ID_DEICONIFYAPP:
+        case EXTENSION_EVENT_ID_DEICONIFYAPP:
         //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEICONIFYAPP\n");
         break;
         default:
