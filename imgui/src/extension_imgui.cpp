@@ -475,6 +475,14 @@ static int imgui_AddInputCharacter(lua_State* L)
     io.AddInputCharacter(c);
     return 0;
 }
+static int imgui_AddInputCharacters(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    ImGuiIO& io = ImGui::GetIO();
+    const char* s = luaL_checkstring(L, 1);
+    io.AddInputCharactersUTF8(s);
+    return 0;
+}
 
 
 // ----------------------------
