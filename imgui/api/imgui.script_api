@@ -173,6 +173,8 @@
         type: string
       - name: fontsize
         type: number
+      - name: glyphranges
+        type: number
 
     return:
       - name: fontid
@@ -191,6 +193,8 @@
       - name: fontsize
         type: number
       - name: fontpixels
+        type: number
+      - name: glyphranges
         type: number
 
     return:
@@ -1958,3 +1962,13 @@
   - name: KEY_X
   - name: KEY_Y
   - name: KEY_Z
+
+  - name: GLYPH_RANGES_DEFAULT
+  - name: GLYPH_RANGES_GREEK
+  - name: GLYPH_RANGES_KOREAN
+  - name: GLYPH_RANGES_JAPANESE
+  - name: GLYPH_RANGES_CHINESEFULL
+  - name: GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON
+  - name: GLYPH_RANGES_CYRILLIC
+  - name: GLYPH_RANGES_THAI
+  - name: GLYPH_RANGES_VIETNAMESE

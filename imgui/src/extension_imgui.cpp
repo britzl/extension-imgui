@@ -37,6 +37,17 @@ typedef struct ImgObject
     unsigned char *    data;
 } ImgObject;
 
+enum ExtImGuiGlyphRanges {
+    ExtImGuiGlyphRanges_Default,
+    ExtImGuiGlyphRanges_Greek,
+    ExtImGuiGlyphRanges_Korean,
+    ExtImGuiGlyphRanges_Japanese,
+    ExtImGuiGlyphRanges_ChineseFull,
+    ExtImGuiGlyphRanges_ChineseSimplifiedCommon,
+    ExtImGuiGlyphRanges_Cyrillic,
+    ExtImGuiGlyphRanges_Thai,
+    ExtImGuiGlyphRanges_Vietnamese
+};
 
 static bool g_imgui_NewFrame        = false;
 static char* g_imgui_TextBuffer     = 0;
@@ -2242,14 +2253,55 @@ static ImFont* imgui_GetFont(int index)
     return 0;
 }
 
+ImWchar* LuaToGlyphRanges(lua_State * L, int index) {
+    const ImWchar* glyph_ranges = NULL;
+    if (!lua_isnil(L, index)) {
+        ImGuiIO& io = ImGui::GetIO();
+        ExtImGuiGlyphRanges range = (ExtImGuiGlyphRanges)lua_tointeger(L, index);
+        switch (range) {
+            case ExtImGuiGlyphRanges_Greek:
+                glyph_ranges = io.Fonts->GetGlyphRangesGreek();
+                break;
+            case ExtImGuiGlyphRanges_Korean:
+                glyph_ranges = io.Fonts->GetGlyphRangesKorean();
+                break;
+            case ExtImGuiGlyphRanges_Japanese:
+                glyph_ranges = io.Fonts->GetGlyphRangesJapanese();
+                break;
+            case ExtImGuiGlyphRanges_ChineseFull:
+                glyph_ranges = io.Fonts->GetGlyphRangesChineseFull();
+                break;
+            case ExtImGuiGlyphRanges_ChineseSimplifiedCommon:
+                glyph_ranges = io.Fonts->GetGlyphRangesChineseSimplifiedCommon();
+                break;
+            case ExtImGuiGlyphRanges_Cyrillic:
+                glyph_ranges = io.Fonts->GetGlyphRangesCyrillic();
+                break;
+            case ExtImGuiGlyphRanges_Thai:
+                glyph_ranges = io.Fonts->GetGlyphRangesThai();
+                break;
+            case ExtImGuiGlyphRanges_Vietnamese:
+                glyph_ranges = io.Fonts->GetGlyphRangesVietnamese();
+                break;
+            default:
+            case ExtImGuiGlyphRanges_Default:
+                glyph_ranges = io.Fonts->GetGlyphRangesDefault();
+                break;
+        }
+    }
+    return (ImWchar*)glyph_ranges;
+}
+
 static int imgui_FontAddTTFFile(lua_State * L)
 {
     DM_LUA_STACK_CHECK(L, 1);
     const char * ttf_filename = luaL_checkstring(L, 1);
     float font_size = luaL_checknumber(L, 2);
+    const ImFontConfig* font_cfg = NULL;
+    const ImWchar* glyph_ranges = LuaToGlyphRanges(L, 3);
 
     ImGuiIO& io = ImGui::GetIO();
-    ImFont* font = io.Fonts->AddFontFromFileTTF(ttf_filename, font_size);
+    ImFont* font = io.Fonts->AddFontFromFileTTF(ttf_filename, font_size, font_cfg, glyph_ranges);
     // Put font in map.
     if(font != NULL)
     {
@@ -2270,12 +2322,14 @@ static int imgui_FontAddTTFData(lua_State * L)
     int ttf_data_size = luaL_checknumber(L, 2);
     float font_size = luaL_checknumber(L, 3);
     int font_pixels = luaL_checknumber(L, 4);
+    const ImFontConfig* font_cfg = NULL;
+    const ImWchar* glyph_ranges = LuaToGlyphRanges(L, 5);
 
     char *ttf_data_cpy = (char *)calloc(ttf_data_size, sizeof(char));
     memcpy(ttf_data_cpy, ttf_data, ttf_data_size);
 
     ImGuiIO& io = ImGui::GetIO();
-    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data_cpy, ttf_data_size, font_pixels);
+    ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data_cpy, ttf_data_size, font_pixels, font_cfg, glyph_ranges);
     // Put font in map.
     if(font != NULL)
     {
@@ -2670,6 +2724,7 @@ static const luaL_reg Module_methods[] =
     {"set_key_modifier_alt", imgui_SetKeyModifierAlt},
     {"set_key_modifier_super", imgui_SetKeyModifierSuper},
     {"add_input_character", imgui_AddInputCharacter},
+    {"add_input_characters", imgui_AddInputCharacters},
     {"want_mouse_input", imgui_WantCaptureMouse},
     {"want_keyboard_input", imgui_WantCaptureKeyboard},
     {"want_text_input", imgui_WantCaptureText},
@@ -2987,6 +3042,16 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "DIR_RIGHT", ImGuiDir_Right);
     lua_setfieldstringint(L, "DIR_UP", ImGuiDir_Up);
     lua_setfieldstringint(L, "DIR_DOWN", ImGuiDir_Down);
+
+    lua_setfieldstringint(L, "GLYPH_RANGES_DEFAULT", ExtImGuiGlyphRanges_Default);                // Basic Latin, Extended Latin
+    lua_setfieldstringint(L, "GLYPH_RANGES_GREEK", ExtImGuiGlyphRanges_Greek);                  // Default + Greek and Coptic
+    lua_setfieldstringint(L, "GLYPH_RANGES_KOREAN", ExtImGuiGlyphRanges_Korean);                 // Default + Korean characters
+    lua_setfieldstringint(L, "GLYPH_RANGES_JAPANESE", ExtImGuiGlyphRanges_Japanese);               // Default + Hiragana, Katakana, Half-Width, Selection of 2999 Ideographs
+    lua_setfieldstringint(L, "GLYPH_RANGES_CHINESEFULL", ExtImGuiGlyphRanges_ChineseFull);            // Default + Half-Width + Japanese Hiragana/Katakana + full set of about 21000 CJK Unified Ideographs
+    lua_setfieldstringint(L, "GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON", ExtImGuiGlyphRanges_ChineseSimplifiedCommon);// Default + Half-Width + Japanese Hiragana/Katakana + set of 2500 CJK Unified Ideographs for common simplified Chinese
+    lua_setfieldstringint(L, "GLYPH_RANGES_CYRILLIC", ExtImGuiGlyphRanges_Cyrillic);               // Default + about 400 Cyrillic characters
+    lua_setfieldstringint(L, "GLYPH_RANGES_THAI", ExtImGuiGlyphRanges_Thai);                   // Default + Thai characters
+    lua_setfieldstringint(L, "GLYPH_RANGES_VIETNAMESE", ExtImGuiGlyphRanges_Vietnamese);             // Default + Vietnamese characters
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
