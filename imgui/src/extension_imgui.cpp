@@ -2334,7 +2334,18 @@ static int imgui_FontAddTTFData(lua_State * L)
     const ImWchar* glyph_ranges = LuaToGlyphRanges(L, 5);
 
     char *ttf_data_cpy = (char *)calloc(ttf_data_size, sizeof(char));
-    memcpy(ttf_data_cpy, ttf_data, ttf_data_size);
+    if (!ttf_data_cpy)
+    {
+        dmLogWarning("Failed to allocate memory for ttf data of size %d", ttf_data_size);
+        lua_pushnil(L);
+        return 1;
+    }
+    if (!memcpy(ttf_data_cpy, ttf_data, ttf_data_size))
+    {
+        dmLogWarning("Failed to copy ttf data");
+        lua_pushnil(L);
+        return 1;
+    }
 
     ImGuiIO& io = ImGui::GetIO();
     ImFont* font = io.Fonts->AddFontFromMemoryTTF((void *)ttf_data_cpy, ttf_data_size, font_pixels, font_cfg, glyph_ranges);
