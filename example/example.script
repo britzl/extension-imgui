@@ -1,135 +1,26 @@
-local JEDI = { "Luke", "Obi-Wan", "Yoda" }
-local SITH = { "Maul", "Vader", "Palpatine" }
+local tab1 = require("example.tab1")
+local tab2 = require("example.tab2")
+local tab3 = require("example.tab3")
+local tab4 = require("example.tab4")
+local tab5 = require("example.tab5")
+local tab6 = require("example.tab6")
 
-
-local function set_style()
-	--[[local style = {}
-	style.ChildBorderSize = 1
-	style.PopupRounding = 0
-	style.PopupBorderSize = 1
-	style.FramePadding = vmath.vector3(4, 3, 0)
-	style.FrameRounding = 0
-	style.FrameBorderSize = 0
-	style.ItemSpacing = vmath.vector3(8, 4, 0)
-	style.ItemInnerSpacing = vmath.vector3(4, 4, 0)
-	style.CellPadding = vmath.vector3(4, 2, 0)
-	style.TouchExtraPadding = vmath.vector3(0, 0, 0)
-	style.IndentSpacing = 21
-	style.Alpha = 1
-	style.ScrollbarSize = 14
-	style.ScrollbarRounding = 9
-	style.GrabMinSize = 10
-	style.GrabRounding = 0
-	style.LogSliderDeadzone = 4
-	style.TabRounding = 4
-	style.TabBorderSize = 0
-	style.TabMinWidthForCloseButton = 0
-	style.ColorButtonPosition = 1
-	style.ButtonTextAlign = vmath.vector3(0.5, 0.5, 0)
-	style.SelectableTextAlign = vmath.vector3(0, 0, 0)
-	style.DisplayWindowPadding = vmath.vector3(19, 19, 0)
-	style.DisplaySafeAreaPadding = vmath.vector3(3, 3, 0)
-	style.MouseCursorScale = 1
-	style.CircleSegmentMaxError = 1.6
-	style.ColumnsMinSpacing = 6
-	style.AntiAliasedLines = true
-	style.AntiAliasedLinesUseTex = true
-	style.AntiAliasedFill = true
-	style.CurveTessellationTol = 1.25
-	style.WindowPadding = vmath.vector3(8, 8, 0)
-	style.WindowRounding = 0
-	style.WindowBorderSize = 1
-	style.WindowMinSize = vmath.vector3(32, 32, 0)
-	style.WindowTitleAlign = vmath.vector3(0, 0.5, 0)
-	style.WindowMenuButtonPosition = 0
-	style.ChildRounding = 0
-	imgui.set_style(style)--]]
-
-	imgui.set_style_color(imgui.ImGuiCol_Text, 0.90, 0.90, 0.90, 0.90)
-	imgui.set_style_color(imgui.ImGuiCol_TextDisabled, 0.60, 0.60, 0.60, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_WindowBg, 0.09, 0.09, 0.15, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_PopupBg, 0.05, 0.05, 0.10, 0.85)
-	imgui.set_style_color(imgui.ImGuiCol_Border, 0.70, 0.70, 0.70, 0.65)
-	imgui.set_style_color(imgui.ImGuiCol_BorderShadow, 0.00, 0.00, 0.00, 0.00)
-	imgui.set_style_color(imgui.ImGuiCol_FrameBg, 0.00, 0.00, 0.01, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_FrameBgHovered, 0.90, 0.80, 0.80, 0.40)
-	imgui.set_style_color(imgui.ImGuiCol_FrameBgActive, 0.90, 0.65, 0.65, 0.45)
-	imgui.set_style_color(imgui.ImGuiCol_TitleBg, 0.00, 0.00, 0.00, 0.83)
-	imgui.set_style_color(imgui.ImGuiCol_TitleBgCollapsed, 0.40, 0.40, 0.80, 0.20)
-	imgui.set_style_color(imgui.ImGuiCol_TitleBgActive, 0.00, 0.00, 0.00, 0.87)
-	imgui.set_style_color(imgui.ImGuiCol_MenuBarBg, 0.01, 0.01, 0.02, 0.80)
-	imgui.set_style_color(imgui.ImGuiCol_ScrollbarBg, 0.20, 0.25, 0.30, 0.60)
-	imgui.set_style_color(imgui.ImGuiCol_ScrollbarGrab, 0.55, 0.53, 0.55, 0.51)
-	imgui.set_style_color(imgui.ImGuiCol_ScrollbarGrabHovered, 0.56, 0.56, 0.56, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_ScrollbarGrabActive, 0.56, 0.56, 0.56, 0.91)
-	imgui.set_style_color(imgui.ImGuiCol_CheckMark, 0.90, 0.90, 0.90, 0.83)
-	imgui.set_style_color(imgui.ImGuiCol_SliderGrab, 0.70, 0.70, 0.70, 0.62)
-	imgui.set_style_color(imgui.ImGuiCol_SliderGrabActive, 0.30, 0.30, 0.30, 0.84)
-	imgui.set_style_color(imgui.ImGuiCol_Button, 0.48, 0.72, 0.89, 0.49)
-	imgui.set_style_color(imgui.ImGuiCol_ButtonHovered, 0.50, 0.69, 0.99, 0.68)
-	imgui.set_style_color(imgui.ImGuiCol_ButtonActive, 0.80, 0.50, 0.50, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_Header, 0.30, 0.69, 1.00, 0.53)
-	imgui.set_style_color(imgui.ImGuiCol_HeaderHovered, 0.44, 0.61, 0.86, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_HeaderActive, 0.38, 0.62, 0.83, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_ResizeGrip, 1.00, 1.00, 1.00, 0.85)
-	imgui.set_style_color(imgui.ImGuiCol_ResizeGripHovered, 1.00, 1.00, 1.00, 0.60)
-	imgui.set_style_color(imgui.ImGuiCol_ResizeGripActive, 1.00, 1.00, 1.00, 0.90)
-	imgui.set_style_color(imgui.ImGuiCol_PlotLines, 1.00, 1.00, 1.00, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_PlotLinesHovered, 0.90, 0.70, 0.00, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_PlotHistogram, 0.90, 0.70, 0.00, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_PlotHistogramHovered, 1.00, 0.60, 0.00, 1.00)
-	imgui.set_style_color(imgui.ImGuiCol_TextSelectedBg, 0.00, 0.00, 1.00, 0.35)
-end
-
-local function make_data(self)
-	self.values_line = {}
-	self.values_hist = {}
-	for i=1, 60 do 
-		local data = math.random(1, 30)
-		self.values_hist[data] = (self.values_hist[data] or 0) + 1
-		table.insert(self.values_line, data)
-	end
-end
+local style = require("example.style")
+local fonts = require("example.fonts")
+local images = require("example.images")
 
 function init(self)
 	self.counter = 0
 	self.radio = 1
 	self.show_demo_window = false
 	self.show_close_window = false
-	self.show_live_data = false
-
-	self.values_line = {}
-	self.values_hist = {}
-	make_data(self)
-
 
 	imgui.set_ini_filename()
-	set_style()
-	self.style = imgui.get_style()
-	local scale = 2
-	imgui.scale_all_sizes(scale)
 
-	local fontsize 		= 12.0 * scale
-	local fontsizebase 	= 12.0 * scale
-	self.fonts 	= {}
-	local regular_data = assert(sys.load_resource("/example/bundle/fonts/Montserrat-Regular.ttf"))
-	self.fonts["Regular"] = imgui.font_add_ttf_data(regular_data, #regular_data, fontsize, fontsizebase, imgui.GLYPH_RANGES_CYRILLIC)
-	local bold_data = assert(sys.load_resource("/example/bundle/fonts/Montserrat-Bold.ttf"))
-	self.fonts["Bold"] = imgui.font_add_ttf_data(bold_data, #bold_data, fontsize, fontsizebase)
-	local italic_data = assert(sys.load_resource("/example/bundle/fonts/Montserrat-Italic.ttf"))
-	self.fonts["Italic"] = imgui.font_add_ttf_data(italic_data, #italic_data, fontsize, fontsizebase)
-	local bolditalic_data = assert(sys.load_resource("/example/bundle/fonts/Montserrat-BoldItalic.ttf"))
-	self.fonts["BoldItalic"] = imgui.font_add_ttf_data(bolditalic_data, #bolditalic_data, fontsize, fontsizebase)
+	style.set()
 
-	-- Resource based Image 
-	local img1_data = assert(sys.load_resource("/example/bundle/images/image1.png"))
-	self.image1 = imgui.image_load_data("image1", img1_data, #img1_data)
-
-	-- File based Image can be used on desktop platforms
-	-- self.image1 = imgui.image_load("example/images/image1.png")
-
-	local img2_data = assert(sys.load_resource("/example/bundle/images/image2.png"))
-	self.image2 = imgui.image_load_data("image2", img2_data, #img2_data)
+	fonts.load()
+	images.load()
 end
 
 local function close_window(self)
@@ -145,313 +36,9 @@ local function close_window(self)
 	end
 end
 
-local function update_tab1(self)
-	imgui.text("This is some useful text.")
-	local changed, checked = imgui.checkbox("Demo window", self.show_demo_window)
-	if changed then
-		self.show_demo_window = checked
-	end
-
-	imgui.separator()
-
-	if imgui.radio_button("Option 1", self.radio == 1) then
-		self.radio  = 1
-	end
-	if imgui.radio_button("Option 2", self.radio == 2) then
-		self.radio  = 2
-	end
-	if imgui.radio_button("Option 3", self.radio == 3) then
-		self.radio  = 3
-	end
-
-	imgui.separator()
-
-	if imgui.button("Button") then
-		self.counter = self.counter + 1
-	end
-	imgui.same_line()
-	imgui.text(("counter = %d"):format(self.counter))
-
-	imgui.separator()
-
-	local pos = go.get_position("object")
-	local changed, x, y, z = imgui.input_float3("pos", pos.x, pos.y, pos.z)
-	if changed then
-		pos.x = x
-		pos.y = y
-		pos.z = z
-		go.set_position(pos, "object")
-	end
-
-	local changed, x, y, z = imgui.input_int4("posi", pos.x, pos.y, pos.z, 0)
-	if changed then
-		pos.x = x
-		pos.y = y
-		pos.z = z
-		go.set_position(pos, "object")
-	end
-	
-	local changed, int = imgui.input_int("test int", self.int or 0)
-	if changed then
-		self.int = int
-	end
-
-	if imgui.button("open window with close button") then
-		self.show_close_window = true;
-	end
-
-	if imgui.begin_table("table_example", 3) then
-		imgui.table_setup_scroll_freeze(1, 1)
-		imgui.table_setup_column("FIRST NAME")
-		imgui.table_setup_column("LAST NAME")
-		imgui.table_setup_column("AGE")
-		imgui.table_headers_row()
-
-		imgui.table_next_row()
-		imgui.table_next_column()
-		imgui.text("Bilbo")
-		imgui.table_next_column()
-		imgui.text("Baggins")
-		imgui.table_next_column()
-		imgui.text("129")
-
-		imgui.table_next_row()
-		imgui.table_next_column()
-		imgui.text("Frodo")
-		imgui.table_next_column()
-		imgui.text("Baggins")
-		imgui.table_next_column()
-		imgui.text("51")
-
-		imgui.end_table()
-	end
-
-	imgui.separator()
-
-	-- Manual wrapping
-	imgui.text("Manual wrapping:")
-
-	local button_count = 20
-	local button_size = 60
-	local window_pos_x, window_pos_y = imgui.get_window_pos()
-	local region_x, region_y = imgui.get_window_content_region_max()
-	local window_visible_x = window_pos_x + region_x
-	local spacing_x = self.style.ItemSpacing.x
-
-	for n = 1, button_count do
-		imgui.push_id(tostring(n))
-		imgui.button("Box", button_size, button_size)
-		local last_button_x, last_button_y = imgui.get_item_rect_max()
-		local next_button_x = last_button_x + spacing_x + button_size
-		if (n  < button_count and next_button_x < window_visible_x) then
-			imgui.same_line()
-		end
-		imgui.pop_id()
-	end
-end
-
-local function update_tab2(self)
-	local selected = imgui.tree_node("root")
-	if selected then
-		imgui.bullet()
-		self.foo_selected = imgui.selectable("foo", self.foo_selected)
-		imgui.bullet()
-		self.bar_selected = imgui.selectable("bar", self.bar_selected)
-		imgui.tree_pop()
-	end
 
 
-	-- this is the old way of creating combo boxes
-	-- it still exists in the ImGUI API since it's a quick way ti create a combo box
-	local changed, jedi = imgui.combo("Jedi##array", self.selected_jedi or 1, JEDI)
-	if changed then
-		self.selected_jedi = jedi
-	end
 
-	-- new way of creating combo boxes with a begin and end function
-	if imgui.begin_combo("Jedi##selectable", "Select a Jedi") then
-		for i=1,#JEDI do
-			if imgui.selectable(JEDI[i], i == (self.selected_jedi or 1)) then
-				self.selected_jedi = i
-			end
-		end
-		imgui.end_combo()
-	end
-
-	imgui.separator()
-
-	if imgui.button("Push me to focus on test double") then
-		imgui.set_keyboard_focus_here(0)
-	end
-	local testdbl = self.testdbl or 0
-	local changed, value = imgui.input_double("test double", testdbl, 0.0001, 0.01, 5)
-	if changed then
-		self.testdbl = value
-	end
-	
-	local progress = self.progress or 0
-	local changed, p = imgui.input_float("progress float", progress, 0.01, 1.0, 3)
-	if changed then
-		self.progress = p
-		progress = p
-	end
-
-	imgui.separator()
-	imgui.draw_progress(progress, -1, 0.0)
-	imgui.separator()
-
-	local changed, p = imgui.slider_float("slider float", self.slider_float or 0, 0.0, 100.0)
-	if changed then
-		self.slider_float = p
-	end
-		
-	imgui.push_id("first")
-	if imgui.button("Same name") then
-		pprint("first same button")
-	end
-	imgui.pop_id()
-
-	imgui.push_id("second")
-	if imgui.button("Same name") then
-		pprint("second same button")
-	end
-	imgui.pop_id()
-end
-
-local function update_tab3(self)
-
-	local changed, checked = imgui.checkbox("Live Data", self.show_live_data)
-	if changed then
-		self.show_live_data = checked
-	end
-
-	if(self.show_live_data == true) then 
-		make_data(self)
-	end
-	imgui.separator()
-	
-	imgui.text_colored(" Data Plot ", 1, 0, 0, 1 )
-	imgui.plot_lines( "Data", 0, 150, 40, self.values_line )
-
-	imgui.separator()
-	
-	imgui.text_colored(" Data Histogram ", 0, 1, 0, 1 )
-	imgui.plot_histogram( "Histogram", 0, 150, 40, self.values_hist )
-
-	imgui.separator()
-end
-
--- Example images and font styles
-local function update_tab4(self)
-
-	imgui.font_push(self.fonts["Regular"])
-	imgui.text_colored("Example Text Regular - Привіт Світ", 1, 1, 1, 1 )
-	imgui.font_pop()
-	imgui.separator()
-	imgui.font_push(self.fonts["Bold"])
-	imgui.text_colored("Example Text Bold", 1, 1, 1, 1 )
-	imgui.font_pop()
-	imgui.separator()
-	imgui.font_push(self.fonts["Italic"])
-	imgui.text_colored("Example Text Italic", 1, 1, 1, 1 )
-	imgui.font_pop()
-	imgui.separator()
-	imgui.font_push(self.fonts["BoldItalic"])
-	imgui.text_colored("Example Text Bold Italic", 1, 1, 1, 1 )
-	imgui.font_pop()
-	imgui.separator()
-	
-	imgui.font_push(self.fonts["Regular"])
-	imgui.text_colored("image stretched", 1, 1, 1, 1 )
-	imgui.image_add(self.image1, 150,20)
-
-	imgui.text_colored("image original aspect", 1, 1, 1, 1 )
-	imgui.image_add(self.image2, 150,150)
-	imgui.font_pop()
-end
-
-
-local function update_tab5(self)
-	if imgui.tree_node("Jedi vs Sith") then
-		imgui.text("Right click for some info")
-		for i=1,#JEDI do
-			imgui.tree_node(JEDI[i], imgui.TREENODE_LEAF + imgui.TREENODE_NO_TREE_PUSH_ON_OPEN)
-			if imgui.begin_dragdrop_source(imgui.DROPFLAGS_SOURCEALLOWNULLID) then
-				imgui.set_dragdrop_payload("jedi", JEDI[i])
-				imgui.end_dragdrop_source()
-			end
-			if imgui.begin_popup_context_item("jedipop" .. i) then
-				imgui.text("This is a Jedi")
-				imgui.end_popup()
-			end
-		end
-		for i=1,#SITH do
-			imgui.tree_node(SITH[i], imgui.TREENODE_LEAF + imgui.TREENODE_NO_TREE_PUSH_ON_OPEN)
-			if imgui.begin_dragdrop_source(imgui.DROPFLAGS_SOURCEALLOWNULLID) then
-				imgui.set_dragdrop_payload("sith", SITH[i])
-				imgui.end_dragdrop_source()
-			end
-			if imgui.begin_popup_context_item("sithpop" .. i) then
-				imgui.text("This is a Sith")
-				imgui.end_popup()
-			end
-		end
-		imgui.tree_pop()
-	end
-	
-	imgui.separator()
-	
-	imgui.text("Drop Jedi and Sith here")
-	if imgui.begin_dragdrop_target() then
-		if imgui.accept_dragdrop_payload("jedi") then
-			self.counter = self.counter + 1
-		elseif imgui.accept_dragdrop_payload("sith") then
-			self.counter = self.counter - 1
-		end
-		imgui.end_dragdrop_target()
-	end
-	imgui.text("Counter " .. self.counter)
-	
-end
-
--- Loosely based on "Widgets Width" part of imgui_demo
-local function update_tab6(self)
-	if not self.tab6_f then self.tab6_f = 0 end
-	
-	imgui.text("SetNextItemWidth(200)")
-	imgui.same_line()
-	imgui.set_next_item_width(200)
-	local changed, f = imgui.input_float("float##1", self.tab6_f)
-	if changed then
-		self.tab6_f = f
-	end
-	
-	imgui.text("SetNextItemWidth(GetWindowWidth() * 0.5f)")
-	imgui.same_line()
-	local w,h = imgui.get_window_size()
-	imgui.set_next_item_width(w * 0.5)
-	local changed, f = imgui.input_float("float##2", self.tab6_f)
-	if changed then
-		self.tab6_f = f
-	end
-	
-	imgui.text("SetNextItemWidth(GetContentRegionAvail().x * 0.5f)")
-	imgui.same_line()
-	local aw, ah = imgui.get_content_region_avail()
-	imgui.set_next_item_width(aw * 0.5)
-	local changed, f = imgui.input_float("float##3", self.tab6_f)
-	if changed then
-		self.tab6_f = f
-	end
-	
-	imgui.text("SetNextItemWidth(-200)")
-	imgui.same_line()
-	imgui.set_next_item_width(-200)
-	local changed, f = imgui.input_float("float##4", self.tab6_f)
-	if changed then
-		self.tab6_f = f
-	end
-end
 
 local function main_menu_bar(self)
 	if imgui.begin_main_menu_bar() then
@@ -550,37 +137,37 @@ function update(self, dt)
 
 	local tab1_open = imgui.begin_tab_item("Tab1")
 	if tab1_open then
-		update_tab1(self)
+		tab1(self)
 		imgui.end_tab_item()
 	end
 
 	local tab2_open = imgui.begin_tab_item("Tab2")
 	if tab2_open then
-		update_tab2(self)
+		tab2(self)
 		imgui.end_tab_item()
 	end
 
 	local tab3_open = imgui.begin_tab_item("Tab3")
 	if tab3_open then
-		update_tab3(self)
+		tab3(self)
 		imgui.end_tab_item()
 	end
 
 	local tab4_open = imgui.begin_tab_item("Tab4")
 	if tab4_open then
-		update_tab4(self)
+		tab4(self)
 		imgui.end_tab_item()
 	end
 
 	local tab5_open = imgui.begin_tab_item("Tab5")
 	if tab5_open then
-		update_tab5(self)
+		tab5(self)
 		imgui.end_tab_item()
 	end
 
 	local tab6_open = imgui.begin_tab_item("Tab6")
 	if tab6_open then
-		update_tab6(self)
+		tab6(self)
 		imgui.end_tab_item()
 	end
 		
