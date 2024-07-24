@@ -290,6 +290,59 @@
 
 #*****************************************************************************************************
 
+  - name: set_next_window_focus
+    type: function
+
+#*****************************************************************************************************
+
+  - name: set_window_focus
+    type: function
+
+    parameters:
+      - name: name
+        type: string
+        optional: true
+
+#*****************************************************************************************************
+
+  - name: set_next_window_collapsed
+    type: function
+
+    parameters:
+      - name: collapsed
+        type: boolean
+      - name: cond
+        type: number
+        optional: true
+
+#*****************************************************************************************************
+
+  - name: set_window_collapsed
+    type: function
+
+    parameters:
+      - name: collapsed
+        type: boolean
+      - name: cond
+        type: number
+        optional: true
+
+#*****************************************************************************************************
+
+  - name: set_window_collapsed
+    type: function
+
+    parameters:
+      - name: name
+        type: string
+      - name: collapsed
+        type: boolean
+      - name: cond
+        type: number
+        optional: true
+
+#*****************************************************************************************************
+
   - name: get_window_size
     type: function
 

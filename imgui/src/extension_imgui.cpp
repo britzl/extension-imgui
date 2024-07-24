@@ -591,6 +591,80 @@ static int imgui_SetNextWindowPos(lua_State* L)
     ImGui::SetNextWindowPos(ImVec2(x, y), cond);
     return 0;
 }
+static int imgui_SetNextWindowFocus(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    ImGui::SetNextWindowFocus();
+    return 0;
+}
+static int imgui_SetWindowFocus(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    if (lua_isstring(L, 1))
+    {
+        const  char* name = luaL_checkstring(L, 1);
+        ImGui::SetWindowFocus(name);
+    }
+    else
+    {
+        ImGui::SetWindowFocus();
+    }
+    return 0;
+}
+static int imgui_SetNextWindowCollapsed(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    bool collapsed = false;
+    if (lua_isboolean(L, 1))
+    {
+        collapsed = lua_toboolean(L, 1);
+    }
+    uint32_t cond = ImGuiCond_None;
+    if (lua_isnumber(L, 2))
+    {
+        cond = luaL_checkint(L, 2);
+    }
+    ImGui::SetNextWindowCollapsed(collapsed, cond);
+    return 0;
+}
+static int imgui_SetWindowCollapsed(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    if (lua_isstring(L, 1))
+    {
+        const  char* name = luaL_checkstring(L, 1);
+        bool collapsed = false;
+        if (lua_isboolean(L, 2))
+        {
+            collapsed = lua_toboolean(L, 2);
+        }
+        uint32_t cond = ImGuiCond_None;
+        if (lua_isnumber(L, 3))
+        {
+            cond = luaL_checkint(L, 3);
+        }
+        ImGui::SetWindowCollapsed(name, collapsed, cond);
+    }
+    else
+    {
+        bool collapsed = false;
+        if (lua_isboolean(L, 1))
+        {
+            collapsed = lua_toboolean(L, 1);
+        }
+        uint32_t cond = ImGuiCond_None;
+        if (lua_isnumber(L, 2))
+        {
+            cond = luaL_checkint(L, 2);
+        }
+        ImGui::SetWindowCollapsed(collapsed, cond);
+    }
+    return 0;
+}
 static int imgui_GetWindowSize(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 2);
@@ -2633,6 +2707,10 @@ static const luaL_reg Module_methods[] =
 
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
+    {"set_next_window_focus", imgui_SetNextWindowFocus},
+    {"set_window_focus", imgui_SetWindowFocus},
+    {"set_next_window_collapsed", imgui_SetNextWindowCollapsed},
+    {"set_window_collapsed", imgui_SetWindowCollapsed},
     {"get_window_size", imgui_GetWindowSize},
     {"get_window_pos", imgui_GetWindowPos},
     {"begin_window", imgui_Begin},
