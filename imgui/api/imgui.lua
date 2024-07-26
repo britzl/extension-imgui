@@ -189,8 +189,8 @@ function imgui.get_window_pos() end
 
 --- Begins a new window.
 ---@param title string The title of the window.
----@param open boolean Whether the window is open.
----@param flags WindowFlags The flags for the window.
+---@param open boolean|nil Whether the window is open.
+---@param flags WindowFlags|nil The flags for the window.
 ---@return boolean result Whether the window began successfully.
 ---@return boolean isopen Whether the window is open.
 function imgui.begin_window(title, open, flags) end
@@ -203,7 +203,7 @@ function imgui.end_window() end
 --*****************************************************************************************************
 
 --- Checks if the window is focused.
----@param flags WindowFlags The flags for checking focus.
+---@param flags WindowFlags|nil The flags for checking focus.
 ---@return boolean focused Whether the window is focused.
 function imgui.is_window_focused(flags) end
 
