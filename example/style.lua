@@ -3,7 +3,8 @@ local M = {}
 local SCALE = 2
 
 function M.set()
-	--[[local style = {}
+	--[[---@type Style
+	local style = {}
 	style.ChildBorderSize = 1
 	style.PopupRounding = 0
 	style.PopupBorderSize = 1

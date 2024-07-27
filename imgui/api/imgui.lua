@@ -508,7 +508,7 @@ end
 ---@param float number A number representing the initial slider value.
 ---@param min number A number indicating the minimum slider value.
 ---@param max number A number indicating the maximum slider value.
----@param float_precision number A number indicating the precision of the slider value.
+---@param float_precision number|nil A number indicating the precision of the slider value.
 ---@return number new_float A number representing the new slider value.
 function imgui.slider_float(label, float, min, max, float_precision)
 end
@@ -871,6 +871,87 @@ end
 --*****************************************************************************************************
 --***** STYLE *****************************************************************************************
 --*****************************************************************************************************
+
+--- @class Style
+--- Configuration for ImGui styling
+--- Border size for child windows
+--- @field ChildBorderSize number
+--- Rounding radius for popups
+--- @field PopupRounding number
+--- Border size for popups
+--- @field PopupBorderSize number
+--- Padding within a framed region (x, y)
+--- @field FramePadding vector3
+--- Rounding radius for frames
+--- @field FrameRounding number
+--- Border size for frames
+--- @field FrameBorderSize number
+--- Spacing between items
+--- @field ItemSpacing vector3
+--- Inner spacing between elements of an item
+--- @field ItemInnerSpacing vector3
+--- Padding inside a table cell
+--- @field CellPadding vector3
+--- Extra padding for touch inputs
+--- @field TouchExtraPadding vector3
+--- Indentation spacing for tree nodes
+--- @field IndentSpacing number
+--- Global alpha (transparency)
+--- @field Alpha number
+--- Width of the vertical scrollbar
+--- @field ScrollbarSize number
+--- Rounding radius for scrollbars
+--- @field ScrollbarRounding number
+--- Minimum size for grab areas
+--- @field GrabMinSize number
+--- Rounding radius for grab areas
+--- @field GrabRounding number
+--- Deadzone for log sliders
+--- @field LogSliderDeadzone number
+--- Rounding radius for tabs
+--- @field TabRounding number
+--- Border size for tabs
+--- @field TabBorderSize number
+--- Minimum width for the close button on tabs
+--- @field TabMinWidthForCloseButton number
+--- Position of color button
+--- @field ColorButtonPosition number
+--- Text alignment for buttons (x, y)
+--- @field ButtonTextAlign vector3
+--- Text alignment for selectable items (x, y)
+--- @field SelectableTextAlign vector3
+--- Padding for display windows (x, y)
+--- @field DisplayWindowPadding vector3
+--- Safe area padding for display windows (x, y)
+--- @field DisplaySafeAreaPadding vector3
+--- Scale for mouse cursor
+--- @field MouseCursorScale number
+--- Maximum allowed error for circle segments
+--- @field CircleSegmentMaxError number
+--- Minimum spacing between columns
+--- @field ColumnsMinSpacing number
+--- Enable anti-aliasing for lines
+--- @field AntiAliasedLines boolean
+--- Enable texture-based anti-aliasing for lines
+--- @field AntiAliasedLinesUseTex boolean
+--- Enable anti-aliasing for filled shapes
+--- @field AntiAliasedFill boolean
+--- Tolerance for curve tessellation
+--- @field CurveTessellationTol number
+--- Padding for window content (x, y)
+--- @field WindowPadding vector3
+--- Rounding radius for windows
+--- @field WindowRounding number
+--- Border size for windows
+--- @field WindowBorderSize number
+--- Minimum size for windows (width, height)
+--- @field WindowMinSize vector3
+--- Alignment for window titles (x, y)
+--- @field WindowTitleAlign vector3
+--- Position for window menu buttons
+--- @field WindowMenuButtonPosition number
+--- Rounding radius for child windows
+--- @field ChildRounding number
 
 --- Sets the style for the UI.
 -- This includes colors, sizes, and other style parameters.
