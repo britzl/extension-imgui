@@ -363,8 +363,8 @@ function imgui.table_next_row() end
 
 --- Creates a tree node widget with the given text.
 ---@param text string The label of the tree node.
----@return TreeNode flags A number representing the status or attributes of the tree node.
-function imgui.tree_node(text)
+---@param TreeNode flags A number representing the status or attributes of the tree node.
+function imgui.tree_node(text, flags)
 end
 
 --- Ends a tree node, balancing a previous call to tree_node.
@@ -761,7 +761,7 @@ end
 
 --- Sets the state of a specific mouse button.
 -- Use constants such as imgui.MOUSEBUTTON_LEFT, imgui.MOUSEBUTTON_MIDDLE, or imgui.MOUSEBUTTON_RIGHT.
----@param index number The index of the mouse button.
+---@param index MouseButton The index of the mouse button.
 ---@param state number The state of the mouse button (0 for released, 1 for pressed).
 function imgui.set_mouse_button(index, state)
 end
@@ -778,7 +778,7 @@ function imgui.set_mouse_pos(x, y)
 end
 
 --- Sets the state of a specific key.
----@param keyid number The ID of the key to set.
+---@param keyid Key The ID of the key to set.
 ---@param state boolean A boolean value indicating whether the key is pressed.
 function imgui.set_key_down(keyid, state)
 end
