@@ -955,12 +955,12 @@ end
 
 --- Sets the style for the UI.
 -- This includes colors, sizes, and other style parameters.
----@param style table A table containing style attributes and values.
+---@param style Style A table containing style attributes and values.
 function imgui.set_style(style)
 end
 
 --- Gets the current style settings.
----@return table style A table containing the current style attributes and values.
+---@return Style style A table containing the current style attributes and values.
 function imgui.get_style()
 end
 
@@ -1008,10 +1008,6 @@ end
 ---@param r number The red component of the color (0 to 255).
 ---@param g number The green component of the color (0 to 255).
 ---@param b number The blue component
-
---*****************************************************************************************************
---***** STYLE *****************************************************************************************
---*****************************************************************************************************
 
 --- Sets the color for a specific style element.
 -- This affects UI elements such as windows, frames, and text.
