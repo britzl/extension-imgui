@@ -1,1983 +1,898 @@
 - name: imgui
   type: table
-  desc: Functions and constants for interacting with ImGUI APIs
+  desc: Functions and constants for interacting with Dear ImGUI
 
   members:
-
-
-#*****************************************************************************************************
-#***** DRAG AND DROP *********************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_dragdrop_source
+  - name: image_b64_decode
     type: function
-
+    desc: ImageB64Decode 
     parameters:
-      - name: flags
-        type: number
+    - name: data
+      type: string
 
-    return:
-      - name: result
-        type: bool
+    - name: length
+      type: number
 
-#*****************************************************************************************************
-
-  - name: end_dragdrop_source
-    type: function
-
-#*****************************************************************************************************
-
-  - name: begin_dragdrop_target
-    type: function
-
-    return:
-      - name: result
-        type: bool
-
-#*****************************************************************************************************
-
-  - name: end_dragdrop_target
-    type: function
-
-#*****************************************************************************************************
-
-  - name: set_dragdrop_payload
-    type: function
-
-    parameters:
-      - name: type
-        type: string
-
-      - name: payload
-        type: string
-
-    return:
-      - name: result
-        type: bool
-
-#*****************************************************************************************************
-
-  - name: accept_dragdrop_payload
-    type: function
-
-    parameters:
-      - name: type
-        type: string
-
-      - name: flags
-        type: number
-
-    return:
-      - name: payload
-        type: string
-
-#*****************************************************************************************************
-#***** IMAGE ****************************************************************************************
-#*****************************************************************************************************
-
-  - name: image_load
-    type: function
-
-    parameters:
-      - name: filename
-        type: string
-
-    return:
-      - name: imageid
-        type: number
-
-#*****************************************************************************************************
+    returns:
+    - name: decoded
+      type: string
+      desc: Data
 
   - name: image_load_data
     type: function
-
+    desc: ImageLoadData 
     parameters:
-      - name: imagename
-        type: string
-      - name: image_data
-        type: string
-      - name: image_data_len
-        type: number
+    - name: filename
+      type: string
 
-    return:
-      - name: imageid
-        type: number
+    - name: data
+      type: string
 
-#*****************************************************************************************************
-
-  - name: image_get
-    type: function
-
-    parameters:
-      - name: imagename
-        type: string
-
-    return:
-      - name: imageid
-        type: number
-
-#*****************************************************************************************************
-
-  - name: image_free
-    type: function
-
-    parameters:
-      - name: imageid
-        type: number
-
-#*****************************************************************************************************
-
-  - name: image_add
-    type: function
-
-    parameters:
-      - name: imageid
-        type: number
-      - name: pixel_width
-        type: number
-      - name: pixel_height
-        type: number
-      - name: uv0x
-        type: number
-      - name: uv0y
-        type: number
-      - name: uv1x
-        type: number
-      - name: uv1y
-        type: number
-
-#*****************************************************************************************************
-
-  - name: image_b64_decode
-    type: function
-
-    parameters:
-      - name: image_data_base64
-        type: string
-      - name: image_data_len
-        type: number
-
-    return:
-      - name: image_data_raw
-        type: string
-
-#*****************************************************************************************************
-#***** FONTS *****************************************************************************************
-#*****************************************************************************************************
-
-  - name: font_add_ttf_file
-    type: function
-
-    parameters:
-      - name: ttf_filename
-        type: string
-      - name: fontsize
-        type: number
-      - name: glyphranges
-        type: number
-
-    return:
-      - name: fontid
-        type: number
-
-#*****************************************************************************************************
-
-  - name: font_add_ttf_data
-    type: function
-
-    parameters:
-      - name: ttf_data
-        type: string
-      - name: ttf_data_size
-        type: number
-      - name: fontsize
-        type: number
-      - name: fontpixels
-        type: number
-      - name: glyphranges
-        type: number
-
-    return:
-      - name: fontid
-        type: number
-
-#*****************************************************************************************************
-
-  - name: font_push
-    type: function
-
-    parameters:
-      - name: fontid
-        type: number
-
-#*****************************************************************************************************
-
-  - name: font_pop
-    type: function
-
-
-#*****************************************************************************************************
-
-  - name: font_scale
-    type: function
-
-    parameters:
-      - name: fontid
-        type: number
-      - name: fontscale
-        type: number
-
-#*****************************************************************************************************
-
-  - name: get_frame_height
-    type: function
-
-    return:
-      - name: height
-        type: number
-
-#*****************************************************************************************************
-#***** WINDOW ****************************************************************************************
-#*****************************************************************************************************
-
-  - name: set_cursor_pos
-    type: function
-
-    parameters:
-      - name: x
-        type: number
-      - name: y
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_display_size
-    type: function
-
-    parameters:
-      - name: width
-        type: number
-      - name: height
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_next_window_size
-    type: function
-
-    parameters:
-      - name: width
-        type: number
-      - name: height
-        type: number
-      - name: cond
-        type: number
-        optional: true
-
-#*****************************************************************************************************
-
-  - name: set_next_window_pos
-    type: function
-
-    parameters:
-      - name: x
-        type: number
-      - name: y
-        type: number
-      - name: cond
-        type: number
-        optional: true
-
-#*****************************************************************************************************
-
-  - name: get_window_size
-    type: function
-
-    return:
-      - name: width
-        type: number
-      - name: height
-        type: number
-
-
-#*****************************************************************************************************
-
-  - name: get_window_pos
-    type: function
-
-    return:
-      - name: x
-        type: number
-      - name: y
-        type: number
-
-
-#*****************************************************************************************************
-
-  - name: begin_window
-    type: function
-
-    parameters:
-      - name: title
-        type: string
-      - name: open
-        type: boolean
-      - name: flags
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-      - name: isopen
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: end_window
-    type: function
-
-#*****************************************************************************************************
-
-  - name: is_window_focused
-    type: function
-
-    parameters:
-      - name: flags
-        type: table
-
-    return:
-      - name: focused
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: get_content_region_avail
-    type: function
-
-    return:
-      - name: w
-        type: number
-      - name: h
-        type: number
-
-#*****************************************************************************************************
-
-  - name: get_window_content_region_max
-    type: function
-
-    return:
-      - name: x
-        type: number
-      - name: y
-        type: number
-
-#*****************************************************************************************************
-
-  - name: begin_child
-    type: function
-
-    parameters:
-      - name: title
-        type: string
-      - name: width
-        type: number
-      - name: height
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-
-
-#*****************************************************************************************************
-
-  - name: end_child
-    type: function
-
-#*****************************************************************************************************
-#***** COMBO *****************************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_popup_context_item
-    type: function
-
-    parameters:
-      - name: id
-        type: string
-      - name: popup_flags
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: begin_popup
-    type: function
-
-    parameters:
-      - name: id
-        type: string
-      - name: window_flags
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: begin_popup_modal
-    type: function
-
-    parameters:
-      - name: name
-        type: string
-      - name: window_flags
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: open_popup
-    type: function
-
-    parameters:
-      - name: id
-        type: string
-      - name: popup_flags
-        type: number
-
-#*****************************************************************************************************
-
-  - name: close_current_popup
-    type: function
-
-#*****************************************************************************************************
-
-  - name: end_popup
-    type: function
-
-#*****************************************************************************************************
-#***** COMBO *****************************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_combo
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: preview
-        type: string
-
-    return:
-      - name: result
-        type: boolean
-
-
-#*****************************************************************************************************
-
-  - name: end_combo
-    type: function
-
-
-#*****************************************************************************************************
-
-  - name: combo
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: current
-        type: nummber
-      - name: items
-        type: table
-
-    return:
-      - name: result
-        type: boolean
-      - name: current
-        type: number
-
-#*****************************************************************************************************
-#***** TABLE *****************************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_table
-    type: function
-
-    parameters:
-      - name: id
-        type: string
-      - name: column
-        type: number
-      - name: flags
-        type: number
-      - name: outer_size_x
-        type: number
-      - name: outer_size_y
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: end_table
-    type: function
-
-#*****************************************************************************************************
-
-  - name: table_headers_row
-    type: function
-
-
-#*****************************************************************************************************
-
-  - name: table_setup_column
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: flags
-        type: number
-      - name: init_width_or_weight
-        type: number
-
-#*****************************************************************************************************
-
-  - name: table_setup_scroll_freeze
-    type: function
-
-    parameters:
-      - name: columns
-        type: number
-      - name: rows
-        type: number
-
-#*****************************************************************************************************
-
-  - name: table_set_column_index
-    type: function
-
-    parameters:
-      - name: column
-        type: number
-
-
-#*****************************************************************************************************
-
-  - name: table_next_column
-    type: function
-
-#*****************************************************************************************************
-
-  - name: table_next_row
-    type: function
-
-#*****************************************************************************************************
-#***** TREE NODE *************************************************************************************
-#*****************************************************************************************************
-
-  - name: tree_node
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-
-    return:
-      - name: flags
-        type: number
-
-#*****************************************************************************************************
-
-  - name: tree_pop
-    type: function
-
-#*****************************************************************************************************
-#***** PUSH/POP ID ***********************************************************************************
-#*****************************************************************************************************
-
-  - name: push_id
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-
-  - name: pop_id
-    type: function
-
-#*****************************************************************************************************
-#***** TOOLTIP ***************************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_tooltip
-    type: function
-
-#*****************************************************************************************************
-
-  - name: end_tooltip
-    type: function
-
-#*****************************************************************************************************
-#***** TAB BAR ***************************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_tab_bar
-    type: function
-
-    parameters:
-      - name: id
-        type: string
-
-    return:
-      - name: result
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: end_tab_bar
-    type: function
-
-#*****************************************************************************************************
-
-  - name: begin_tab_item
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: open
-        type: boolean
-      - name: flags
-        type: number
-
-    return:
-      - name: result
-        type: boolean
-      - name: open
-        type: boolean
-
-#*****************************************************************************************************
-#***** COMPONENTS ************************************************************************************
-#*****************************************************************************************************
-
-  - name: text
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-
-#*****************************************************************************************************
-
-  - name: text_colored
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-      - name: Red
-        type: number
-      - name: Green
-        type: number
-      - name: Blue
-        type: number
-      - name: Alpha
-        type: number
-
-#*****************************************************************************************************
-
-  - name: input_text
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: text
-        type: string
-      - name: flags
-        type: number
-
-    return:
-      - name: changed
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: input_int
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: value
-        type: number
-
-    return:
-      - name: changed
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: input_float
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: float
-        type: number
-      - name: step
-        type: number
-      - name: step_fast
-        type: number
-      - name: float_precision
-        type: number
-
-    return:
-      - name: new_float
-        type: number
-
-#*****************************************************************************************************
-
-  - name: input_float3
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: v1
-        type: number
-      - name: v2
-        type: number
-      - name: v3
-        type: number
-
-    return:
-      - name: changed
-        type: boolean
-      - name: v1
-        type: number
-      - name: v2
-        type: number
-      - name: v3
-        type: number
-
-#*****************************************************************************************************
-
-  - name: input_float4
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: v1
-        type: number
-      - name: v2
-        type: number
-      - name: v3
-        type: number
-      - name: v4
-        type: number
-
-    return:
-      - name: changed
-        type: boolean
-      - name: v1
-        type: number
-      - name: v2
-        type: number
-      - name: v3
-        type: number
-      - name: v4
-        type: number
-
-#*****************************************************************************************************
-
-  - name: input_double
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: double
-        type: number
-      - name: step
-        type: number
-      - name: step_fast
-        type: number
-      - name: double_precision
-        type: number
-
-    return:
-      - name: new_double
-        type: number
-
-#*****************************************************************************************************
-
-  - name: slider_float
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: float
-        type: number
-      - name: min
-        type: number
-      - name: max
-        type: number
-      - name: float_precision
-        type: number
-
-    return:
-      - name: new_float
-        type: number
-
-#*****************************************************************************************************
-
-  - name: selectable
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-      - name: selected
-        type: boolean
-      - name: flags
-        type: number
-
-    return:
-      - name: selected
-        type: boolean
-
-
-#*****************************************************************************************************
-
-  - name: button
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-
-    return:
-      - name: pushed
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: button_image
-    type: function
-
-    parameters:
-      - name: imageid
-        type: number
-      - name: width(opt)
-        type: number
-      - name: height(opt)
-        type: number
-
-    return:
-      - name: pushed
-        type: boolean
-
-
-#*****************************************************************************************************
-
-  - name: checkbox
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-      - name: checked
-        type: boolean
-
-    return:
-      - name: changed
-        type: boolean
-      - name: pushed
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: radio_button
-    type: function
-
-    parameters:
-      - name: text
-        type: string
-      - name: checked
-        type: boolean
-
-    return:
-      - name: changed
-        type: boolean
-      - name: pushed
-        type: boolean
-
-#*****************************************************************************************************
-#***** MENU BAR **************************************************************************************
-#*****************************************************************************************************
-
-  - name: begin_menu_bar
-    type: function
-
+    - name: data_length
+      type: number
 
     returns:
-      - name: result
-        type: boolean
+    - name: texture_id
+      type: number
 
-#*****************************************************************************************************
+    - name: width
+      type: number
 
-  - name: end_menu_bar
+    - name: height
+      type: number
+
+
+  - name: image_load
     type: function
-
-#*****************************************************************************************************
-
-  - name: begin_main_menu_bar
-    type: function
-
+    desc: ImageLoad 
+    parameters:
+    - name: filename
+      type: string
 
     returns:
-      - name: result
-        type: boolean
+    - name: texture_id
+      type: number
 
-#*****************************************************************************************************
+    - name: width
+      type: number
 
-  - name: end_main_menu_bar
-    type: function
+    - name: height
+      type: number
 
-#*****************************************************************************************************
-
-  - name: begin_menu
-    type: function
-
-
-    parameters:
-      - name: label
-        type: string
-
-      - name: enabled
-        optional: true
-        type: bool
-
-
-    returns:
-      - name: result
-        type: boolean
-
-#*****************************************************************************************************
-
-  - name: end_menu
-    type: function
-
-#*****************************************************************************************************
-
-  - name: menu_item
-    type: function
-
-
-    parameters:
-      - name: label
-        type: string
-
-      - name: shortcut
-        type: string
-        optional: true
-
-      - name: selected
-        type: boolean
-        optional: true
-
-      - name: enabled
-        type: boolean
-        optional: true
-
-
-    returns:
-      - name: changed
-        type: boolean
-
-      - name: selected
-        type: boolean
-
-#*****************************************************************************************************
-#***** LAYOUT ****************************************************************************************
-#*****************************************************************************************************
-
-  - name: same_line
-    type: function
-
-    parameters:
-      - name: offset
-        type: number
-
-#*****************************************************************************************************
-
-  - name: new_line
-    type: function
-
-#*****************************************************************************************************
-
-  - name: bullet
-    type: function
-
-#*****************************************************************************************************
-
-  - name: indent
-    type: function
-
-#*****************************************************************************************************
-
-  - name: unindent
-    type: function
-
-#*****************************************************************************************************
-
-  - name: spacing
-    type: function
-
-#*****************************************************************************************************
-
-  - name: separator
-    type: function
-
-#*****************************************************************************************************
-
-  - name: get_cursor_screen_pos
-    type: function
-
-    return:
-      - name: x
-        type: number
-      - name: y
-        type: number
-
-
-#*****************************************************************************************************
-#***** PRIMITIVES ************************************************************************************
-#*****************************************************************************************************
 
   - name: add_line
     type: function
-
+    desc: DrawListAddLine 
     parameters:
-      - name: x1
-        type: number
-      - name: y1
-        type: number
-      - name: x2
-        type: number
-      - name: y2
-        type: number
-      - name: r
-        type: number
-      - name: g
-        type: number
-      - name: b
-        type: number
-      - name: a
-        type: number
-      - name: thickness
-        type: number
+    - name: x1
+      type: number
 
-#*****************************************************************************************************
+    - name: y1
+      type: number
+
+    - name: x2
+      type: number
+
+    - name: y2
+      type: number
+
+    - name: r
+      type: number
+
+    - name: g
+      type: number
+
+    - name: b
+      type: number
+
+    - name: a
+      type: number
+
 
   - name: add_rect
     type: function
-
+    desc: DrawListAddRect 
     parameters:
-      - name: x1
-        type: number
-      - name: y1
-        type: number
-      - name: x2
-        type: number
-      - name: y2
-        type: number
-      - name: r
-        type: number
-      - name: g
-        type: number
-      - name: b
-        type: number
-      - name: a
-        type: number
-      - name: thickness
-        type: number
+    - name: x1
+      type: number
+
+    - name: y1
+      type: number
+
+    - name: x2
+      type: number
+
+    - name: y2
+      type: number
+
+    - name: r
+      type: number
+
+    - name: g
+      type: number
+
+    - name: b
+      type: number
+
+    - name: a
+      type: number
+
+    - name: thickness
+      type: number
 
 
-#*****************************************************************************************************
-#***** PLOTS *****************************************************************************************
-#*****************************************************************************************************
-
-  - name: plot_lines
+  - name: set_display_size
     type: function
-
+    desc: SetDisplaySize 
     parameters:
-      - name: label
-        type: string
-      - name: valueoffset
-        type: number
-      - name: width
-        type: number
-      - name: height
-        type: number
-      - name: plotdata
-        type: table
+    - name: w
+      type: number
 
+    - name: h
+      type: number
 
-#*****************************************************************************************************
-
-  - name: plot_histogram
-    type: function
-
-    parameters:
-      - name: label
-        type: string
-      - name: valueoffset
-        type: number
-      - name: width
-        type: number
-      - name: height
-        type: number
-      - name: plotdata
-        type: table
-
-#*****************************************************************************************************
-
-  - name: text_getsize
-    type: function
-
-    return:
-      - name: textpixelsize
-        type: number
-
-#*****************************************************************************************************
-#***** DRAWING ***************************************************************************************
-#*****************************************************************************************************
-
-  - name: draw_line
-    type: function
-
-    parameters:
-      - name: x1
-        type: number
-      - name: y1
-        type: number
-      - name: x2
-        type: number
-      - name: y2
-        type: number
-      - name: color
-        type: number
-
-#*****************************************************************************************************
-
-  - name: draw_rect
-    type: function
-
-    parameters:
-      - name: x
-        type: number
-      - name: y
-        type: number
-      - name: width
-        type: number
-      - name: height
-        type: number
-      - name: color
-        type: number
-
-#*****************************************************************************************************
-
-  - name: draw_rect_filled
-    type: function
-
-    parameters:
-      - name: x
-        type: number
-      - name: y
-        type: number
-      - name: width
-        type: number
-      - name: height
-        type: number
-      - name: color
-        type: number
-
-#*****************************************************************************************************
-
-  - name: draw_progress
-    type: function
-
-    parameters:
-      - name: progress
-        type: number
-      - name: sizex
-        type: number
-      - name: sizey
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_rendering_enabled
-    type: function
-
-    parameters:
-      - name: enabled
-        type: boolean
-
-#*****************************************************************************************************
-#***** INPUT *****************************************************************************************
-#*****************************************************************************************************
 
   - name: set_mouse_input
     type: function
-
+    desc: SetMouseInput 
     parameters:
-      - name: x
-        type: number
-      - name: y
-        type: number
-      - name: mouse1
-        type: number
-      - name: mouse2
-        type: number
-      - name: mouse3
-        type: number
-      - name: mousewheel
-        type: number
+    - name: x
+      type: number
 
-#*****************************************************************************************************
+    - name: y
+      type: number
 
-  - name: set_mouse_button
-    type: function
+    - name: down1
+      type: number
 
-    parameters:
-      - name: index
-        type: number
-        desc: one of imgui.MOUSEBUTTON_LEFT, imgui.MOUSEBUTTON_MIDDLE or imgui.MOUSEBUTTON_RIGHT
-      - name: state
-        type: number
+    - name: down2
+      type: number
 
-#*****************************************************************************************************
+    - name: down3
+      type: number
 
-  - name: set_mouse_wheel
-    type: function
+    - name: wheel
+      type: number
 
-    parameters:
-      - name: mousewheel
-        type: number
-
-#*****************************************************************************************************
 
   - name: set_mouse_pos
     type: function
-
+    desc: SetMousePos 
     parameters:
-      - name: x
-        type: number
-      - name: y
-        type: number
+    - name: x
+      type: number
 
-#*****************************************************************************************************
+    - name: y
+      type: number
+
+
+  - name: set_mouse_button
+    type: function
+    desc: SetMouseButton 
+    parameters:
+    - name: index
+      type: number
+
+    - name: down
+      type: number
+
+
+  - name: set_mouse_wheel
+    type: function
+    desc: SetMouseWheel 
+    parameters:
+    - name: wheel
+      type: number
+
 
   - name: set_key_down
     type: function
-
+    desc: SetKeyDown 
     parameters:
-      - name: keyid
-        type: number
-      - name: state
-        type: boolean
+    - name: key
+      type: number
 
-#*****************************************************************************************************
+    - name: down
+      type: boolean
+
 
   - name: set_key_modifier_ctrl
     type: function
-
+    desc: SetKeyModifierCtrl 
     parameters:
-      - name: state
-        type: boolean
+    - name: down
+      type: boolean
 
-#*****************************************************************************************************
 
   - name: set_key_modifier_shift
     type: function
-
+    desc: SetKeyModifierShift 
     parameters:
-      - name: state
-        type: boolean
+    - name: down
+      type: boolean
 
-#*****************************************************************************************************
 
   - name: set_key_modifier_alt
     type: function
-
+    desc: SetKeyModifierAlt 
     parameters:
-      - name: state
-        type: boolean
+    - name: down
+      type: boolean
 
-#*****************************************************************************************************
 
   - name: set_key_modifier_super
     type: function
-
+    desc: SetKeyModifierSuper 
     parameters:
-      - name: state
-        type: boolean
+    - name: down
+      type: boolean
 
-#*****************************************************************************************************
 
   - name: add_input_character
     type: function
-
+    desc: AddInputCharacter 
     parameters:
-      - name: character
-        type: string
+    - name: character
+      type: string
 
-#*****************************************************************************************************
 
   - name: add_input_characters
     type: function
-
+    desc: AddInputCharacters 
     parameters:
-      - name: characters
-        type: string
+    - name: characters
+      type: string
 
-#*****************************************************************************************************
+
+  - name: tree_node
+    type: function
+    desc: TreeNode 
+    parameters:
+    - name: text
+      type: string
+
+    - name: flags
+      type: number
+
+
+  - name: tree_pop
+    type: function
+    desc: TreePop 
+
+  - name: push_id
+    type: function
+    desc: PushId 
+    parameters:
+    - name: text
+      type: string
+
+
+  - name: pop_id
+    type: function
+    desc: PopId 
+
+  - name: begin
+    type: function
+    desc: Begin 
+    parameters:
+    - name: title
+      type: string
+
+    - name: is_open
+      type: boolean
+
+    - name: flags
+      type: number
+
+    returns:
+    - name: result
+      type: bool
+
+    - name: is_open
+      type: bool
+
+
+  - name: end
+    type: function
+    desc: End 
+
+  - name: set_next_window_size
+    type: function
+    desc: SetNextWindowSize 
+    parameters:
+    - name: width
+      type: number
+
+    - name: height
+      type: number
+
+    - name: cond
+      type: number
+
+
+  - name: set_next_window_pos
+    type: function
+    desc: SetNextWindowPos 
+    parameters:
+    - name: x
+      type: number
+
+    - name: y
+      type: number
+
+    - name: cond
+      type: number
+
+
+  - name: get_window_size
+    type: function
+    desc: GetWindowSize 
+    returns:
+    - name: width
+      type: number
+
+    - name: height
+      type: number
+
+
+  - name: get_window_pos
+    type: function
+    desc: GetWindowPos 
+    returns:
+    - name: x
+      type: number
+
+    - name: y
+      type: number
+
+
+  - name: is_window_focused
+    type: function
+    desc: IsWindowFocused 
+    parameters:
+    - name: flags
+      type: number
+
+    returns:
+    - name: focused
+      type: boolean
+
+
+  - name: get_content_region_avail
+    type: function
+    desc: GetContentRegionAvail 
+    returns:
+    - name: x
+      type: number
+
+    - name: y
+      type: number
+
+
+  - name: get_window_content_region_max
+    type: function
+    desc: GetWindowContentRegionMax 
+    returns:
+    - name: x
+      type: number
+
+    - name: y
+      type: number
+
+
+  - name: begin_child
+    type: function
+    desc: BeginChild 
+    parameters:
+    - name: title
+      type: string
+
+    - name: width
+      type: number
+
+    - name: border
+      type: number
+
+    - name: flags
+      type: number
+
+    returns:
+    - name: result
+      type: bool
+
+
+  - name: end_child
+    type: function
+    desc: EndChild 
+
+  - name: begin_popup_context_item
+    type: function
+    desc: BeginPopupContextItem 
+    parameters:
+    - name: id
+      type: string
+
+    returns:
+    - name: result
+      type: boolean
+
+
+  - name: begin_popup
+    type: function
+    desc: BeginPopup 
+    parameters:
+    - name: id
+      type: string
+
+    - name: flags
+      type: number
+
+    returns:
+    - name: result
+      type: boolean
+
+
+  - name: begin_popup_modal
+    type: function
+    desc: BeginPopupModal 
+    parameters:
+    - name: id
+      type: string
+
+    - name: flags
+      type: number
+
+    returns:
+    - name: result
+      type: boolean
+
+
+  - name: open_popup
+    type: function
+    desc: OpenPopup 
+    parameters:
+    - name: id
+      type: string
+
+    - name: flags
+      type: number
+
+    returns:
+    - name: result
+      type: boolean
+
+
+  - name: close_current_popup
+    type: function
+    desc: CloseCurrentPopup 
+
+  - name: end_popup
+    type: function
+    desc: EndPopup 
+
+  - name: begin_drag_drop_source
+    type: function
+    desc: BeginDragDropSource 
+    parameters:
+    - name: flags
+      type: number
+
+
+  - name: end_drag_drop_source
+    type: function
+    desc: EndDragDropSource 
+
+  - name: begin_drag_drop_target
+    type: function
+    desc: BeginDragDropTarget 
+
+  - name: end_drag_drop_target
+    type: function
+    desc: EndDragDropTarget 
+
+  - name: set_drag_drop_payload
+    type: function
+    desc: SetDragDropPayload 
+    parameters:
+    - name: type
+      type: string
+
+    - name: payload
+      type: string
+
+
+  - name: accept_drag_drop_payload
+    type: function
+    desc: AcceptDragDropPayload 
+    parameters:
+    - name: type
+      type: string
+
+    - name: flags
+      type: number
+
+
+  - name: begin_combo
+    type: function
+    desc: BeginCombo 
+    parameters:
+    - name: label
+      type: string
+
+    - name: preview
+      type: string
+
+
+  - name: end_combo
+    type: function
+    desc: EndCombo 
+
+  - name: combo
+    type: function
+    desc: Combo 
+    parameters:
+    - name: label
+      type: string
+
+    - name: current
+      type: number
+
+    - name: items
+      type: table
+
+    returns:
+    - name: result
+      type: boolean
+
+    - name: r
+      type: numbe
+
+
+  - name: begin_table
+    type: function
+    desc: BeginTable 
+
+  - name: end_table
+    type: function
+    desc: EndTable 
+
+  - name: table_headers_row
+    type: function
+    desc: TableHeadersRow 
+
+  - name: table_setup_column
+    type: function
+    desc: TableSetupColumn 
+
+  - name: table_set_column_index
+    type: function
+    desc: TableSetColumnIndex 
+
+  - name: table_next_column
+    type: function
+    desc: TableNextColumn 
+
+  - name: table_next_row
+    type: function
+    desc: TableNextRow 
+
+  - name: table_setup_scroll_freeze
+    type: function
+    desc: TableSetupScrollFreeze 
+
+  - name: begin_tooltip
+    type: function
+    desc: BeginTooltip 
+
+  - name: end_tooltip
+    type: function
+    desc: EndTooltip 
+
+  - name: begin_tab_bar
+    type: function
+    desc: BeginTabBar 
+
+  - name: end_tab_bar
+    type: function
+    desc: EndTabBar 
+
+  - name: begin_tab_item
+    type: function
+    desc: BeginTabItem 
+
+  - name: end_tab_item
+    type: function
+    desc: EndTabItem 
+
+  - name: text
+    type: function
+    desc: Text 
+
+  - name: text_get_size
+    type: function
+    desc: TextGetSize 
+
+  - name: text_colored
+    type: function
+    desc: TextColored 
+
+  - name: input_text
+    type: function
+    desc: InputText 
+
+  - name: input_int
+    type: function
+    desc: InputInt 
+
+  - name: input_float
+    type: function
+    desc: InputFloat 
+
+  - name: input_double
+    type: function
+    desc: InputDouble 
+
+  - name: input_int4
+    type: function
+    desc: InputInt4 
+
+  - name: input_float3
+    type: function
+    desc: InputFloat3 
+
+  - name: input_float4
+    type: function
+    desc: InputFloat4 
+
+  - name: slider_float
+    type: function
+    desc: SliderFloat 
+
+  - name: selectable
+    type: function
+    desc: Selectable 
+
+  - name: button
+    type: function
+    desc: Button 
+
+  - name: button_image
+    type: function
+    desc: ButtonImage 
+
+  - name: checkbox
+    type: function
+    desc: Checkbox 
+
+  - name: radio_button
+    type: function
+    desc: RadioButton 
+
+  - name: begin_menu_bar
+    type: function
+    desc: BeginMenuBar 
+
+  - name: end_menu_bar
+    type: function
+    desc: EndMenuBar 
+
+  - name: begin_main_menu_bar
+    type: function
+    desc: BeginMainMenuBar 
+
+  - name: end_main_menu_bar
+    type: function
+    desc: EndMainMenuBar 
+
+  - name: begin_menu
+    type: function
+    desc: BeginMenu 
+
+  - name: end_menu
+    type: function
+    desc: EndMenu 
+
+  - name: menu_item
+    type: function
+    desc: MenuItem 
+
+  - name: same_line
+    type: function
+    desc: SameLine 
+
+  - name: new_line
+    type: function
+    desc: NewLine 
+
+  - name: bullet
+    type: function
+    desc: Bullet 
+
+  - name: indent
+    type: function
+    desc: Indent 
+
+  - name: unindent
+    type: function
+    desc: Unindent 
+
+  - name: spacing
+    type: function
+    desc: Spacing 
+
+  - name: separator
+    type: function
+    desc: Separator 
+
+  - name: get_cursor_screen_pos
+    type: function
+    desc: GetCursorScreenPos 
+
+  - name: plot_lines
+    type: function
+    desc: PlotLines 
+
+  - name: plot_histogram
+    type: function
+    desc: PlotHistogram 
+
+  - name: demo
+    type: function
+    desc: Demo 
 
   - name: is_mouse_double_clicked
     type: function
-
-    parameters:
-      - name: button
-        type: number
-
-    return:
-      - name: clicked
-        type: boolean
-
-#*****************************************************************************************************
-
+    desc: IsMouseDoubleClicked 
 
   - name: is_mouse_clicked
     type: function
-
-    parameters:
-      - name: button
-        type: number
-
-    return:
-      - name: clicked
-        type: boolean
-
-#*****************************************************************************************************
+    desc: IsMouseClicked 
 
   - name: is_item_active
     type: function
-
-    return:
-      - name: active
-        type: boolean
-
-#*****************************************************************************************************
+    desc: IsItemActive 
 
   - name: is_item_focused
     type: function
-
-    return:
-      - name: focused
-        type: boolean
-
-#*****************************************************************************************************
+    desc: IsItemFocused 
 
   - name: is_item_clicked
     type: function
-
-    parameters:
-      - name: button
-        type: number
-
-    return:
-      - name: clicked
-        type: boolean
-
-#*****************************************************************************************************
+    desc: IsItemClicked 
 
   - name: is_item_double_clicked
     type: function
-
-    parameters:
-      - name: button
-        type: number
-
-    return:
-      - name: clicked
-        type: boolean
-
-
-#*****************************************************************************************************
+    desc: IsItemDoubleClicked 
 
   - name: is_item_hovered
     type: function
-
-    return:
-      - name: hovered
-        type: boolean
-
-#*****************************************************************************************************
+    desc: IsItemHovered 
 
   - name: get_item_rect_max
     type: function
-
-    return:
-      - name: x
-        type: number
-      - name: y
-        type: number
-
-#*****************************************************************************************************
+    desc: GetItemRectMax 
 
   - name: set_keyboard_focus_here
     type: function
-
-    parameters:
-      - name: offset
-        type: number
-
-#*****************************************************************************************************
-#***** STYLE *****************************************************************************************
-#*****************************************************************************************************
-
-  - name: set_style
-    type: function
-
-    parameters:
-      - name: style
-        type: table
-
-#*****************************************************************************************************
+    desc: SetKeyboardFocusHere 
 
   - name: get_style
     type: function
+    desc: GetStyle 
 
-    return:
-      - name: style
-        type: table
-
-#*****************************************************************************************************
-
-  - name: set_style_window_rounding
+  - name: set_style
     type: function
-
-    parameters:
-      - name: rounding
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_style_window_bordersize
-    type: function
-
-    parameters:
-      - name: bordersize
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_style_child_bordersize
-    type: function
-
-    parameters:
-      - name: bordersize
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_style_frame_rounding
-    type: function
-
-    parameters:
-      - name: rounding
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_style_tab_rounding
-    type: function
-
-    parameters:
-      - name: rounding
-        type: number
-
-
-#*****************************************************************************************************
-
-  - name: set_style_scrollbar_rounding
-    type: function
-
-    parameters:
-      - name: rounding
-        type: number
-
-#*****************************************************************************************************
-
-  - name: set_style_scrollbar_size
-    type: function
-
-    parameters:
-      - name: size
-        type: number
-
-#*****************************************************************************************************
+    desc: SetStyle 
 
   - name: set_style_color
     type: function
-
-    parameters:
-      - name: style
-        type: number
-      - name: r
-        type: number
-      - name: g
-        type: number
-      - name: b
-        type: number
-      - name: a
-        type: number
-
-#*****************************************************************************************************
+    desc: SetStyleColor 
 
   - name: push_style_color
     type: function
-
-    parameters:
-      - name: color
-        type: number
-      - name: r
-        type: number
-      - name: g
-        type: number
-      - name: b
-        type: number
-      - name: a
-        type: number
-
-#*****************************************************************************************************
+    desc: PushStyleColor 
 
   - name: pop_style_color
     type: function
-
-    parameters:
-      - name: count
-        type: number
-
-
-#*****************************************************************************************************
-
-  - name: get_style_item_spacing
-    type: function
-
-    return:
-      - name: x
-        type: number
-      - name: y
-        type: number
-
-
-#*****************************************************************************************************
+    desc: PopStyleColor 
 
   - name: set_window_font_scale
     type: function
-
-    parameters:
-      - name: fontscale
-        type: number
-
-#*****************************************************************************************************
+    desc: SetWindowFontScale 
 
   - name: set_global_font_scale
     type: function
-
-    parameters:
-      - name: fontscale
-        type: number
-
-
-#*****************************************************************************************************
+    desc: SetGlobalFontScale 
 
   - name: scale_all_sizes
     type: function
+    desc: ScaleAllSizes 
 
-    parameters:
-      - name: scale
-        type: number
-
-#*****************************************************************************************************
-#***** ITEM WIDTH ************************************************************************************
-#*****************************************************************************************************
+  - name: set_cursor_pos
+    type: function
+    desc: SetCursorPos 
 
   - name: push_item_width
     type: function
-
-    parameters:
-      - name: width
-        type: number
-
-#*****************************************************************************************************
+    desc: PushItemWidth 
 
   - name: pop_item_width
     type: function
-
-#*****************************************************************************************************
+    desc: PopItemWidth 
 
   - name: set_next_item_width
     type: function
-
-    parameters:
-      - name: width
-        type: number
-
-#*****************************************************************************************************
+    desc: SetNextItemWidth 
 
   - name: calc_item_width
     type: function
-
-    return:
-      - name: width
-        type: number
-
-#*****************************************************************************************************
-#***** NAVIGATION ************************************************************************************
-#*****************************************************************************************************
+    desc: CalcItemWidth 
 
   - name: set_scroll_here_y
     type: function
+    desc: SetScrollHereY 
 
-    parameters:
-      - name: center_y_ratio
-        type: number
-
-#*****************************************************************************************************
-#***** CAPTURE ***************************************************************************************
-#*****************************************************************************************************
-
-  - name: want_mouse_input
+  - name: font_add_t_t_f_file
     type: function
+    desc: FontAddTTFFile 
 
-    return:
-      - name: capture
-        type: boolean
-
-
-  - name: want_keyboard_input
+  - name: font_add_t_t_f_data
     type: function
+    desc: FontAddTTFData 
 
-    return:
-      - name: capture
-        type: boolean
-
-
-  - name: want_text_input
+  - name: font_push
     type: function
+    desc: FontPush 
 
-    return:
-      - name: capture
-        type: boolean
+  - name: font_pop
+    type: function
+    desc: FontPop 
 
-#*****************************************************************************************************
-#***** CONFIG ****************************************************************************************
-#*****************************************************************************************************
+  - name: font_scale
+    type: function
+    desc: FontScale 
+
+  - name: get_frame_height
+    type: function
+    desc: GetFrameHeight 
+
+  - name: draw_line
+    type: function
+    desc: DrawLine 
+
+  - name: draw_rect
+    type: function
+    desc: DrawRect 
+
+  - name: draw_rect_filled
+    type: function
+    desc: DrawRectFilled 
+
+  - name: draw_progress_bar
+    type: function
+    desc: DrawProgressBar 
+
+  - name: set_rendering_enabled
+    type: function
+    desc: SetRenderingEnabled 
+
+  - name: want_capture_mouse
+    type: function
+    desc: WantCaptureMouse 
+
+  - name: want_capture_keyboard
+    type: function
+    desc: WantCaptureKeyboard 
+
+  - name: want_capture_text
+    type: function
+    desc: WantCaptureText 
 
   - name: set_defaults
     type: function
-
-#*****************************************************************************************************
+    desc: SetDefaults 
 
   - name: set_ini_filename
     type: function
+    desc: SetIniFilename 
 
-    parameters:
-      - name: filename
-        type: string
-
-#*****************************************************************************************************
-
-  - name: MOUSEBUTTON_LEFT
-  - name: MOUSEBUTTON_RIGHT
-  - name: MOUSEBUTTON_MIDDLE
-
-  - name: SELECTABLE_DONT_CLOSE_POPUPS
-  - name: SELECTABLE_SPAN_ALL_COLUMNS
-  - name: SELECTABLE_ALLOW_DOUBLE_CLICK
-  - name: SELECTABLE_DISABLED
-  - name: SELECTABLE_ALLOW_ITEM_OVERLAP
-
-  - name: TABITEM_UNSAVED_DOCUMENT
-  - name: TABITEM_SET_SELECTED
-  - name: TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
-  - name: TABITEM_NO_PUSH_ID
-  - name: TABITEM_NO_TOOLTIP
-  - name: TABITEM_NO_REORDER
-  - name: TABITEM_LEADING
-  - name: TABITEM_TRAILING
-
-  - name: FOCUSED_CHILD_WINDOWS
-  - name: FOCUSED_ROOT_WINDOW
-  - name: FOCUSED_ANY_WINDOW
-  - name: FOCUSED_ROOT_AND_CHILD_WINDOWS
-
-  - name: TREENODE_SELECTED
-  - name: TREENODE_FRAMED
-  - name: TREENODE_ALLOW_ITEM_OVERLAP
-  - name: TREENODE_NO_TREE_PUSH_ON_OPEN
-  - name: TREENODE_NO_AUTO_OPEN_ON_LOG
-  - name: TREENODE_DEFAULT_OPEN
-  - name: TREENODE_OPEN_ON_DOUBLE_CLICK
-  - name: TREENODE_OPEN_ON_ARROW
-  - name: TREENODE_LEAF
-  - name: TREENODE_BULLET
-  - name: TREENODE_FRAME_PADDING
-  - name: TREENODE_SPAN_AVAILABLE_WIDTH
-  - name: TREENODE_SPAN_FULL_WIDTH
-  - name: TREENODE_NAV_LEFT_JUMPS_BACK_HERE
-
-  - name: ImGuiCol_Text
-  - name: ImGuiCol_TextDisabled
-  - name: ImGuiCol_WindowBg
-  - name: ImGuiCol_ChildBg
-  - name: ImGuiCol_PopupBg
-  - name: ImGuiCol_Border
-  - name: ImGuiCol_BorderShadow
-  - name: ImGuiCol_FrameBg
-  - name: ImGuiCol_FrameBgHovered
-  - name: ImGuiCol_FrameBgActive
-  - name: ImGuiCol_TitleBg
-  - name: ImGuiCol_TitleBgActive
-  - name: ImGuiCol_TitleBgCollapsed
-  - name: ImGuiCol_MenuBarBg
-  - name: ImGuiCol_ScrollbarBg
-  - name: ImGuiCol_ScrollbarGrab
-  - name: ImGuiCol_ScrollbarGrabHovered
-  - name: ImGuiCol_ScrollbarGrabActive
-  - name: ImGuiCol_CheckMark
-  - name: ImGuiCol_SliderGrab
-  - name: ImGuiCol_SliderGrabActive
-  - name: ImGuiCol_Button
-  - name: ImGuiCol_ButtonHovered
-  - name: ImGuiCol_ButtonActive
-  - name: ImGuiCol_Header
-  - name: ImGuiCol_HeaderHovered
-  - name: ImGuiCol_HeaderActive
-  - name: ImGuiCol_Separator
-  - name: ImGuiCol_SeparatorHovered
-  - name: ImGuiCol_SeparatorActive
-  - name: ImGuiCol_ResizeGrip
-  - name: ImGuiCol_ResizeGripHovered
-  - name: ImGuiCol_ResizeGripActive
-  - name: ImGuiCol_Tab
-  - name: ImGuiCol_TabHovered
-  - name: ImGuiCol_TabActive
-  - name: ImGuiCol_TabUnfocused
-  - name: ImGuiCol_TabUnfocusedActive
-  - name: ImGuiCol_PlotLines
-  - name: ImGuiCol_PlotLinesHovered
-  - name: ImGuiCol_PlotHistogram
-  - name: ImGuiCol_PlotHistogramHovered
-  - name: ImGuiCol_TableHeaderBg
-  - name: ImGuiCol_TableBorderStrong
-  - name: ImGuiCol_TableBorderLight
-  - name: ImGuiCol_TableRowBg
-  - name: ImGuiCol_TableRowBgAlt
-  - name: ImGuiCol_TextSelectedBg
-  - name: ImGuiCol_DragDropTarget
-  - name: ImGuiCol_NavHighlight
-  - name: ImGuiCol_NavWindowingHighlight
-  - name: ImGuiCol_NavWindowingDimBg
-  - name: ImGuiCol_ModalWindowDimBg
-
-  - name: TABLECOLUMN_NONE
-  - name: TABLECOLUMN_DEFAULTHIDE
-  - name: TABLECOLUMN_DEFAULTSORT
-  - name: TABLECOLUMN_WIDTHSTRETCH
-  - name: TABLECOLUMN_WIDTHFIXED
-  - name: TABLECOLUMN_NORESIZE
-  - name: TABLECOLUMN_NOREORDER
-  - name: TABLECOLUMN_NOHIDE
-  - name: TABLECOLUMN_NOCLIP
-  - name: TABLECOLUMN_NOSORT
-  - name: TABLECOLUMN_NOSORTASCENDING
-  - name: TABLECOLUMN_NOSORTDESCENDING
-  - name: TABLECOLUMN_NOHEADERWIDTH
-  - name: TABLECOLUMN_PREFERSORTASCENDING
-  - name: TABLECOLUMN_PREFERSORTDESCENDING
-  - name: TABLECOLUMN_INDENTENABLE
-  - name: TABLECOLUMN_INDENTDISABLE
-
-  - name: WINDOWFLAGS_NONE
-  - name: WINDOWFLAGS_NOTITLEBAR
-  - name: WINDOWFLAGS_NORESIZE
-  - name: WINDOWFLAGS_NOMOVE
-  - name: WINDOWFLAGS_NOSCROLLBAR
-  - name: WINDOWFLAGS_NOSCROLLWITHMOUSE
-  - name: WINDOWFLAGS_NOCOLLAPSE
-  - name: WINDOWFLAGS_ALWAYSAUTORESIZE
-  - name: WINDOWFLAGS_NOBACKGROUND
-  - name: WINDOWFLAGS_NOSAVEDSETTINGS
-  - name: WINDOWFLAGS_NOMOUSEINPUTS
-  - name: WINDOWFLAGS_MENUBAR
-  - name: WINDOWFLAGS_HORIZONTALSCROLLBAR
-  - name: WINDOWFLAGS_NOFOCUSONAPPEARING
-  - name: WINDOWFLAGS_NOBRINGTOFRONTONFOCUS
-  - name: WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR
-  - name: WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR
-  - name: WINDOWFLAGS_ALWAYSUSEWINDOWPADDING
-  - name: WINDOWFLAGS_NONAVINPUTS
-  - name: WINDOWFLAGS_NONAVFOCUS
-  - name: WINDOWFLAGS_UNSAVEDDOCUMENT
-  - name: WINDOWFLAGS_NONAV
-  - name: WINDOWFLAGS_NODECORATION
-  - name: WINDOWFLAGS_NOINPUTS
-
-  - name: POPUPFLAGS_NONE
-  - name: POPUPFLAGS_MOUSEBUTTONLEFT
-  - name: POPUPFLAGS_MOUSEBUTTONRIGHT
-  - name: POPUPFLAGS_MOUSEBUTTONMIDDLE
-  - name: POPUPFLAGS_MOUSEBUTTONMASK
-  - name: POPUPFLAGS_MOUSEBUTTONDEFAULT
-  - name: POPUPFLAGS_NOOPENOVEREXISTINGPOPUP
-  - name: POPUPFLAGS_NOOPENOVERITEMS
-  - name: POPUPFLAGS_ANYPOPUPID
-  - name: POPUPFLAGS_ANYPOPUPLEVEL
-  - name: POPUPFLAGS_ANYPOPUP
-
-  - name: DROPFLAGS_NONE
-  - name: DROPFLAGS_SOURCENOPREVIEWTOOLTIP
-  - name: DROPFLAGS_SOURCENODISABLEHOVER
-  - name: DROPFLAGS_SOURCENOHOLDTOOPENOTHERS
-  - name: DROPFLAGS_SOURCEALLOWNULLID
-  - name: DROPFLAGS_SOURCEEXTERN
-  - name: DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD
-  - name: DROPFLAGS_ACCEPTBEFOREDELIVERY
-  - name: DROPFLAGS_ACCEPTNODRAWDEFAULTRECT
-  - name: DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP
-  - name: DROPFLAGS_ACCEPTPEEKONLY
-
-  - name: TABLE_NONE
-  - name: TABLE_RESIZABLE
-  - name: TABLE_REORDERABLE
-  - name: TABLE_HIDEABLE
-  - name: TABLE_SORTABLE
-  - name: TABLE_NOSAVEDSETTINGS
-  - name: TABLE_CONTEXTMENUINBODY
-  - name: TABLE_ROWBG
-  - name: TABLE_BORDERSINNERH
-  - name: TABLE_BORDERSOUTERH
-  - name: TABLE_BORDERSINNERV
-  - name: TABLE_BORDERSOUTERV
-  - name: TABLE_BORDERSH
-  - name: TABLE_BORDERSV
-  - name: TABLE_BORDERSINNER
-  - name: TABLE_BORDERSOUTER
-  - name: TABLE_BORDERS
-  - name: TABLE_NOBORDERSINBODY
-  - name: TABLE_NOBORDERSINBODYUNTILRESIZE
-  - name: TABLE_SIZINGFIXEDFIT
-  - name: TABLE_SIZINGFIXEDSAME
-  - name: TABLE_SIZINGSTRETCHPROP
-  - name: TABLE_SIZINGSTRETCHSAME
-  - name: TABLE_NOHOSTEXTENDX
-  - name: TABLE_NOHOSTEXTENDY
-  - name: TABLE_NOKEEPCOLUMNSVISIBLE
-  - name: TABLE_PRECISEWIDTHS
-  - name: TABLE_NOCLIP
-  - name: TABLE_PADOUTERX
-  - name: TABLE_NOPADOUTERX
-  - name: TABLE_NOPADINNERX
-  - name: TABLE_SCROLLX
-  - name: TABLE_SCROLLY
-  - name: TABLE_SORTMULTI
-  - name: TABLE_SORTTRISTATE
-
-  - name: INPUTFLAGS_NONE
-  - name: INPUTFLAGS_CHARSDECIMAL
-  - name: INPUTFLAGS_CHARSHEXADECIMAL
-  - name: INPUTFLAGS_CHARSUPPERCASE
-  - name: INPUTFLAGS_CHARSNOBLANK
-  - name: INPUTFLAGS_AUTOSELECTALL
-  - name: INPUTFLAGS_ENTERRETURNSTRUE
-  - name: INPUTFLAGS_CALLBACKCOMPLETION
-  - name: INPUTFLAGS_CALLBACKHISTORY
-  - name: INPUTFLAGS_CALLBACKALWAYS
-  - name: INPUTFLAGS_CALLBACKCHARFILTER
-  - name: INPUTFLAGS_ALLOWTABINPUT
-  - name: INPUTFLAGS_CTRLENTERFORNEWLINE
-  - name: INPUTFLAGS_NOHORIZONTALSCROLL
-  - name: INPUTFLAGS_ALWAYSOVERWRITE
-  - name: INPUTFLAGS_READONLY
-  - name: INPUTFLAGS_PASSWORD
-  - name: INPUTFLAGS_NOUNDOREDO
-  - name: INPUTFLAGS_CHARSSCIENTIFIC
-  - name: INPUTFLAGS_CALLBACKRESIZE
-  - name: INPUTFLAGS_CALLBACKEDIT
-  - name: INPUTFLAGS_ESCAPECLEARSALL
-
-  - name: COND_NONE
-  - name: COND_ALWAYS
-  - name: COND_ONCE
-  - name: COND_FIRSTUSEEVER
-  - name: COND_APPEARING
-
-  - name: DIR_NONE
-  - name: DIR_LEFT
-  - name: DIR_RIGHT
-  - name: DIR_UP
-  - name: DIR_DOWN
-
-  - name: KEY_TAB
-  - name: KEY_LEFTARROW
-  - name: KEY_RIGHTARROW
-  - name: KEY_UPARROW
-  - name: KEY_DOWNARROW
-  - name: KEY_PAGEUP
-  - name: KEY_PAGEDOWN
-  - name: KEY_HOME
-  - name: KEY_END
-  - name: KEY_INSERT
-  - name: KEY_DELETE
-  - name: KEY_BACKSPACE
-  - name: KEY_SPACE
-  - name: KEY_ENTER
-  - name: KEY_ESCAPE
-  - name: KEY_KEYPADENTER
-  - name: KEY_A
-  - name: KEY_C
-  - name: KEY_V
-  - name: KEY_X
-  - name: KEY_Y
-  - name: KEY_Z
-
-  - name: GLYPH_RANGES_DEFAULT
-  - name: GLYPH_RANGES_GREEK
-  - name: GLYPH_RANGES_KOREAN
-  - name: GLYPH_RANGES_JAPANESE
-  - name: GLYPH_RANGES_CHINESEFULL
-  - name: GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON
-  - name: GLYPH_RANGES_CYRILLIC
-  - name: GLYPH_RANGES_THAI
-  - name: GLYPH_RANGES_VIETNAMESE

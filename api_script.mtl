@@ -1,0 +1,38 @@
+- name: imgui
+  type: table
+  desc: Functions and constants for interacting with Dear ImGUI
+
+  members:
+{{#groups}}
+{{#files}}
+{{#entries}}
+{{^field}}
+  - name: {{name}}
+    type: function
+    desc: {{#summary}}{{summary}} {{/summary}}{{description}}
+    {{#has_params}}
+    parameters:
+    {{#params}}
+    - name: {{name}}
+      type: {{type}}
+{{#description}}      desc: {{description}}{{/description}}
+  {{/params}}
+  {{/has_params}}
+  {{#has_returns}}
+    returns:
+  {{#returns}}
+    - name: {{name}}
+      type: {{type}}
+{{#description}}      desc: {{description}}{{/description}}
+  {{/returns}}
+  {{/has_returns}}
+{{/field}}
+{{#field}}
+  - name: {{name}}
+    type: number
+    desc: {{#summary}}{{summary}} {{/summary}}{{description}}
+{{/field}}
+
+{{/entries}}
+{{/files}}
+{{/groups}}

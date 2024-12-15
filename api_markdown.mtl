@@ -1,0 +1,46 @@
+# API reference
+
+{{#groups}}
+* {{group}}
+{{#files}}
+  * [{{#type}}{{type}}{{/type}}{{^type}}{{module}}{{/type}}](#{{#type}}{{type}}{{/type}}{{^type}}{{module}}{{/type}})
+{{/files}}
+{{/groups}}
+
+{{#groups}}
+# {{group}}
+
+{{#files}}
+## {{#type}}{{type}}{{/type}}{{^type}}{{module}}{{/type}}
+*File: `{{filename}}`*
+
+{{#file_summary}}{{file_summary}} {{/file_summary}}{{file_description}}
+{{#usage}}
+
+```lua
+{{{usage}}}```{{/usage}}
+
+{{#entries}}
+{{#type}}
+### {{type}}.{{name}}{{#field_type}} [`{{field_type}}`]{{/field_type}}{{^field}}({{params_string}}){{/field}}
+{{/type}}
+{{^type}}
+### {{name}}{{#field_type}} [`{{field_type}}`]{{/field_type}}{{^field}}({{params_string}}){{/field}}
+{{/type}}
+{{#summary}}{{summary}} {{/summary}}{{description}}
+{{#usage}}```
+{{{usage}}}```{{/usage}}
+{{#has_params}}
+
+PARAMS
+{{#params}}* `{{name}}` {{#type}}[`{{type}}`] {{/type}}- {{description}}
+{{/params}}{{/has_params}}{{#has_returns}}
+RETURNS
+{{#returns}}* `{{name}}` {{#type}}[`{{type}}`] {{/type}}- {{description}}
+{{/returns}}{{/has_returns}}
+
+{{/entries}}
+---
+
+{{/files}}
+{{/groups}}

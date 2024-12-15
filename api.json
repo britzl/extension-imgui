@@ -1,0 +1,1957 @@
+{
+    "groups": [
+        {
+            "files": [
+                {
+                    "entries": [
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "image_b64_decode",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "data",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "length",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "data,length",
+                            "returns": [
+                                {
+                                    "description": "Data",
+                                    "name": "decoded",
+                                    "type": "string"
+                                }
+                            ],
+                            "summary": "ImageB64Decode",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "image_load_data",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "filename",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "data",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "data_length",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "filename,data,data_length",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "texture_id",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "width",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "height",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "ImageLoadData",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "image_load",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "filename",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "filename",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "texture_id",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "width",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "height",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "ImageLoad",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "add_line",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "x1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "x2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "r",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "g",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "b",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "a",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "x1,y1,x2,y2,r,g,b,a",
+                            "returns": [],
+                            "summary": "DrawListAddLine",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "add_rect",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "x1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "x2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "r",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "g",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "b",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "a",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "thickness",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "x1,y1,x2,y2,r,g,b,a,thickness",
+                            "returns": [],
+                            "summary": "DrawListAddRect",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_display_size",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "w",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "h",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "w,h",
+                            "returns": [],
+                            "summary": "SetDisplaySize",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_mouse_input",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "down1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "down2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "down3",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "wheel",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "x,y,down1,down2,down3,wheel",
+                            "returns": [],
+                            "summary": "SetMouseInput",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_mouse_pos",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "x,y",
+                            "returns": [],
+                            "summary": "SetMousePos",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_mouse_button",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "index",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "down",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "index,down",
+                            "returns": [],
+                            "summary": "SetMouseButton",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_mouse_wheel",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "wheel",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "wheel",
+                            "returns": [],
+                            "summary": "SetMouseWheel",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_key_down",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "key",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "down",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "params_string": "key,down",
+                            "returns": [],
+                            "summary": "SetKeyDown",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_key_modifier_ctrl",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "down",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "params_string": "down",
+                            "returns": [],
+                            "summary": "SetKeyModifierCtrl",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_key_modifier_shift",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "down",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "params_string": "down",
+                            "returns": [],
+                            "summary": "SetKeyModifierShift",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_key_modifier_alt",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "down",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "params_string": "down",
+                            "returns": [],
+                            "summary": "SetKeyModifierAlt",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_key_modifier_super",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "down",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "params_string": "down",
+                            "returns": [],
+                            "summary": "SetKeyModifierSuper",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "add_input_character",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "character",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "character",
+                            "returns": [],
+                            "summary": "AddInputCharacter",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "add_input_characters",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "characters",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "characters",
+                            "returns": [],
+                            "summary": "AddInputCharacters",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "tree_node",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "text",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "text,flags",
+                            "returns": [],
+                            "summary": "TreeNode",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "tree_pop",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TreePop",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "push_id",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "text",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "text",
+                            "returns": [],
+                            "summary": "PushId",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "pop_id",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PopId",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "begin",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "title",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "is_open",
+                                    "type": "boolean"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "title,is_open,flags",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "bool"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "is_open",
+                                    "type": "bool"
+                                }
+                            ],
+                            "summary": "Begin",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end",
+                            "params": [],
+                            "returns": [],
+                            "summary": "End",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_next_window_size",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "width",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "height",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "cond",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "width,height,cond",
+                            "returns": [],
+                            "summary": "SetNextWindowSize",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_next_window_pos",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "cond",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "x,y,cond",
+                            "returns": [],
+                            "summary": "SetNextWindowPos",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": true,
+                            "name": "get_window_size",
+                            "params": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "width",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "height",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "GetWindowSize",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": true,
+                            "name": "get_window_pos",
+                            "params": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "GetWindowPos",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "is_window_focused",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "flags",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "focused",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "summary": "IsWindowFocused",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": true,
+                            "name": "get_content_region_avail",
+                            "params": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "GetContentRegionAvail",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": true,
+                            "name": "get_window_content_region_max",
+                            "params": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "y",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "GetWindowContentRegionMax",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "begin_child",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "title",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "width",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "border",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "title,width,border,flags",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "bool"
+                                }
+                            ],
+                            "summary": "BeginChild",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_child",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndChild",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "begin_popup_context_item",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "id",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "id",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "summary": "BeginPopupContextItem",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "begin_popup",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "id",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "id,flags",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "summary": "BeginPopup",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "begin_popup_modal",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "id",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "id,flags",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "summary": "BeginPopupModal",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "open_popup",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "id",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "id,flags",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
+                            "summary": "OpenPopup",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "close_current_popup",
+                            "params": [],
+                            "returns": [],
+                            "summary": "CloseCurrentPopup",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_popup",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndPopup",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "begin_drag_drop_source",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "flags",
+                            "returns": [],
+                            "summary": "BeginDragDropSource",
+                            "tresult": "boolean result",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_drag_drop_source",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndDragDropSource",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_drag_drop_target",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginDragDropTarget",
+                            "tresult": "boolean result",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_drag_drop_target",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndDragDropTarget",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "set_drag_drop_payload",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "type",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "payload",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "type,payload",
+                            "returns": [],
+                            "summary": "SetDragDropPayload",
+                            "tresult": "boolean result",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "accept_drag_drop_payload",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "type",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "type,flags",
+                            "returns": [],
+                            "summary": "AcceptDragDropPayload",
+                            "tresult": "string payload",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "begin_combo",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "preview",
+                                    "type": "string"
+                                }
+                            ],
+                            "params_string": "label,preview",
+                            "returns": [],
+                            "summary": "BeginCombo",
+                            "tresult": "boolean result",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_combo",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndCombo",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "combo",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "current",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "items",
+                                    "type": "table"
+                                }
+                            ],
+                            "params_string": "label,current,items",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "r",
+                                    "type": "numbe"
+                                }
+                            ],
+                            "summary": "Combo",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_table",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginTable",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_table",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndTable",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "table_headers_row",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TableHeadersRow",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "table_setup_column",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TableSetupColumn",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "table_set_column_index",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TableSetColumnIndex",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "table_next_column",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TableNextColumn",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "table_next_row",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TableNextRow",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "table_setup_scroll_freeze",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TableSetupScrollFreeze",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_tooltip",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginTooltip",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_tooltip",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndTooltip",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_tab_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginTabBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_tab_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndTabBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_tab_item",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginTabItem",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_tab_item",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndTabItem",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "text",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Text",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "text_get_size",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TextGetSize",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "text_colored",
+                            "params": [],
+                            "returns": [],
+                            "summary": "TextColored",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_text",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputText",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_int",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputInt",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_float",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputFloat",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_double",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputDouble",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_int4",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputInt4",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_float3",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputFloat3",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "input_float4",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputFloat4",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "slider_float",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SliderFloat",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "selectable",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Selectable",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "button",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Button",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "button_image",
+                            "params": [],
+                            "returns": [],
+                            "summary": "ButtonImage",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "checkbox",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Checkbox",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "radio_button",
+                            "params": [],
+                            "returns": [],
+                            "summary": "RadioButton",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_menu_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginMenuBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_menu_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndMenuBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_main_menu_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginMainMenuBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_main_menu_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndMainMenuBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "begin_menu",
+                            "params": [],
+                            "returns": [],
+                            "summary": "BeginMenu",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "end_menu",
+                            "params": [],
+                            "returns": [],
+                            "summary": "EndMenu",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "menu_item",
+                            "params": [],
+                            "returns": [],
+                            "summary": "MenuItem",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "same_line",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SameLine",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "new_line",
+                            "params": [],
+                            "returns": [],
+                            "summary": "NewLine",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "bullet",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Bullet",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "indent",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Indent",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "unindent",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Unindent",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "spacing",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Spacing",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "separator",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Separator",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "get_cursor_screen_pos",
+                            "params": [],
+                            "returns": [],
+                            "summary": "GetCursorScreenPos",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "plot_lines",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PlotLines",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "plot_histogram",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PlotHistogram",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "demo",
+                            "params": [],
+                            "returns": [],
+                            "summary": "Demo",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_mouse_double_clicked",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsMouseDoubleClicked",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_mouse_clicked",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsMouseClicked",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_item_active",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsItemActive",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_item_focused",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsItemFocused",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_item_clicked",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsItemClicked",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_item_double_clicked",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsItemDoubleClicked",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "is_item_hovered",
+                            "params": [],
+                            "returns": [],
+                            "summary": "IsItemHovered",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "get_item_rect_max",
+                            "params": [],
+                            "returns": [],
+                            "summary": "GetItemRectMax",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_keyboard_focus_here",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetKeyboardFocusHere",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "get_style",
+                            "params": [],
+                            "returns": [],
+                            "summary": "GetStyle",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_style",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetStyle",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_style_color",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetStyleColor",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "push_style_color",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PushStyleColor",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "pop_style_color",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PopStyleColor",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_window_font_scale",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetWindowFontScale",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_global_font_scale",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetGlobalFontScale",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "scale_all_sizes",
+                            "params": [],
+                            "returns": [],
+                            "summary": "ScaleAllSizes",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_cursor_pos",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetCursorPos",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "push_item_width",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PushItemWidth",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "pop_item_width",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PopItemWidth",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_next_item_width",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetNextItemWidth",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "calc_item_width",
+                            "params": [],
+                            "returns": [],
+                            "summary": "CalcItemWidth",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_scroll_here_y",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetScrollHereY",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "font_add_t_t_f_file",
+                            "params": [],
+                            "returns": [],
+                            "summary": "FontAddTTFFile",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "font_add_t_t_f_data",
+                            "params": [],
+                            "returns": [],
+                            "summary": "FontAddTTFData",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "font_push",
+                            "params": [],
+                            "returns": [],
+                            "summary": "FontPush",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "font_pop",
+                            "params": [],
+                            "returns": [],
+                            "summary": "FontPop",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "font_scale",
+                            "params": [],
+                            "returns": [],
+                            "summary": "FontScale",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "get_frame_height",
+                            "params": [],
+                            "returns": [],
+                            "summary": "GetFrameHeight",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "draw_line",
+                            "params": [],
+                            "returns": [],
+                            "summary": "DrawLine",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "draw_rect",
+                            "params": [],
+                            "returns": [],
+                            "summary": "DrawRect",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "draw_rect_filled",
+                            "params": [],
+                            "returns": [],
+                            "summary": "DrawRectFilled",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "draw_progress_bar",
+                            "params": [],
+                            "returns": [],
+                            "summary": "DrawProgressBar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_rendering_enabled",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetRenderingEnabled",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "want_capture_mouse",
+                            "params": [],
+                            "returns": [],
+                            "summary": "WantCaptureMouse",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "want_capture_keyboard",
+                            "params": [],
+                            "returns": [],
+                            "summary": "WantCaptureKeyboard",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "want_capture_text",
+                            "params": [],
+                            "returns": [],
+                            "summary": "WantCaptureText",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_defaults",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetDefaults",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_ini_filename",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetIniFilename",
+                            "usage": null
+                        }
+                    ],
+                    "filename": "imgui/src/extension_imgui.cpp",
+                    "group": "src",
+                    "module": "extension_imgui"
+                }
+            ],
+            "group": "src"
+        }
+    ]
+}
