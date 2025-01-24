@@ -718,6 +718,8 @@ static int imgui_SetNextWindowSize(lua_State* L)
  * @number x
  * @number y
  * @number cond
+ * @number pivot_x
+ * @number pivot_y
  */
 static int imgui_SetNextWindowPos(lua_State* L)
 {

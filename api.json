@@ -620,9 +620,19 @@
                                     "description": "",
                                     "name": "cond",
                                     "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "pivot_x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "pivot_y",
+                                    "type": "number"
                                 }
                             ],
-                            "params_string": "x,y,cond",
+                            "params_string": "x,y,cond,pivot_x,pivot_y",
                             "returns": [],
                             "summary": "SetNextWindowPos",
                             "usage": null
