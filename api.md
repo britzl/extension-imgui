@@ -243,7 +243,7 @@ PARAMS
 * `cond` [`number`] - 
 
 
-### set_next_window_pos(x,y,cond)
+### set_next_window_pos(x,y,cond,pivot_x,pivot_y)
 SetNextWindowPos 
 
 
@@ -251,6 +251,8 @@ PARAMS
 * `x` [`number`] - 
 * `y` [`number`] - 
 * `cond` [`number`] - 
+* `pivot_x` [`number`] - 
+* `pivot_y` [`number`] - 
 
 
 ### get_window_size()

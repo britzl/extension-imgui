@@ -323,6 +323,12 @@
     - name: cond
       type: number
 
+    - name: pivot_x
+      type: number
+
+    - name: pivot_y
+      type: number
+
 
   - name: get_window_size
     type: function

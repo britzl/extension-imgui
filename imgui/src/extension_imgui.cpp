@@ -718,6 +718,8 @@ static int imgui_SetNextWindowSize(lua_State* L)
  * @number x
  * @number y
  * @number cond
+ * @number pivot_x
+ * @number pivot_y
  */
 static int imgui_SetNextWindowPos(lua_State* L)
 {
@@ -730,7 +732,13 @@ static int imgui_SetNextWindowPos(lua_State* L)
     {
         cond = luaL_checkint(L, 3);
     }
-    ImGui::SetNextWindowPos(ImVec2(x, y), cond);
+    ImVec2 pivot = ImVec2(0, 0);
+    if (lua_isnumber(L, 4) && lua_isnumber(L, 5))
+    {
+        pivot.x = luaL_checknumber(L, 4);
+        pivot.y = luaL_checknumber(L, 5);
+    }
+    ImGui::SetNextWindowPos(ImVec2(x, y), cond, pivot);
     return 0;
 }
 /** GetWindowSize
