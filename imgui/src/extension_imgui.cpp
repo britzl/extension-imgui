@@ -788,6 +788,19 @@ static int imgui_IsWindowFocused(lua_State* L)
     return 1;
 }
 
+/** IsWindowHovered
+ * @name is_window_hovered
+ * @treturn bool result
+ */
+static int imgui_IsWindowHovered(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    bool hovered = ImGui::IsWindowHovered();
+    lua_pushboolean(L, hovered);
+    return 1;
+}
+
 /** GetContentRegionAvail
  * @name get_content_region_avail
  * @treturn number x
@@ -3158,6 +3171,7 @@ static const luaL_reg Module_methods[] =
     {"begin_window", imgui_Begin},
     {"end_window", imgui_End},
     {"is_window_focused", imgui_IsWindowFocused},
+    {"is_window_hovered", imgui_IsWindowHovered},
     {"get_content_region_avail", imgui_GetContentRegionAvail},
     {"get_window_content_region_max", imgui_GetWindowContentRegionMax},
 

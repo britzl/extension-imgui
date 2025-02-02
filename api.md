@@ -284,6 +284,14 @@ RETURNS
 * `focused` [`boolean`] - 
 
 
+### is_window_hovered()
+IsWindowHovered 
+
+
+RETURNS
+* `result` [`bool`] - 
+
+
 ### get_content_region_avail()
 GetContentRegionAvail 
 

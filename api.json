@@ -706,6 +706,22 @@
                             "description": "",
                             "has_params": false,
                             "has_returns": true,
+                            "name": "is_window_hovered",
+                            "params": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "bool"
+                                }
+                            ],
+                            "summary": "IsWindowHovered",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": true,
                             "name": "get_content_region_avail",
                             "params": [],
                             "returns": [
