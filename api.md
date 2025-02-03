@@ -621,6 +621,16 @@ RETURNS
 * `value` [`number`] - 
 
 
+### color_edit4(label,color,flags)
+ColorEdit4 
+
+
+PARAMS
+* `label` [`string`] - 
+* `color` [`vec4`] - 
+* `flags` [`number`] - 
+
+
 ### selectable()
 Selectable 
 

@@ -1459,6 +1459,33 @@
                         },
                         {
                             "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "color_edit4",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "color",
+                                    "type": "vec4"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "flags",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "label,color,flags",
+                            "returns": [],
+                            "summary": "ColorEdit4",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
                             "has_params": false,
                             "has_returns": false,
                             "name": "selectable",

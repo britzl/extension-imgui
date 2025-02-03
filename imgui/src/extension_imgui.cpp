@@ -1705,6 +1705,35 @@ static int imgui_SliderFloat(lua_State* L)
 }
 
 
+/** ColorEdit4
+ * @name color_edit4
+ * @string label
+ * @vec4 color
+ * @number flags
+ */
+static int imgui_ColorEdit4(lua_State* L)
+{
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    dmVMath::Vector4* color = dmScript::CheckVector4(L, 2);
+    uint32_t flags = 0x0;
+    if (lua_isnumber(L, 3))
+    {
+        flags = luaL_checknumber(L, 3);
+    }
+
+    static ImVec4 c(color->getX(), color->getY(), color->getZ(), color->getW());
+    ImGui::ColorEdit4(label, (float*)&c, flags);
+    color->setX(c.x);
+    color->setY(c.y);
+    color->setZ(c.z);
+    color->setW(c.w);
+    return 0;
+}
+
+
+
+
 /** Selectable
  * @name selectable
  */
@@ -3264,6 +3293,8 @@ static const luaL_reg Module_methods[] =
     {"push_id", imgui_PushId},
     {"pop_id", imgui_PopId},
 
+    {"color_edit4", imgui_ColorEdit4},
+
     {"selectable", imgui_Selectable},
     {"text", imgui_Text},
     {"text_colored", imgui_TextColored},
@@ -3628,6 +3659,32 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKRESIZE", ImGuiInputTextFlags_CallbackResize);  // Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKEDIT", ImGuiInputTextFlags_CallbackEdit);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
     lua_setfieldstringint(L, "INPUTFLAGS_ESCAPECLEARSALL", ImGuiInputTextFlags_EscapeClearsAll);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NONE", ImGuiColorEditFlags_None);
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOALPHA", ImGuiColorEditFlags_NoAlpha);   //              // ColorEdit, ColorPicker, ColorButton: ignore Alpha component (will only read 3 components from the input pointer).
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOPICKER", ImGuiColorEditFlags_NoPicker);   //              // ColorEdit: disable picker when clicking on color square.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOOPTIONS", ImGuiColorEditFlags_NoOptions);   //              // ColorEdit: disable toggling options menu when right-clicking on inputs/small preview.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOSMALLPREVIEW", ImGuiColorEditFlags_NoSmallPreview);   //              // ColorEdit, ColorPicker: disable color square preview next to the inputs. (e.g. to show only the inputs)
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOINPUTS", ImGuiColorEditFlags_NoInputs);   //              // ColorEdit, ColorPicker: disable inputs sliders/text widgets (e.g. to show only the small preview color square).
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOTOOLTIP", ImGuiColorEditFlags_NoTooltip);   //              // ColorEdit, ColorPicker, ColorButton: disable tooltip when hovering the preview.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOLABEL", ImGuiColorEditFlags_NoLabel);   //              // ColorEdit, ColorPicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOSIDEPREVIEW", ImGuiColorEditFlags_NoSidePreview);   //              // ColorPicker: disable bigger color preview on right side of the picker, use small color square preview instead.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NODRAGDROP", ImGuiColorEditFlags_NoDragDrop);   //              // ColorEdit: disable drag and drop target. ColorButton: disable drag and drop source.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_NOBORDER", ImGuiColorEditFlags_NoBorder);  //              // ColorButton: disable border (which is enforced by default)
+    lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHABAR", ImGuiColorEditFlags_AlphaBar);  //              // ColorEdit, ColorPicker: show vertical alpha bar/gradient in picker.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHAPREVIEW", ImGuiColorEditFlags_AlphaPreview);  //              // ColorEdit, ColorPicker, ColorButton: display preview as a transparent color over a checkerboard, instead of opaque.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHAPREVIEWHALF", ImGuiColorEditFlags_AlphaPreviewHalf);  //              // ColorEdit, ColorPicker, ColorButton: display half opaque / half checkerboard, instead of opaque.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_HDR", ImGuiColorEditFlags_HDR);  //              // (WIP) ColorEdit: Currently only disable 0.0f..1.0f limits in RGBA edition (note: you probably want to use ImGuiColorEditFlags_Float flag as well).
+    lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYRGB", ImGuiColorEditFlags_DisplayRGB);  // [Display]    // ColorEdit: override _display_ type among RGB/HSV/Hex. ColorPicker: select any combination using one or more of RGB/HSV/Hex.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYHSV", ImGuiColorEditFlags_DisplayHSV);  // [Display]    // "
+    lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYHEX", ImGuiColorEditFlags_DisplayHex);  // [Display]    // "
+    lua_setfieldstringint(L, "COLOREDITFLAGS_UINT8", ImGuiColorEditFlags_Uint8);  // [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0..255.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_FLOAT", ImGuiColorEditFlags_Float);  // [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. No round-trip of value via integers.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_PICKERHUEBAR", ImGuiColorEditFlags_PickerHueBar);  // [Picker]     // ColorPicker: bar for Hue, rectangle for Sat/Value.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_PICKERHUEWHEEL", ImGuiColorEditFlags_PickerHueWheel);  // [Picker]     // ColorPicker: wheel for Hue, triangle for Sat/Value.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_INPUTRGB", ImGuiColorEditFlags_InputRGB);  // [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
+    lua_setfieldstringint(L, "COLOREDITFLAGS_INPUTHSV", ImGuiColorEditFlags_InputHSV);  // [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
+
 
     lua_setfieldstringint(L, "COND_NONE", ImGuiCond_None);  // No condition (always set the variable), same as _Always
     lua_setfieldstringint(L, "COND_ALWAYS", ImGuiCond_Always);  // No condition (always set the variable)

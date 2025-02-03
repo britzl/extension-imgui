@@ -729,6 +729,20 @@
       type: number
 
 
+  - name: color_edit4
+    type: function
+    desc: ColorEdit4 
+    parameters:
+    - name: label
+      type: string
+
+    - name: color
+      type: vec4
+
+    - name: flags
+      type: number
+
+
   - name: selectable
     type: function
     desc: Selectable 
