@@ -972,7 +972,7 @@ static int imgui_EndPopup(lua_State* L)
 /** BeginDragDropSource
  * @name begin_drag_drop_source
  * @number flags
- * @tresult boolean result
+ * @treturn boolean result
  */
 static int imgui_BeginDragDropSource(lua_State* L)
 {
@@ -999,7 +999,7 @@ static int imgui_EndDragDropSource(lua_State* L)
 }
 /** BeginDragDropTarget
  * @name begin_drag_drop_target
- * @tresult boolean result
+ * @treturn boolean result
  */
 static int imgui_BeginDragDropTarget(lua_State* L)
 {
@@ -1024,7 +1024,7 @@ static int imgui_EndDragDropTarget(lua_State* L)
  * @name set_drag_drop_payload
  * @string type
  * @string payload
- * @tresult boolean result
+ * @treturn boolean result
  */
 static int imgui_SetDragDropPayload(lua_State* L)
 {
@@ -1041,7 +1041,7 @@ static int imgui_SetDragDropPayload(lua_State* L)
  * @name accept_drag_drop_payload
  * @string type
  * @number flags
- * @tresult string payload
+ * @treturn string payload
  */
 static int imgui_AcceptDragDropPayload(lua_State* L)
 {
@@ -1070,7 +1070,7 @@ static int imgui_AcceptDragDropPayload(lua_State* L)
  * @name begin_combo
  * @string label
  * @string preview
- * @tresult boolean result
+ * @treturn boolean result
  */
 static int imgui_BeginCombo(lua_State* L)
 {
@@ -1628,8 +1628,53 @@ static int imgui_InputFloat4(lua_State* L)
     return 5;
 }
 
+/** DragFloat
+ * @name drag_float
+ * @string label
+ * @number value
+ * @number speed
+ * @number min
+ * @number max
+ * @number precision
+ * @treturn number value
+ */
+static int imgui_DragFloat(lua_State* L)
+{
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    float value = luaL_checknumber(L, 2);
+    float speed = luaL_checknumber(L, 3);
+    float min = luaL_checknumber(L, 4);
+    float max = luaL_checknumber(L, 5);
+    char float_precision[20] = { "%.6f" };
+
+    if (lua_isnumber(L, 6))
+    {
+        int precision_count = lua_tointeger(L, 6);
+        dmSnPrintf(float_precision, sizeof(float_precision), "%%.%df", precision_count );
+    }
+
+    bool changed = ImGui::DragFloat(label, &value, speed, min, max, float_precision);
+    lua_pushboolean(L, changed);
+    if (changed)
+    {
+        lua_pushnumber(L, value);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+    return 2;
+}
+
 /** SliderFloat
  * @name slider_float
+ * @string label
+ * @number value
+ * @number min
+ * @number max
+ * @number precision
+ * @treturn number value
  */
 static int imgui_SliderFloat(lua_State* L)
 {
@@ -1640,7 +1685,6 @@ static int imgui_SliderFloat(lua_State* L)
     float max = luaL_checknumber(L, 4);
     char float_precision[20] = { "%.6f" };
 
-    // Only accept 5th if we have 4th param
     if (lua_isnumber(L, 5))
     {
         int precision_count = lua_tointeger(L, 5);
@@ -1659,7 +1703,7 @@ static int imgui_SliderFloat(lua_State* L)
     }
     return 2;
 }
-    
+
 
 /** Selectable
  * @name selectable
@@ -3230,6 +3274,7 @@ static const luaL_reg Module_methods[] =
     {"input_double", imgui_InputDouble},
     {"input_float3", imgui_InputFloat3},
     {"input_float4", imgui_InputFloat4},
+    {"drag_float", imgui_DragFloat},
     {"slider_float", imgui_SliderFloat},
     {"button", imgui_Button},
     {"button_image", imgui_ButtonImage},

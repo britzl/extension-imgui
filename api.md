@@ -393,6 +393,9 @@ BeginDragDropSource
 PARAMS
 * `flags` [`number`] - 
 
+RETURNS
+* `result` [`boolean`] - 
+
 
 ### end_drag_drop_source()
 EndDragDropSource 
@@ -402,6 +405,9 @@ EndDragDropSource
 ### begin_drag_drop_target()
 BeginDragDropTarget 
 
+
+RETURNS
+* `result` [`boolean`] - 
 
 
 ### end_drag_drop_target()
@@ -417,6 +423,9 @@ PARAMS
 * `type` [`string`] - 
 * `payload` [`string`] - 
 
+RETURNS
+* `result` [`boolean`] - 
+
 
 ### accept_drag_drop_payload(type,flags)
 AcceptDragDropPayload 
@@ -426,6 +435,9 @@ PARAMS
 * `type` [`string`] - 
 * `flags` [`number`] - 
 
+RETURNS
+* `payload` [`string`] - 
+
 
 ### begin_combo(label,preview)
 BeginCombo 
@@ -434,6 +446,9 @@ BeginCombo
 PARAMS
 * `label` [`string`] - 
 * `preview` [`string`] - 
+
+RETURNS
+* `result` [`boolean`] - 
 
 
 ### end_combo()
@@ -575,9 +590,35 @@ InputFloat4
 
 
 
-### slider_float()
+### drag_float(label,value,speed,min,max,precision)
+DragFloat 
+
+
+PARAMS
+* `label` [`string`] - 
+* `value` [`number`] - 
+* `speed` [`number`] - 
+* `min` [`number`] - 
+* `max` [`number`] - 
+* `precision` [`number`] - 
+
+RETURNS
+* `value` [`number`] - 
+
+
+### slider_float(label,value,min,max,precision)
 SliderFloat 
 
+
+PARAMS
+* `label` [`string`] - 
+* `value` [`number`] - 
+* `min` [`number`] - 
+* `max` [`number`] - 
+* `precision` [`number`] - 
+
+RETURNS
+* `value` [`number`] - 
 
 
 ### selectable()

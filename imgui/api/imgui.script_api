@@ -491,6 +491,10 @@
     - name: flags
       type: number
 
+    returns:
+    - name: result
+      type: boolean
+
 
   - name: end_drag_drop_source
     type: function
@@ -499,6 +503,10 @@
   - name: begin_drag_drop_target
     type: function
     desc: BeginDragDropTarget 
+    returns:
+    - name: result
+      type: boolean
+
 
   - name: end_drag_drop_target
     type: function
@@ -514,6 +522,10 @@
     - name: payload
       type: string
 
+    returns:
+    - name: result
+      type: boolean
+
 
   - name: accept_drag_drop_payload
     type: function
@@ -525,6 +537,10 @@
     - name: flags
       type: number
 
+    returns:
+    - name: payload
+      type: string
+
 
   - name: begin_combo
     type: function
@@ -535,6 +551,10 @@
 
     - name: preview
       type: string
+
+    returns:
+    - name: result
+      type: boolean
 
 
   - name: end_combo
@@ -658,9 +678,56 @@
     type: function
     desc: InputFloat4 
 
+  - name: drag_float
+    type: function
+    desc: DragFloat 
+    parameters:
+    - name: label
+      type: string
+
+    - name: value
+      type: number
+
+    - name: speed
+      type: number
+
+    - name: min
+      type: number
+
+    - name: max
+      type: number
+
+    - name: precision
+      type: number
+
+    returns:
+    - name: value
+      type: number
+
+
   - name: slider_float
     type: function
     desc: SliderFloat 
+    parameters:
+    - name: label
+      type: string
+
+    - name: value
+      type: number
+
+    - name: min
+      type: number
+
+    - name: max
+      type: number
+
+    - name: precision
+      type: number
+
+    returns:
+    - name: value
+      type: number
+
 
   - name: selectable
     type: function

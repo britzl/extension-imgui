@@ -938,7 +938,7 @@
                         {
                             "description": "",
                             "has_params": true,
-                            "has_returns": false,
+                            "has_returns": true,
                             "name": "begin_drag_drop_source",
                             "params": [
                                 {
@@ -948,9 +948,14 @@
                                 }
                             ],
                             "params_string": "flags",
-                            "returns": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
                             "summary": "BeginDragDropSource",
-                            "tresult": "boolean result",
                             "usage": null
                         },
                         {
@@ -966,12 +971,17 @@
                         {
                             "description": "",
                             "has_params": false,
-                            "has_returns": false,
+                            "has_returns": true,
                             "name": "begin_drag_drop_target",
                             "params": [],
-                            "returns": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
                             "summary": "BeginDragDropTarget",
-                            "tresult": "boolean result",
                             "usage": null
                         },
                         {
@@ -987,7 +997,7 @@
                         {
                             "description": "",
                             "has_params": true,
-                            "has_returns": false,
+                            "has_returns": true,
                             "name": "set_drag_drop_payload",
                             "params": [
                                 {
@@ -1002,15 +1012,20 @@
                                 }
                             ],
                             "params_string": "type,payload",
-                            "returns": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
                             "summary": "SetDragDropPayload",
-                            "tresult": "boolean result",
                             "usage": null
                         },
                         {
                             "description": "",
                             "has_params": true,
-                            "has_returns": false,
+                            "has_returns": true,
                             "name": "accept_drag_drop_payload",
                             "params": [
                                 {
@@ -1025,15 +1040,20 @@
                                 }
                             ],
                             "params_string": "type,flags",
-                            "returns": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "payload",
+                                    "type": "string"
+                                }
+                            ],
                             "summary": "AcceptDragDropPayload",
-                            "tresult": "string payload",
                             "usage": null
                         },
                         {
                             "description": "",
                             "has_params": true,
-                            "has_returns": false,
+                            "has_returns": true,
                             "name": "begin_combo",
                             "params": [
                                 {
@@ -1048,9 +1068,14 @@
                                 }
                             ],
                             "params_string": "label,preview",
-                            "returns": [],
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "result",
+                                    "type": "boolean"
+                                }
+                            ],
                             "summary": "BeginCombo",
-                            "tresult": "boolean result",
                             "usage": null
                         },
                         {
@@ -1343,11 +1368,92 @@
                         },
                         {
                             "description": "",
-                            "has_params": false,
-                            "has_returns": false,
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "drag_float",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "speed",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "min",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "max",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "precision",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "label,value,speed,min,max,precision",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "value",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "DragFloat",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
                             "name": "slider_float",
-                            "params": [],
-                            "returns": [],
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "min",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "max",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "precision",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "label,value,min,max,precision",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "value",
+                                    "type": "number"
+                                }
+                            ],
                             "summary": "SliderFloat",
                             "usage": null
                         },

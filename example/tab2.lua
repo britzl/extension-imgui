@@ -51,11 +51,16 @@ return function(self)
 	imgui.draw_progress(progress, -1, 0.0)
 	imgui.separator()
 
+	local changed, p = imgui.drag_float("drag float", self.drag_float or 0, 0.2, 0.0, 100.0)
+	if changed then
+		self.drag_float = p
+	end
+
 	local changed, p = imgui.slider_float("slider float", self.slider_float or 0, 0.0, 100.0)
 	if changed then
 		self.slider_float = p
 	end
-
+	
 	imgui.push_id("first")
 	if imgui.button("Same name") then
 		pprint("first same button")
