@@ -364,6 +364,14 @@
       type: boolean
 
 
+  - name: is_window_hovered
+    type: function
+    desc: IsWindowHovered 
+    returns:
+    - name: result
+      type: bool
+
+
   - name: get_content_region_avail
     type: function
     desc: GetContentRegionAvail 
