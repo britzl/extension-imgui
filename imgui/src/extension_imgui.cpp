@@ -243,7 +243,6 @@ static int imgui_ImageLoad(lua_State* L)
     image.m_Data = stbi_load(filename, &image.m_Width, &image.m_Heigth, NULL, STBI_rgb_alpha);
     image.m_DataSize = image.m_Width * image.m_Heigth * STBI_rgb_alpha;
 
-    // TODO: calculate data size
     int load_result = imgui_ImageInternalLoad(filename, &image);
     stbi_image_free(image.m_Data);
     image.m_Data = 0;
@@ -3813,14 +3812,6 @@ dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
 
 dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
 {
-    // This is actually more complex than this,
-    // but that value is buried deep in the private internals of dmGraphics_OpenGL
-    #ifdef DM_RELEASE
-    g_VerifyGraphicsCalls = false;
-    #else
-    // g_VerifyGraphicsCalls = true;
-    #endif
-
     g_GraphicsContext = ExtensionParamsGetContextByName(params, "graphics");
 
     LuaInit(params->m_L);
@@ -3854,19 +3845,14 @@ void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* e
     switch(event->m_Event)
     {
         case EXTENSION_EVENT_ID_ACTIVATEAPP:
-        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ACTIVATEAPP\n");
         break;
         case EXTENSION_EVENT_ID_DEACTIVATEAPP:
-        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEACTIVATEAPP\n");
         break;
         case EXTENSION_EVENT_ID_ICONIFYAPP:
-        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_ICONIFYAPP\n");
         break;
         case EXTENSION_EVENT_ID_DEICONIFYAPP:
-        //dmLogInfo("OnEventDefoldImGui - EVENT_ID_DEICONIFYAPP\n");
         break;
         default:
-        //dmLogWarning("OnEventDefoldImGui - Unknown event id\n");
         break;
     }
 }
