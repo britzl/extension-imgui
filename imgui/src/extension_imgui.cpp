@@ -14,13 +14,15 @@
 #include "imgui/imgui_impl_android.h"
 #endif
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_vulkan.h"
 
 #include <dmsdk/sdk.h>
 #include <dmsdk/dlib/crypt.h>
+#include <dmsdk/graphics/graphics_vulkan.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
-#include "stb/stb_image.h"
+#include <stb/stb_image.h>
 
 #define MAX_HISTOGRAM_VALUES    1000 * 1024
 #define MAX_IMAGE_NAME          256
@@ -29,12 +31,13 @@
 
 typedef struct ImgObject
 {
-    int                w;
-    int                h;
-    int                comp;
-    GLuint             tid;
-    char               name[MAX_IMAGE_NAME];
-    unsigned char *    data;
+    char                 m_Name[MAX_IMAGE_NAME];
+    dmGraphics::HTexture m_Texture;
+    int                  m_Width;
+    int                  m_Heigth;
+    int                  m_DataSize;
+    lua_Integer          m_UniqueId;
+    unsigned char*       m_Data;
 } ImgObject;
 
 enum ExtImGuiGlyphRanges {
@@ -49,13 +52,24 @@ enum ExtImGuiGlyphRanges {
     ExtImGuiGlyphRanges_Vietnamese
 };
 
+typedef bool (*BackendInitFn)();
+typedef void (*EmptyArgumentFn)();
+typedef void (*RenderDrawDataFn)(ImDrawData* draw_data);
+void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
+
+static dmGraphics::HContext g_GraphicsContext = NULL;
 static bool g_imgui_NewFrame        = false;
 static char* g_imgui_TextBuffer     = 0;
 static dmArray<ImFont*> g_imgui_Fonts;
 static dmArray<ImgObject> g_imgui_Images;
 static bool g_VerifyGraphicsCalls   = false;
 static bool g_RenderingEnabled      = true;
+static BackendInitFn g_AdapterBackendInit = NULL;
+static EmptyArgumentFn g_AdapterNewFrame = NULL;
+static RenderDrawDataFn g_AdapterRenderDrawData = NULL;
+static EmptyArgumentFn g_AdapterBackendShutdown = NULL;
 
+static lua_Integer g_ImageIdCounter = 0;
 
 static void imgui_ClearGLError()
 {
@@ -100,30 +114,45 @@ static int imgui_ImageB64Decode(lua_State *L)
 
 static int imgui_ImageInternalLoad(const char *filename, ImgObject *image)
 {
-    if (image->data == 0)
+    if (image->m_Data == 0)
     {
         dmLogError("Error loading image: %s", filename);
         return 0;
     }
 
-    dmLogInfo("imgui_ImageInternalLoad before %d", image->tid);
+    image->m_UniqueId = g_ImageIdCounter++;
+    dmGraphics::TextureCreationParams creation_params;
+    creation_params.m_Type = dmGraphics::TEXTURE_TYPE_2D;
+    creation_params.m_Width = image->m_Width;
+    creation_params.m_Height = image->m_Heigth;
+    creation_params.m_Depth = 1;;
+    creation_params.m_LayerCount = 1;
+    creation_params.m_OriginalWidth = image->m_Width;
+    creation_params.m_OriginalHeight = image->m_Heigth;
+    creation_params.m_OriginalDepth = 1;
+    creation_params.m_MipMapCount = 1;
+    creation_params.m_UsageHintBits = dmGraphics::TEXTURE_USAGE_FLAG_SAMPLE;
+    image->m_Texture = dmGraphics::NewTexture(g_GraphicsContext, creation_params);
 
-    glGenTextures(1, &image->tid);
-    dmLogInfo("imgui_ImageInternalLoad after %d", image->tid);
-    glBindTexture(GL_TEXTURE_2D, image->tid);
-
-    strcpy(image->name, filename);
+    strcpy(image->m_Name, filename);
     if (g_imgui_Images.Full())
     {
         g_imgui_Images.OffsetCapacity(2);
     }
     g_imgui_Images.Push(*image);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // This is required on WebGL for non power-of-two textures
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Same
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+    dmGraphics::TextureParams params;
+    params.m_Data = image->m_Data;
+    params.m_DataSize = image->m_DataSize;
+    params.m_Width = image->m_Width;
+    params.m_Height = image->m_Heigth;
+    params.m_Slice = 0;
+    params.m_Format = dmGraphics::TEXTURE_FORMAT_RGBA;
+    params.m_MinFilter = dmGraphics::TEXTURE_FILTER_LINEAR;
+    params.m_MagFilter = dmGraphics::TEXTURE_FILTER_LINEAR;
+    params.m_UWrap = dmGraphics::TEXTURE_WRAP_CLAMP_TO_EDGE;
+    params.m_VWrap = dmGraphics::TEXTURE_WRAP_CLAMP_TO_EDGE;
+    dmGraphics::SetTexture(g_GraphicsContext, image->m_Texture, params);
 
     return 1;
 }
@@ -147,43 +176,39 @@ static int imgui_ImageLoadData(lua_State* L)
     ImgObject image;
 
     // If its already in the vector, return the id
-    for (int i=0; i<g_imgui_Images.Size(); i++)
+    for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        if (strcmp(g_imgui_Images[i].name, filename) == 0)
+        if (strcmp(g_imgui_Images[i].m_Name, filename) == 0)
         {
             image = g_imgui_Images[i];
-            lua_pushinteger(L, image.tid);
-            lua_pushinteger(L, image.w);
-            lua_pushinteger(L, image.h);
+            lua_pushinteger(L, image.m_UniqueId);
+            lua_pushinteger(L, image.m_Width);
+            lua_pushinteger(L, image.m_Heigth);
             return 3;
         }
     }
 
     unsigned char *strdata = (unsigned char *)luaL_checkstring(L, 2);
-    int lendata = luaL_checkinteger(L, 3);
-    image.data = stbi_load_from_memory( strdata, lendata, &image.w, &image.h, NULL, STBI_rgb_alpha);
-    if (image.data == 0)
+    image.m_DataSize = luaL_checkinteger(L, 3);
+    image.m_Data = stbi_load_from_memory(strdata, image.m_DataSize, &image.m_Width, &image.m_Heigth, NULL, STBI_rgb_alpha);
+    int load_result = imgui_ImageInternalLoad(filename, &image);
+
+    stbi_image_free(image.m_Data);
+    image.m_Data = 0;
+    image.m_DataSize = 0;
+    if (load_result == 1)
     {
-        dmLogError("Error loading image: %s", filename);
+        lua_pushinteger(L, image.m_UniqueId);
+        lua_pushinteger(L, image.m_Width);
+        lua_pushinteger(L, image.m_Heigth);
+    }
+    else
+    {
         lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnil(L);
-        return 3;
     }
 
-    if (!imgui_ImageInternalLoad(filename, &image))
-    {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
-        return 3;
-    }
-
-    stbi_image_free(image.data);
-    image.data = 0;
-    lua_pushinteger(L, image.tid);
-    lua_pushinteger(L, image.w);
-    lua_pushinteger(L, image.h);
     return 3;
 }
 
@@ -198,62 +223,59 @@ static int imgui_ImageLoadData(lua_State* L)
 static int imgui_ImageLoad(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 3);
-    const char * filename = luaL_checkstring(L, 1);
+    const char* filename = luaL_checkstring(L, 1);
     dmLogInfo("imgui_ImageLoad %s", filename);
     ImgObject image;
 
     // If its already in the vector, return the id
     for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        if(strcmp(g_imgui_Images[i].name, filename) == 0)
+        if(strcmp(g_imgui_Images[i].m_Name, filename) == 0)
         {
             image = g_imgui_Images[i];
-            lua_pushinteger(L, image.tid);
-            lua_pushinteger(L, image.w);
-            lua_pushinteger(L, image.h);
+            lua_pushinteger(L, image.m_UniqueId);
+            lua_pushinteger(L, image.m_Width);
+            lua_pushinteger(L, image.m_Heigth);
             return 3;
         }
     }
 
-    image.data = stbi_load(filename, &image.w, &image.h, NULL, STBI_rgb_alpha);
-    if (image.data == 0)
-    {
-        dmLogError("Error loading image: %s", filename);
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
-        return 3;
-    }
+    image.m_Data = stbi_load(filename, &image.m_Width, &image.m_Heigth, NULL, STBI_rgb_alpha);
+    image.m_DataSize = image.m_Width * image.m_Heigth * STBI_rgb_alpha;
 
-    if (!imgui_ImageInternalLoad(filename, &image))
+    // TODO: calculate data size
+    int load_result = imgui_ImageInternalLoad(filename, &image);
+    stbi_image_free(image.m_Data);
+    image.m_Data = 0;
+    image.m_DataSize = 0;
+    if (load_result)
+    {
+        lua_pushinteger(L, image.m_UniqueId);
+        lua_pushinteger(L, image.m_Width);
+        lua_pushinteger(L, image.m_Heigth);
+    }
+    else
     {
         lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnil(L);
-        return 3;
     }
-
-    stbi_image_free(image.data);
-    image.data = 0;
-    lua_pushinteger(L, image.tid);
-    lua_pushinteger(L, image.w);
-    lua_pushinteger(L, image.h);
     return 3;
 }
 
 static int imgui_ImageGet( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 3);
-    GLuint tid = (GLuint)luaL_checkinteger(L, 1);
+    lua_Integer unique_id = luaL_checkinteger(L, 1);
 
     for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        if (g_imgui_Images[i].tid == tid)
+        if (g_imgui_Images[i].m_UniqueId == unique_id)
         {
-            ImgObject image = g_imgui_Images[i];
-            lua_pushinteger(L, image.tid);
-            lua_pushinteger(L, image.w);
-            lua_pushinteger(L, image.h);
+            const ImgObject& image = g_imgui_Images[i];
+            lua_pushinteger(L, image.m_UniqueId);
+            lua_pushinteger(L, image.m_Width);
+            lua_pushinteger(L, image.m_Heigth);
             return 3;
         }
     }
@@ -267,7 +289,7 @@ static int imgui_ImageGet( lua_State *L )
 static int imgui_ImageAdd( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
-    GLuint tid = (GLuint)luaL_checkinteger(L, 1);
+    lua_Integer unique_id = luaL_checkinteger(L, 1);
     int w = luaL_checknumber(L, 2);
     int h = luaL_checknumber(L, 3);
 
@@ -281,19 +303,27 @@ static int imgui_ImageAdd( lua_State *L )
         uv1.x = luaL_checknumber(L, 6);
         uv1.y = luaL_checknumber(L, 7);
     }
-    ImGui::Image((void*)(intptr_t)tid, ImVec2(w, h), uv0, uv1);
+    for (int i = 0; i < g_imgui_Images.Size(); i++)
+    {
+        if (g_imgui_Images[i].m_UniqueId == unique_id)
+        {
+            const ImgObject& image = g_imgui_Images[i];
+            ImGui::Image((void*)(dmGraphics::HTexture) image.m_Texture, ImVec2(w, h), uv0, uv1);
+            return 0;
+        }
+    }
     return 0;
 }
 
 static int imgui_ImageFree( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
-    GLuint tid = (GLuint)luaL_checkinteger(L, 1);
+    lua_Integer unique_id = luaL_checkinteger(L, 1);
     for (int i = 0; i < g_imgui_Images.Size(); i++)
     {
-        if (g_imgui_Images[i].tid == tid)
+        if (g_imgui_Images[i].m_UniqueId == unique_id)
         {
-            glDeleteTextures(1, &tid);
+            dmGraphics::DeleteTexture(g_GraphicsContext, g_imgui_Images[i].m_Texture);
             g_imgui_Images.EraseSwap(i);
             break;
         }
@@ -384,7 +414,7 @@ static void imgui_NewFrame()
 {
     if (g_imgui_NewFrame == false)
     {
-        ImGui_ImplOpenGL3_NewFrame();
+        g_AdapterNewFrame();
         imgui_ClearGLError();
         ImGui::NewFrame();
         g_imgui_NewFrame = true;
@@ -2989,12 +3019,13 @@ static int imgui_GetFrameHeight(lua_State* L)
 // ----------------------------
 static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 {
+    ImGui_ImplVulkan_NewFrame();
     imgui_NewFrame();
     ImGui::Render();
 
     if (g_RenderingEnabled)
     {
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        g_AdapterRenderDrawData(ImGui::GetDrawData());
     }
     
     imgui_ClearGLError();
@@ -3156,14 +3187,53 @@ static int imgui_SetIniFilename(lua_State* L)
 // ----- IMGUI INIT/SHUTDOWN --
 // ----------------------------
 
+// ------------ OpenGL 3 functions -----------------------
+static bool imgui_InitOpenGL3()
+{
+    return ImGui_ImplOpenGL3_Init();
+}
+
+// -------------------------------------------------------
+// ------------ Vulkan functions -------------------------
+
+static bool imgui_InitVulkan()
+{
+    ImGui_ImplVulkan_InitInfo init_info;
+    memset(&init_info, 0, sizeof(ImGui_ImplVulkan_InitInfo));
+
+    VkDevice device = dmGraphics::VulkanGetDevice(g_GraphicsContext);
+    init_info.Instance = dmGraphics::VulkanGetInstance(g_GraphicsContext);
+    init_info.PhysicalDevice = dmGraphics::VulkanGetPhysicalDevice(g_GraphicsContext);
+    init_info.Device = device;
+    init_info.QueueFamily = dmGraphics::VulkanGetGraphicsQueueFamily(g_GraphicsContext);
+    init_info.Queue = dmGraphics::VulkanGetGraphicsQueue(g_GraphicsContext);
+    // TODO: how many descriptors???
+    dmGraphics::VulkanCreateDescriptorPool(device, 16384, &init_info.DescriptorPool);
+    init_info.RenderPass = dmGraphics::VulkanGetRenderPass(g_GraphicsContext);
+    init_info.MinImageCount = 2;
+    init_info.ImageCount = 16;
+    init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+
+    init_info.UseDynamicRendering = false;
+
+    return ImGui_ImplVulkan_Init(&init_info);
+}
+
+static void imgui_RenderDrawDataVulkan(ImDrawData* draw_data)
+{
+    ImGui_ImplVulkan_RenderDrawData(draw_data, dmGraphics::VulkanGetCurrentFrameCommandBuffer(g_GraphicsContext));
+}
+
+// -------------------------------------------------------
+
 static void imgui_Init(float width, float height)
 {
-    #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
-    int r = gl3wInit();
-    if (r != GL3W_OK) {
-        dmLogError("Failed to initialize OpenGL: %d", r);
-    }
-    #endif
+    // #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+    // int r = gl3wInit();
+    // if (r != GL3W_OK) {
+    //     dmLogError("Failed to initialize OpenGL: %d", r);
+    // }
+    // #endif
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -3178,7 +3248,7 @@ static void imgui_Init(float width, float height)
         io.KeyMap[i] = 0;
     }
 
-    ImGui_ImplOpenGL3_Init();
+    g_AdapterBackendInit();
     imgui_ClearGLError();
 }
 
@@ -3186,7 +3256,7 @@ static void imgui_Shutdown()
 {
     dmLogInfo("imgui_Shutdown");
 
-    ImGui_ImplOpenGL3_Shutdown();
+    g_AdapterBackendShutdown();
     imgui_ClearGLError();
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->Clear();
@@ -3201,6 +3271,29 @@ static void imgui_ExtensionInit()
         free(g_imgui_TextBuffer);
     }
     g_imgui_TextBuffer = (char*)malloc(TEXTBUFFER_SIZE);
+    dmGraphics::AdapterFamily family = dmGraphics::GetInstalledAdapterFamily();
+    switch(family)
+    {
+        case dmGraphics::ADAPTER_FAMILY_VULKAN:
+        {
+            g_AdapterBackendInit = imgui_InitVulkan;
+            g_AdapterNewFrame = ImGui_ImplVulkan_NewFrame;
+            g_AdapterRenderDrawData = imgui_RenderDrawDataVulkan;
+            g_AdapterBackendShutdown = ImGui_ImplVulkan_Shutdown;
+            break;
+        }
+        case dmGraphics::ADAPTER_FAMILY_OPENGL:
+        case dmGraphics::ADAPTER_FAMILY_OPENGLES:
+        {
+            g_AdapterBackendInit = imgui_InitOpenGL3;
+            g_AdapterNewFrame = ImGui_ImplOpenGL3_NewFrame;
+            g_AdapterRenderDrawData = ImGui_ImplOpenGL3_RenderDrawData;
+            g_AdapterBackendShutdown = ImGui_ImplOpenGL3_Shutdown;
+            break;
+        }
+        default:
+            assert(!"Adapter is not supported yet!");
+    }
 }
 
 static void imgui_ExtensionShutdown()
@@ -3213,7 +3306,7 @@ static void imgui_ExtensionShutdown()
 
     while (!g_imgui_Images.Empty())
     {
-        glDeleteTextures(1, &g_imgui_Images.Back().tid);
+        dmGraphics::DeleteTexture(g_GraphicsContext, g_imgui_Images.Back().m_Texture);
         g_imgui_Images.Pop();
     }
 
@@ -3725,8 +3818,10 @@ dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
     #ifdef DM_RELEASE
     g_VerifyGraphicsCalls = false;
     #else
-    g_VerifyGraphicsCalls = true;
+    // g_VerifyGraphicsCalls = true;
     #endif
+
+    g_GraphicsContext = ExtensionParamsGetContextByName(params, "graphics");
 
     LuaInit(params->m_L);
     float displayWidth = dmConfigFile::GetFloat(params->m_ConfigFile, "display.width", 960.0f);
