@@ -2,6 +2,7 @@ local JEDI = { "Luke", "Obi-Wan", "Yoda" }
 local SITH = { "Maul", "Vader", "Palpatine" }
 
 local COLOR = vmath.vector4()
+local COLOR2 = vmath.vector4(255, 0, 0, 1)
 
 return function(self)
 	local selected = imgui.tree_node("root")
@@ -77,4 +78,5 @@ return function(self)
 
 	self.color = self.color or vmath.vector4()
 	imgui.color_edit4("coloredit4", self.color)
+	imgui.color_edit4("other color", COLOR2)
 end

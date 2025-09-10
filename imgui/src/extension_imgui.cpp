@@ -1722,7 +1722,7 @@ static int imgui_ColorEdit4(lua_State* L)
         flags = luaL_checknumber(L, 3);
     }
 
-    static ImVec4 c(color->getX(), color->getY(), color->getZ(), color->getW());
+    ImVec4 c(color->getX(), color->getY(), color->getZ(), color->getW());
     ImGui::ColorEdit4(label, (float*)&c, flags);
     color->setX(c.x);
     color->setY(c.y);
