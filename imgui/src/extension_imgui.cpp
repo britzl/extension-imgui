@@ -62,7 +62,6 @@ static bool g_imgui_NewFrame        = false;
 static char* g_imgui_TextBuffer     = 0;
 static dmArray<ImFont*> g_imgui_Fonts;
 static dmArray<ImgObject> g_imgui_Images;
-static bool g_VerifyGraphicsCalls   = false;
 static bool g_RenderingEnabled      = true;
 static BackendInitFn g_AdapterBackendInit = NULL;
 static EmptyArgumentFn g_AdapterNewFrame = NULL;
@@ -70,17 +69,6 @@ static RenderDrawDataFn g_AdapterRenderDrawData = NULL;
 static EmptyArgumentFn g_AdapterBackendShutdown = NULL;
 
 static lua_Integer g_ImageIdCounter = 0;
-
-static void imgui_ClearGLError()
-{
-    if (!g_VerifyGraphicsCalls) return;
-    GLint err = glGetError();
-    while (err != 0)
-    {
-        err = glGetError();
-    }
-}
-
 
 // ----------------------------
 // ----- IMAGES ---------------
@@ -125,7 +113,7 @@ static int imgui_ImageInternalLoad(const char *filename, ImgObject *image)
     creation_params.m_Type = dmGraphics::TEXTURE_TYPE_2D;
     creation_params.m_Width = image->m_Width;
     creation_params.m_Height = image->m_Heigth;
-    creation_params.m_Depth = 1;;
+    creation_params.m_Depth = 1;
     creation_params.m_LayerCount = 1;
     creation_params.m_OriginalWidth = image->m_Width;
     creation_params.m_OriginalHeight = image->m_Heigth;
@@ -307,7 +295,7 @@ static int imgui_ImageAdd( lua_State *L )
         if (g_imgui_Images[i].m_UniqueId == unique_id)
         {
             const ImgObject& image = g_imgui_Images[i];
-            ImGui::Image((void*)(dmGraphics::HTexture) image.m_Texture, ImVec2(w, h), uv0, uv1);
+            ImGui::Image((void*)(intptr_t)image.m_Texture, ImVec2(w, h), uv0, uv1);
             return 0;
         }
     }
@@ -414,7 +402,6 @@ static void imgui_NewFrame()
     if (g_imgui_NewFrame == false)
     {
         g_AdapterNewFrame();
-        imgui_ClearGLError();
         ImGui::NewFrame();
         g_imgui_NewFrame = true;
     }
@@ -3026,9 +3013,6 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
     {
         g_AdapterRenderDrawData(ImGui::GetDrawData());
     }
-    
-    imgui_ClearGLError();
-
     g_imgui_NewFrame = false;
     return dmExtension::RESULT_OK;
 }
@@ -3248,7 +3232,6 @@ static void imgui_Init(float width, float height)
     }
 
     g_AdapterBackendInit();
-    imgui_ClearGLError();
 }
 
 static void imgui_Shutdown()
@@ -3256,7 +3239,6 @@ static void imgui_Shutdown()
     dmLogInfo("imgui_Shutdown");
 
     g_AdapterBackendShutdown();
-    imgui_ClearGLError();
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->Clear();
     ImGui::DestroyContext();
