@@ -1801,6 +1801,20 @@ static int imgui_ButtonImage(lua_State* L)
     return 1;
 }
 
+/** ButtonArrow
+ * @name button_arrow
+ */
+static int imgui_ButtonArrow(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    uint32_t direction = luaL_checkint(L, 2);
+    bool pushed = ImGui::ArrowButton(label, direction);
+    lua_pushboolean(L, pushed);
+    return 1;
+}
+
 /** Checkbox
  * @name checkbox
  */
@@ -3309,6 +3323,7 @@ static const luaL_reg Module_methods[] =
     {"slider_float", imgui_SliderFloat},
     {"button", imgui_Button},
     {"button_image", imgui_ButtonImage},
+    {"button_arrow", imgui_ButtonArrow},
     {"checkbox", imgui_Checkbox},
     {"radio_button", imgui_RadioButton},
     {"begin_menu_bar", imgui_BeginMenuBar},
