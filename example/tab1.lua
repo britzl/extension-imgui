@@ -21,8 +21,16 @@ return function(self)
 
 	imgui.separator()
 
-	if imgui.button("Button") then
+	if imgui.button("Reset Counter") then
+		self.counter = 0
+	end
+	imgui.same_line()
+	if imgui.button_arrow("Up", imgui.DIR_UP) then
 		self.counter = self.counter + 1
+	end
+	imgui.same_line()
+	if imgui.button_arrow("Down", imgui.DIR_DOWN) then
+		self.counter = self.counter - 1
 	end
 	imgui.same_line()
 	imgui.text(("counter = %d"):format(self.counter))
