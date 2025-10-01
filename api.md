@@ -828,6 +828,20 @@ PopStyleColor
 
 
 
+### push_style_var(style_var,value)
+PushStyleVar 
+
+
+PARAMS
+* `style_var` [`number`] - Enum for the style to be pushed
+* `value` - Number or vmath.vector3 specifying the value of the style var
+
+
+### pop_style_var()
+PopStyleVar 
+
+
+
 ### set_window_font_scale()
 SetWindowFontScale 
 

@@ -2700,6 +2700,79 @@ static int imgui_PopStyleColor(lua_State* L)
     return 0;
 }
 
+/** PushStyleVar
+ * @name push_style_var
+ * @tparam number style_var enum for the style to be pushed
+ * @param value number or vmath.vector3 specifying the value of the style var
+ */
+static int imgui_PushStyleVar(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    uint32_t style_var = luaL_checkint(L, 1);
+    switch(style_var)
+    {
+        case ImGuiStyleVar_Alpha:
+        case ImGuiStyleVar_DisabledAlpha:
+        case ImGuiStyleVar_WindowRounding:
+        case ImGuiStyleVar_WindowBorderSize:
+        case ImGuiStyleVar_ChildRounding:
+        case ImGuiStyleVar_ChildBorderSize:
+        case ImGuiStyleVar_PopupRounding:
+        case ImGuiStyleVar_PopupBorderSize:
+        case ImGuiStyleVar_FrameRounding:
+        case ImGuiStyleVar_FrameBorderSize:
+        case ImGuiStyleVar_IndentSpacing:
+        case ImGuiStyleVar_ScrollbarSize:
+        case ImGuiStyleVar_ScrollbarRounding:
+        case ImGuiStyleVar_GrabMinSize:
+        case ImGuiStyleVar_GrabRounding:
+        case ImGuiStyleVar_TabRounding:
+        case ImGuiStyleVar_TabBorderSize:
+        case ImGuiStyleVar_TabBarBorderSize:
+        case ImGuiStyleVar_TableAngledHeadersAngle:
+        case ImGuiStyleVar_SeparatorTextBorderSize:
+        {
+            float val_float = luaL_checknumber(L, 2);
+            ImGui::PushStyleVar(style_var, val_float);
+            break;
+        }
+        case ImGuiStyleVar_WindowPadding:
+        case ImGuiStyleVar_WindowMinSize:
+        case ImGuiStyleVar_WindowTitleAlign:
+        case ImGuiStyleVar_FramePadding:
+        case ImGuiStyleVar_ItemSpacing:
+        case ImGuiStyleVar_ItemInnerSpacing:
+        case ImGuiStyleVar_CellPadding:
+        case ImGuiStyleVar_TableAngledHeadersTextAlign:
+        case ImGuiStyleVar_ButtonTextAlign:
+        case ImGuiStyleVar_SelectableTextAlign:
+        case ImGuiStyleVar_SeparatorTextAlign:
+        case ImGuiStyleVar_SeparatorTextPadding:
+        {
+            dmVMath::Vector3* val_vec3 = dmScript::CheckVector3(L, 2);
+            ImVec2 val_vec2(val_vec3->getX(), val_vec3->getY());
+            ImGui::PushStyleVar(style_var, val_vec2);
+            break;
+        }
+    }
+    return 0;
+}
+
+/** PopStyleVar
+ * @name pop_style_var
+ */
+static int imgui_PopStyleVar(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    int count = 1;
+    if (lua_isnumber(L, 1))
+    {
+        count = luaL_checkint(L, 1);
+    }
+    ImGui::PopStyleVar(count);
+    return 0;
+}
+
 /** SetWindowFontScale
  * @name set_window_font_scale
  */
@@ -3393,6 +3466,9 @@ static const luaL_reg Module_methods[] =
     {"push_style_color", imgui_PushStyleColor},
     {"pop_style_color", imgui_PopStyleColor},
 
+    {"push_style_var", imgui_PushStyleVar},
+    {"pop_style_var", imgui_PopStyleVar},
+
     {"push_item_width", imgui_PushItemWidth},
     {"pop_item_width", imgui_PopItemWidth},
     {"set_next_item_width", imgui_SetNextItemWidth},
@@ -3725,6 +3801,40 @@ static void LuaInit(lua_State* L)
     lua_setfieldstringint(L, "GLYPH_RANGES_CYRILLIC", ExtImGuiGlyphRanges_Cyrillic);               // Default + about 400 Cyrillic characters
     lua_setfieldstringint(L, "GLYPH_RANGES_THAI", ExtImGuiGlyphRanges_Thai);                   // Default + Thai characters
     lua_setfieldstringint(L, "GLYPH_RANGES_VIETNAMESE", ExtImGuiGlyphRanges_Vietnamese);             // Default + Vietnamese characters
+
+    // For use with push_style_var / Imgui::PushStyleVar
+    lua_setfieldstringint(L, "STYLEVAR_ALPHA", ImGuiStyleVar_Alpha);                                             // float  Alpha
+    lua_setfieldstringint(L, "STYLEVAR_DISABLEDALPHA", ImGuiStyleVar_DisabledAlpha);                             // float  DisabledAlpha
+    lua_setfieldstringint(L, "STYLEVAR_WINDOWPADDING", ImGuiStyleVar_WindowPadding);                             // ImVec2 WindowPadding
+    lua_setfieldstringint(L, "STYLEVAR_WINDOWROUNDING", ImGuiStyleVar_WindowRounding);                           // float  WindowRounding
+    lua_setfieldstringint(L, "STYLEVAR_WINDOWBORDERSIZE", ImGuiStyleVar_WindowBorderSize);                       // float  WindowBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_WINDOWMINSIZE", ImGuiStyleVar_WindowMinSize);                             // ImVec2 WindowMinSize
+    lua_setfieldstringint(L, "STYLEVAR_WINDOWTITLEALIGN", ImGuiStyleVar_WindowTitleAlign);                       // ImVec2 WindowTitleAlign
+    lua_setfieldstringint(L, "STYLEVAR_CHILDROUNDING", ImGuiStyleVar_ChildRounding);                             // float  ChildRounding
+    lua_setfieldstringint(L, "STYLEVAR_CHILDBORDERSIZE", ImGuiStyleVar_ChildBorderSize);                         // float  ChildBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_POPUPROUNDING", ImGuiStyleVar_PopupRounding);                             // float  PopupRounding
+    lua_setfieldstringint(L, "STYLEVAR_POPUPBORDERSIZE", ImGuiStyleVar_PopupBorderSize);                         // float  PopupBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_FRAMEPADDING", ImGuiStyleVar_FramePadding);                               // ImVec2 FramePadding
+    lua_setfieldstringint(L, "STYLEVAR_FRAMEROUNDING", ImGuiStyleVar_FrameRounding);                             // float  FrameRounding
+    lua_setfieldstringint(L, "STYLEVAR_FRAMEBORDERSIZE", ImGuiStyleVar_FrameBorderSize);                         // float  FrameBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_ITEMSPACING", ImGuiStyleVar_ItemSpacing);                                 // ImVec2 ItemSpacing
+    lua_setfieldstringint(L, "STYLEVAR_ITEMINNERSPACING", ImGuiStyleVar_ItemInnerSpacing);                       // ImVec2 ItemInnerSpacing
+    lua_setfieldstringint(L, "STYLEVAR_INDENTSPACING", ImGuiStyleVar_IndentSpacing);                             // float  IndentSpacing
+    lua_setfieldstringint(L, "STYLEVAR_CELLPADDING", ImGuiStyleVar_CellPadding);                                 // ImVec2 CellPadding
+    lua_setfieldstringint(L, "STYLEVAR_SCROLLBARSIZE", ImGuiStyleVar_ScrollbarSize);                             // float  ScrollbarSize
+    lua_setfieldstringint(L, "STYLEVAR_SCROLLBARROUNDING", ImGuiStyleVar_ScrollbarRounding);                     // float  ScrollbarRounding
+    lua_setfieldstringint(L, "STYLEVAR_GRABMINSIZE", ImGuiStyleVar_GrabMinSize);                                 // float  GrabMinSize
+    lua_setfieldstringint(L, "STYLEVAR_GRABROUNDING", ImGuiStyleVar_GrabRounding);                               // float  GrabRounding
+    lua_setfieldstringint(L, "STYLEVAR_TABROUNDING", ImGuiStyleVar_TabRounding);                                 // float  TabRounding
+    lua_setfieldstringint(L, "STYLEVAR_TABBORDERSIZE", ImGuiStyleVar_TabBorderSize);                             // float  TabBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_TABBARBORDERSIZE", ImGuiStyleVar_TabBarBorderSize);                       // float  TabBarBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_TABLEANGLEDHEADERSANGLE", ImGuiStyleVar_TableAngledHeadersAngle);         // float  TableAngledHeadersAngle
+    lua_setfieldstringint(L, "STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN", ImGuiStyleVar_TableAngledHeadersTextAlign); // ImVec2 TableAngledHeadersTextAlign
+    lua_setfieldstringint(L, "STYLEVAR_BUTTONTEXTALIGN", ImGuiStyleVar_ButtonTextAlign);                         // ImVec2 ButtonTextAlign
+    lua_setfieldstringint(L, "STYLEVAR_SELECTABLETEXTALIGN", ImGuiStyleVar_SelectableTextAlign);                 // ImVec2 SelectableTextAlign
+    lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTBORDERSIZE", ImGuiStyleVar_SeparatorTextBorderSize);         // float  SeparatorTextBorderSize
+    lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTALIGN", ImGuiStyleVar_SeparatorTextAlign);                   // ImVec2 SeparatorTextAlign
+    lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTPADDING", ImGuiStyleVar_SeparatorTextPadding);               // ImVec2 SeparatorTextPadding
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));

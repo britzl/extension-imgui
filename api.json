@@ -1884,6 +1884,38 @@
                         },
                         {
                             "description": "",
+                            "has_params": true,
+                            "has_returns": false,
+                            "name": "push_style_var",
+                            "params": [
+                                {
+                                    "description": "Enum for the style to be pushed",
+                                    "name": "style_var",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "Number or vmath.vector3 specifying the value of the style var",
+                                    "name": "value",
+                                    "type": null
+                                }
+                            ],
+                            "params_string": "style_var,value",
+                            "returns": [],
+                            "summary": "PushStyleVar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "pop_style_var",
+                            "params": [],
+                            "returns": [],
+                            "summary": "PopStyleVar",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
                             "has_params": false,
                             "has_returns": false,
                             "name": "set_window_font_scale",
