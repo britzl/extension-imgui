@@ -1516,6 +1516,34 @@
                         },
                         {
                             "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "button_arrow",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "direction",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "label,direction",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "pushed",
+                                    "type": "bool"
+                                }
+                            ],
+                            "summary": "ButtonArrow",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
                             "has_params": false,
                             "has_returns": false,
                             "name": "checkbox",
@@ -2105,12 +2133,12 @@
                             "usage": null
                         }
                     ],
-                    "filename": "imgui/src/extension_imgui.cpp",
-                    "group": "src",
+                    "filename": "imgui\\src\\extension_imgui.cpp",
+                    "group": "imgui\\src",
                     "module": "extension_imgui"
                 }
             ],
-            "group": "src"
+            "group": "imgui\\src"
         }
     ]
 }

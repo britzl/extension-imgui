@@ -1803,6 +1803,9 @@ static int imgui_ButtonImage(lua_State* L)
 
 /** ButtonArrow
  * @name button_arrow
+ * @string label
+ * @number direction
+ * @treturn bool pushed
  */
 static int imgui_ButtonArrow(lua_State* L)
 {

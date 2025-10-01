@@ -755,6 +755,21 @@
     type: function
     desc: ButtonImage 
 
+  - name: button_arrow
+    type: function
+    desc: ButtonArrow 
+    parameters:
+    - name: label
+      type: string
+
+    - name: direction
+      type: number
+
+    returns:
+    - name: pushed
+      type: bool
+
+
   - name: checkbox
     type: function
     desc: Checkbox 

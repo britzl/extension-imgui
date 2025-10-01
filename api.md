@@ -1,9 +1,9 @@
 # API reference
 
-* src
+* imgui/src
   * [extension_imgui](#extension_imgui)
 
-# src
+# imgui/src
 
 ## extension_imgui
 *File: `imgui/src/extension_imgui.cpp`*
@@ -644,6 +644,18 @@ Button
 ### button_image()
 ButtonImage 
 
+
+
+### button_arrow(label,direction)
+ButtonArrow 
+
+
+PARAMS
+* `label` [`string`] - 
+* `direction` [`number`] - 
+
+RETURNS
+* `pushed` [`bool`] - 
 
 
 ### checkbox()
