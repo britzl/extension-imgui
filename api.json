@@ -1911,9 +1911,9 @@
                             "name": "pop_style_var",
                             "params": [
                                 {
-                                    "description": "Optional number specifying how many style vars to pop; defaults to 1",
+                                    "description": "Number of style vars to pop; optional, defaults to 1",
                                     "name": "count",
-                                    "type": null
+                                    "type": "number"
                                 }
                             ],
                             "params_string": "count",

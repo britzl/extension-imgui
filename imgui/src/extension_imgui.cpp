@@ -2760,7 +2760,7 @@ static int imgui_PushStyleVar(lua_State *L)
 
 /** PopStyleVar
  * @name pop_style_var
- * @param count optional number specifying how many style vars to pop; defaults to 1
+ * @number count number of style vars to pop; optional, defaults to 1
  */
 static int imgui_PopStyleVar(lua_State *L)
 {

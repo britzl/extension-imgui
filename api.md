@@ -842,7 +842,7 @@ PopStyleVar
 
 
 PARAMS
-* `count` - Optional number specifying how many style vars to pop; defaults to 1
+* `count` [`number`] - Number of style vars to pop; optional, defaults to 1
 
 
 ### set_window_font_scale()
