@@ -837,9 +837,12 @@ PARAMS
 * `value` - Number or vmath.vector3 specifying the value of the style var
 
 
-### pop_style_var()
+### pop_style_var(count)
 PopStyleVar 
 
+
+PARAMS
+* `count` - Optional number specifying how many style vars to pop; defaults to 1
 
 
 ### set_window_font_scale()

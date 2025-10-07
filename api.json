@@ -1906,10 +1906,17 @@
                         },
                         {
                             "description": "",
-                            "has_params": false,
+                            "has_params": true,
                             "has_returns": false,
                             "name": "pop_style_var",
-                            "params": [],
+                            "params": [
+                                {
+                                    "description": "Optional number specifying how many style vars to pop; defaults to 1",
+                                    "name": "count",
+                                    "type": null
+                                }
+                            ],
+                            "params_string": "count",
                             "returns": [],
                             "summary": "PopStyleVar",
                             "usage": null

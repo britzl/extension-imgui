@@ -920,6 +920,10 @@
   - name: pop_style_var
     type: function
     desc: PopStyleVar 
+    parameters:
+    - name: count
+      type: None
+      desc: Optional number specifying how many style vars to pop; defaults to 1
 
   - name: set_window_font_scale
     type: function
