@@ -21,17 +21,23 @@ return function(self)
 
 	imgui.separator()
 
+	imgui.push_style_var(imgui.STYLEVAR_FRAMEPADDING, vmath.vector3(0, 0, 0))
 	if imgui.button("Reset Counter") then
 		self.counter = 0
 	end
 	imgui.same_line()
+	imgui.push_style_var(imgui.STYLEVAR_FRAMEPADDING, vmath.vector3(5, 5, 0))
+	imgui.push_style_var(imgui.STYLEVAR_FRAMEROUNDING, 10)
 	if imgui.button_arrow("Up", imgui.DIR_UP) then
 		self.counter = self.counter + 1
 	end
+	imgui.pop_style_var()
 	imgui.same_line()
+	imgui.push_style_var(imgui.STYLEVAR_FRAMEPADDING, vmath.vector3(10, 10, 5))
 	if imgui.button_arrow("Down", imgui.DIR_DOWN) then
 		self.counter = self.counter - 1
 	end
+	imgui.pop_style_var(3)
 	imgui.same_line()
 	imgui.text(("counter = %d"):format(self.counter))
 

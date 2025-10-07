@@ -906,6 +906,25 @@
     type: function
     desc: PopStyleColor 
 
+  - name: push_style_var
+    type: function
+    desc: PushStyleVar 
+    parameters:
+    - name: style_var
+      type: number
+      desc: Enum for the style to be pushed
+    - name: value
+      type: None
+      desc: Number or vmath.vector3 specifying the value of the style var
+
+  - name: pop_style_var
+    type: function
+    desc: PopStyleVar 
+    parameters:
+    - name: count
+      type: number
+      desc: Number of style vars to pop; optional, defaults to 1
+
   - name: set_window_font_scale
     type: function
     desc: SetWindowFontScale 
