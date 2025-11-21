@@ -117,4 +117,15 @@ return function(self)
 		end
 		imgui.pop_id()
 	end
+
+	-----------------------------------
+	-- test for imgui.get_cursor_pos --
+	-----------------------------------
+	local cursor_screen_x, cursor_screen_y = imgui.get_cursor_screen_pos()
+	local cursor_x, cursor_y = imgui.get_cursor_pos()
+	print("cursor_screen_x ", cursor_screen_x, "cursor_screen_y", cursor_screen_y)
+	print("cursor_x ", cursor_x, "cursor_y", cursor_y)
+	-----------------------------------
+	-----------------------------------
+
 end
