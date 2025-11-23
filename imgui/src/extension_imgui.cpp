@@ -2047,12 +2047,29 @@ static int imgui_Separator(lua_State* L)
 
 /** GetCursorScreenPos
  * @name get_cursor_screen_pos
+ * @treturn number x Cursor screen x position
+ * @treturn number y Cursor screen y position
  */
 static int imgui_GetCursorScreenPos(lua_State* L)
 {
     DM_LUA_STACK_CHECK(L, 2);
 
     ImVec2 p = ImGui::GetCursorScreenPos();
+    lua_pushnumber(L, p.x);
+    lua_pushnumber(L, p.y);
+    return 2;
+}
+
+/** GetCursorPos
+ * @name get_cursor_pos
+ * @treturn number x Cursor x position
+ * @treturn number y Cursor y position
+ */
+static int imgui_GetCursorPos(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 2);
+
+    ImVec2 p = ImGui::GetCursorPos();
     lua_pushnumber(L, p.x);
     lua_pushnumber(L, p.y);
     return 2;
@@ -3419,6 +3436,7 @@ static const luaL_reg Module_methods[] =
     {"spacing", imgui_Spacing},
     {"separator", imgui_Separator},
     {"get_cursor_screen_pos", imgui_GetCursorScreenPos},
+    {"get_cursor_pos", imgui_GetCursorPos},
 
     {"add_line", imgui_DrawListAddLine},
     {"add_rect", imgui_DrawListAddRect},
