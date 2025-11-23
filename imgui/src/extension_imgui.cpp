@@ -2047,6 +2047,8 @@ static int imgui_Separator(lua_State* L)
 
 /** GetCursorScreenPos
  * @name get_cursor_screen_pos
+ * @treturn number x Cursor screen x position
+ * @treturn number y Cursor screen y position
  */
 static int imgui_GetCursorScreenPos(lua_State* L)
 {
@@ -2060,6 +2062,8 @@ static int imgui_GetCursorScreenPos(lua_State* L)
 
 /** GetCursorPos
  * @name get_cursor_pos
+ * @treturn number x Cursor x position
+ * @treturn number y Cursor y position
  */
 static int imgui_GetCursorPos(lua_State* L)
 {
