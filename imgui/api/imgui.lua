@@ -1242,6 +1242,10 @@ function imgui.separator() end
 ---@return number y
 function imgui.get_cursor_screen_pos() end
 
+---@return number x
+---@return number y
+function imgui.get_cursor_pos() end
+
 ---
 --- IMGUI PLOT
 
