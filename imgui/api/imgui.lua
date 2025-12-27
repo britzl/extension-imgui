@@ -803,6 +803,8 @@ function imgui.get_item_rect_max() end
 ---@param offset integer
 function imgui.set_keyboard_focus_here(offset) end
 
+function imgui.set_item_default_focus() end
+
 ---
 --- KEY MODIFIERS
 
@@ -930,7 +932,7 @@ function imgui.end_child() end
 ---
 --- POPUP FLAGS
 
----@param id string
+---@param id? string
 ---@return boolean result
 function imgui.begin_popup_context_item(id) end
 
@@ -1085,6 +1087,14 @@ function imgui.input_text(label, text, flags) end
 function imgui.input_int(label, value) end
 
 ---@param label string
+---@param x number
+---@param y number
+---@return boolean changed
+---@return number? x
+---@return number? y
+function imgui.input_int2(label, x, y) end
+
+---@param label string
 ---@param value number
 ---@param step? number
 ---@param step_fast? number
@@ -1154,6 +1164,34 @@ function imgui.drag_float(label, value, speed, min, max, precision) end
 ---@return boolean changed
 ---@return number? value
 function imgui.slider_float(label, value, min, max, precision) end
+
+---@param label string
+---@param x number
+---@param y number
+---@param z number
+---@param min number
+---@param max number
+---@param precision? integer
+---@return boolean changed
+---@return number? x
+---@return number? y
+---@return number? z
+function imgui.slider_float3(label, x, y, z, min, max, precision) end
+
+---@param label string
+---@param x number
+---@param y number
+---@param z number
+---@param w number
+---@param min number
+---@param max number
+---@param precision? integer
+---@return boolean changed
+---@return number? x
+---@return number? y
+---@return number? z
+---@return number? w
+function imgui.slider_float4(label, x, y, z, w, min, max, precision) end
 
 ---@param label string
 ---@param color vector4
