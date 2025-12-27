@@ -6,6 +6,298 @@
                     "entries": [
                         {
                             "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "IMAGES",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "PRIMITIVES",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "FRAMES",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "INPUT",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "KEY MODIFIERS",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "TEXT INPUT",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "TEXT INPUT",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "TREE",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "PUSH/POP ID",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "WINDOW",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "CHILD WINDOW",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "POPUP FLAGS",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "DRAG AND DROP",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "COMBO",
+                            "usage": null
+                        },
+                        {
+                            "description": "-",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "TABLE",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "TOOLTIP",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "TAB BAR",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "WIDGETS",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "LAYOUT",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "IMGUI PLOT",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "IMGUI DEMO",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "STYLE",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "ITEM WIDTH",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "NAVIGATION",
+                            "usage": null
+                        },
+                        {
+                            "description": "-",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "FONT",
+                            "usage": null
+                        },
+                        {
+                            "description": "-",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "DRAW",
+                            "usage": null
+                        },
+                        {
+                            "description": "-",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "INPUT CAPTURE",
+                            "usage": null
+                        },
+                        {
+                            "description": "-",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": null,
+                            "params": [],
+                            "returns": [],
+                            "summary": "CONFIG",
+                            "usage": null
+                        }
+                    ],
+                    "filename": "imgui\\api\\imgui.lua",
+                    "group": "imgui\\api",
+                    "module": "imgui"
+                }
+            ],
+            "group": "imgui\\api"
+        },
+        {
+            "files": [
+                {
+                    "entries": [
+                        {
+                            "description": "",
                             "has_params": true,
                             "has_returns": true,
                             "name": "image_b64_decode",
@@ -809,13 +1101,13 @@
                             "usage": null
                         },
                         {
-                            "description": "",
+                            "description": "If id is omitted, uses the last item ID (same as ImGui helper behavior). Lua - call with no arguments to use the last item; passing nil is not accepted.",
                             "has_params": true,
                             "has_returns": true,
                             "name": "begin_popup_context_item",
                             "params": [
                                 {
-                                    "description": "",
+                                    "description": "Optional; if omitted, uses the last item ID.",
                                     "name": "id",
                                     "type": "string"
                                 }
@@ -1350,6 +1642,16 @@
                             "description": "",
                             "has_params": false,
                             "has_returns": false,
+                            "name": "input_int2",
+                            "params": [],
+                            "returns": [],
+                            "summary": "InputInt2",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
                             "name": "input_float3",
                             "params": [],
                             "returns": [],
@@ -1455,6 +1757,142 @@
                                 }
                             ],
                             "summary": "SliderFloat",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "slider_float3",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value3",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "min",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "max",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "precision",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "label,value1,value2,value3,min,max,precision",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "value1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value3",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "SliderFloat3",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": true,
+                            "has_returns": true,
+                            "name": "slider_float4",
+                            "params": [
+                                {
+                                    "description": "",
+                                    "name": "label",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value3",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value4",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "min",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "max",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "precision",
+                                    "type": "number"
+                                }
+                            ],
+                            "params_string": "label,value1,value2,value3,value4,min,max,precision",
+                            "returns": [
+                                {
+                                    "description": "",
+                                    "name": "value1",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value2",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value3",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "",
+                                    "name": "value4",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "SliderFloat4",
                             "usage": null
                         },
                         {
@@ -1705,11 +2143,43 @@
                         {
                             "description": "",
                             "has_params": false,
-                            "has_returns": false,
+                            "has_returns": true,
                             "name": "get_cursor_screen_pos",
                             "params": [],
-                            "returns": [],
+                            "returns": [
+                                {
+                                    "description": "Cursor screen x position",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "Cursor screen y position",
+                                    "name": "y",
+                                    "type": "number"
+                                }
+                            ],
                             "summary": "GetCursorScreenPos",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": true,
+                            "name": "get_cursor_pos",
+                            "params": [],
+                            "returns": [
+                                {
+                                    "description": "Cursor x position",
+                                    "name": "x",
+                                    "type": "number"
+                                },
+                                {
+                                    "description": "Cursor y position",
+                                    "name": "y",
+                                    "type": "number"
+                                }
+                            ],
+                            "summary": "GetCursorPos",
                             "usage": null
                         },
                         {
@@ -1999,6 +2469,16 @@
                             "params": [],
                             "returns": [],
                             "summary": "CalcItemWidth",
+                            "usage": null
+                        },
+                        {
+                            "description": "",
+                            "has_params": false,
+                            "has_returns": false,
+                            "name": "set_item_default_focus",
+                            "params": [],
+                            "returns": [],
+                            "summary": "SetItemDefaultFocus",
                             "usage": null
                         },
                         {

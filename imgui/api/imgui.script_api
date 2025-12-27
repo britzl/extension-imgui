@@ -3,6 +3,118 @@
   desc: Functions and constants for interacting with Dear ImGUI
 
   members:
+  - name: None
+    type: function
+    desc: IMAGES 
+
+  - name: None
+    type: function
+    desc: PRIMITIVES 
+
+  - name: None
+    type: function
+    desc: FRAMES 
+
+  - name: None
+    type: function
+    desc: INPUT 
+
+  - name: None
+    type: function
+    desc: KEY MODIFIERS 
+
+  - name: None
+    type: function
+    desc: TEXT INPUT 
+
+  - name: None
+    type: function
+    desc: TEXT INPUT 
+
+  - name: None
+    type: function
+    desc: TREE 
+
+  - name: None
+    type: function
+    desc: PUSH/POP ID 
+
+  - name: None
+    type: function
+    desc: WINDOW 
+
+  - name: None
+    type: function
+    desc: CHILD WINDOW 
+
+  - name: None
+    type: function
+    desc: POPUP FLAGS 
+
+  - name: None
+    type: function
+    desc: DRAG AND DROP 
+
+  - name: None
+    type: function
+    desc: COMBO 
+
+  - name: None
+    type: function
+    desc: TABLE -
+
+  - name: None
+    type: function
+    desc: TOOLTIP 
+
+  - name: None
+    type: function
+    desc: TAB BAR 
+
+  - name: None
+    type: function
+    desc: WIDGETS 
+
+  - name: None
+    type: function
+    desc: LAYOUT 
+
+  - name: None
+    type: function
+    desc: IMGUI PLOT 
+
+  - name: None
+    type: function
+    desc: IMGUI DEMO 
+
+  - name: None
+    type: function
+    desc: STYLE 
+
+  - name: None
+    type: function
+    desc: ITEM WIDTH 
+
+  - name: None
+    type: function
+    desc: NAVIGATION 
+
+  - name: None
+    type: function
+    desc: FONT -
+
+  - name: None
+    type: function
+    desc: DRAW -
+
+  - name: None
+    type: function
+    desc: INPUT CAPTURE -
+
+  - name: None
+    type: function
+    desc: CONFIG -
+
   - name: image_b64_decode
     type: function
     desc: ImageB64Decode 
@@ -421,11 +533,11 @@
 
   - name: begin_popup_context_item
     type: function
-    desc: BeginPopupContextItem 
+    desc: BeginPopupContextItem If id is omitted, uses the last item ID (same as ImGui helper behavior). Lua - call with no arguments to use the last item; passing nil is not accepted.
     parameters:
     - name: id
       type: string
-
+      desc: Optional; if omitted, uses the last item ID.
     returns:
     - name: result
       type: boolean
@@ -670,6 +782,10 @@
     type: function
     desc: InputInt4 
 
+  - name: input_int2
+    type: function
+    desc: InputInt2 
+
   - name: input_float3
     type: function
     desc: InputFloat3 
@@ -726,6 +842,84 @@
 
     returns:
     - name: value
+      type: number
+
+
+  - name: slider_float3
+    type: function
+    desc: SliderFloat3 
+    parameters:
+    - name: label
+      type: string
+
+    - name: value1
+      type: number
+
+    - name: value2
+      type: number
+
+    - name: value3
+      type: number
+
+    - name: min
+      type: number
+
+    - name: max
+      type: number
+
+    - name: precision
+      type: number
+
+    returns:
+    - name: value1
+      type: number
+
+    - name: value2
+      type: number
+
+    - name: value3
+      type: number
+
+
+  - name: slider_float4
+    type: function
+    desc: SliderFloat4 
+    parameters:
+    - name: label
+      type: string
+
+    - name: value1
+      type: number
+
+    - name: value2
+      type: number
+
+    - name: value3
+      type: number
+
+    - name: value4
+      type: number
+
+    - name: min
+      type: number
+
+    - name: max
+      type: number
+
+    - name: precision
+      type: number
+
+    returns:
+    - name: value1
+      type: number
+
+    - name: value2
+      type: number
+
+    - name: value3
+      type: number
+
+    - name: value4
       type: number
 
 
@@ -837,6 +1031,24 @@
   - name: get_cursor_screen_pos
     type: function
     desc: GetCursorScreenPos 
+    returns:
+    - name: x
+      type: number
+      desc: Cursor screen x position
+    - name: y
+      type: number
+      desc: Cursor screen y position
+
+  - name: get_cursor_pos
+    type: function
+    desc: GetCursorPos 
+    returns:
+    - name: x
+      type: number
+      desc: Cursor x position
+    - name: y
+      type: number
+      desc: Cursor y position
 
   - name: plot_lines
     type: function
@@ -956,6 +1168,10 @@
   - name: calc_item_width
     type: function
     desc: CalcItemWidth 
+
+  - name: set_item_default_focus
+    type: function
+    desc: SetItemDefaultFocus 
 
   - name: set_scroll_here_y
     type: function
