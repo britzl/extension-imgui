@@ -747,6 +747,24 @@ static int imgui_SetNextWindowPos(lua_State* L)
     ImGui::SetNextWindowPos(ImVec2(x, y), cond, pivot);
     return 0;
 }
+/** SetNextWindowCollapsed
+* @name set_next_window_collapsed
+* @bool collapsed
+* @number cond
+*/
+static int imgui_SetNextWindowCollapsed(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+    imgui_NewFrame();
+    bool collapsed = lua_toboolean(L, 1);
+    uint32_t cond = ImGuiCond_None;
+    if (lua_isnumber(L, 2))
+    {
+        cond = luaL_checkint(L, 2);
+    }
+    ImGui::SetNextWindowCollapsed(collapsed, cond);
+    return 0;
+}
 /** GetWindowSize
  * @name get_window_size
  * @treturn number width
@@ -3503,6 +3521,7 @@ static const luaL_reg Module_methods[] =
 
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
+    {"set_next_window_collapsed", imgui_SetNextWindowCollapsed},
     {"get_window_size", imgui_GetWindowSize},
     {"get_window_pos", imgui_GetWindowPos},
     {"begin_window", imgui_Begin},

@@ -266,6 +266,15 @@
     - name: pivot_y
       type: number
 
+  - name: set_next_window_collapsed
+    type: function
+    desc: SetNextWindowCollapsed. 
+    parameters:
+    - name: collapsed
+      type: boolean
+    - name: cond
+      type: number
+
   - name: get_window_size
     type: function
     desc: GetWindowSize. 

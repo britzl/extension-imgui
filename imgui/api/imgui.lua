@@ -893,6 +893,10 @@ function imgui.set_next_window_size(width, height, cond) end
 ---@param pivot_y? number
 function imgui.set_next_window_pos(x, y, cond, pivot_x, pivot_y) end
 
+---@param collapsed boolean
+---@param cond? integer|imgui.COND
+function imgui.set_next_window_collapsed(collapsed, cond) end
+
 ---@return number width
 ---@return number height
 function imgui.get_window_size() end
