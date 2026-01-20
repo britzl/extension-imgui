@@ -628,6 +628,43 @@ static int imgui_TreePop(lua_State* L)
     return 0;
 }
 
+/** CollapsingHeader
+ * @name collapsing_header
+ * @string label
+ * @bool visible Optional; if omitted or nil, no close button is shown.
+ * @number flags Optional.
+ * @treturn bool open
+ */
+static int imgui_CollapsingHeader(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* label = luaL_checkstring(L, 1);
+    bool* p_visible = 0;
+    bool visible = true;
+    uint32_t flags = 0;
+    int argc = lua_gettop(L);
+    if (argc >= 2)
+    {
+        if (lua_isboolean(L, 2))
+        {
+            visible = lua_toboolean(L, 2);
+            p_visible = &visible;
+        }
+        else if (!lua_isnil(L, 2))
+        {
+            return luaL_error(L, "collapsing_header: arg2 must be boolean or nil");
+        }
+        if (argc >= 3)
+        {
+            flags = luaL_checkint(L, 3);
+        }
+    }
+    bool result = ImGui::CollapsingHeader(label, p_visible, flags);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
 
 // ----------------------------
 // ----- Push/Pop ID ----------
@@ -3572,6 +3609,7 @@ static const luaL_reg Module_methods[] =
 
     {"tree_node", imgui_TreeNode},
     {"tree_pop", imgui_TreePop},
+    {"collapsing_header", imgui_CollapsingHeader},
 
     {"push_id", imgui_PushId},
     {"pop_id", imgui_PopId},

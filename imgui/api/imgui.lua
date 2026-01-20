@@ -856,10 +856,10 @@ function imgui.tree_node_ex(label, open, flags) end
 function imgui.tree_pop() end
 
 ---@param label string
----@param selected boolean
+---@param visible? boolean
 ---@param flags? integer|imgui.TREENODE
----@return boolean clicked
-function imgui.collapsing_header(label, selected, flags) end
+---@return boolean open
+function imgui.collapsing_header(label, visible, flags) end
 
 ---
 --- PUSH/POP ID
