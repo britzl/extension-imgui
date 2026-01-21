@@ -209,6 +209,26 @@
     type: function
     desc: TreePop. 
 
+  - name: collapsing_header
+    type: function
+    desc: CollapsingHeader. 
+    parameters:
+    - name: label
+      type: string
+    - name: visible
+      type: boolean
+      desc: |
+        Optional; if omitted or nil, no close button is shown.
+        
+    - name: flags
+      type: number
+      desc: |
+        Optional.
+        
+    returns:
+    - name: open
+      type: bool
+
   - name: push_id
     type: function
     desc: PushId. 
