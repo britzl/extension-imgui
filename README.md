@@ -45,3 +45,9 @@ You can add the `imgui/imgui.script` to a game object and let that handle input 
 
 ### Display size
 You need to let Dear ImGUI know of any changes to the window size by calling `imgui.set_display_size(w, h)` when the screen size changes.
+
+
+### How to generate API docs
+
+* Download and unpack https://github.com/britzl/generatedocs/archive/refs/heads/main.zip
+* From the root of this project run `path/to/generatedocs.py imgui extension_imgui.cpp`

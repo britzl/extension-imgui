@@ -1,0 +1,30 @@
+local fonts = require("example.fonts")
+local images = require("example.images")
+
+return function(self)
+
+	imgui.font_push(fonts.get("Regular"))
+	imgui.text_colored("Example Text Regular - Привіт Світ", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+	imgui.font_push(fonts.get("Bold"))
+	imgui.text_colored("Example Text Bold", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+	imgui.font_push(fonts.get("Italic"))
+	imgui.text_colored("Example Text Italic", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+	imgui.font_push(fonts.get("BoldItalic"))
+	imgui.text_colored("Example Text Bold Italic", 1, 1, 1, 1 )
+	imgui.font_pop()
+	imgui.separator()
+
+	imgui.font_push(fonts.get("Regular"))
+	imgui.text_colored("image stretched", 1, 1, 1, 1 )
+	imgui.image_add(images.get("image1"), 150,20)
+
+	imgui.text_colored("image original aspect", 1, 1, 1, 1 )
+	imgui.image_add(images.get("image2"), 150,150)
+	imgui.font_pop()
+end

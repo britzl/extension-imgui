@@ -26,3 +26,6 @@ bundle_identifier = com.defold.imgui
 [android]
 package = com.defold.imgui
 
+[native_extension]
+app_manifest = /opengl.appmanifest
+
