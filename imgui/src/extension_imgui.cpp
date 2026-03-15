@@ -1181,7 +1181,8 @@ static int imgui_Combo(lua_State* L)
     {
         luaL_error(L, "You must provide a table");
     }
-    const size_t len = lua_objlen(L, 3);
+
+    size_t len = lua_objlen(L, 3);
     if (len > 1024)
         len = 1024;
 
