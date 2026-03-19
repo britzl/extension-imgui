@@ -1199,21 +1199,38 @@ static int imgui_Combo(lua_State* L)
     {
         luaL_error(L, "You must provide a table");
     }
-    const size_t len = lua_objlen(L, 3);
-    const char* items[len];
-    for(int i=0; i<len; i++)
-    {
-        lua_pushnumber(L, i + 1);
-        int top = lua_gettop(L);
-        lua_gettable(L, 3);
-        const char* item = luaL_checkstring(L, 4);
-        items[i] = item;
-        lua_pop(L, 1);
-    }
 
-    bool result = ImGui::Combo(label, &current, items, len);
-    lua_pushboolean(L, result);
+    int next = current;
+
+    // get the current value and use it as the combo box preview
     lua_pushnumber(L, current + 1);
+    lua_gettable(L, 3);
+    const char* preview = luaL_checkstring(L, -1);
+    bool result = ImGui::BeginCombo(label, preview);
+    lua_pop(L, 1); // pop the current value
+
+    if (result)
+    {
+        // iterate the full list of values and create Selectables for each
+        const size_t len = lua_objlen(L, 3);
+        for(int i=0; i<len; i++)
+        {
+            lua_pushnumber(L, i + 1);
+            lua_gettable(L, 3);
+            const char* item = luaL_checkstring(L, -1);
+            bool selected = (i == current);
+            bool clicked = ImGui::Selectable(item, &selected, 0);
+            lua_pop(L, 1); // pop the item
+            if (clicked)
+            {
+                next = i;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    lua_pushboolean(L, result);
+    lua_pushnumber(L, next + 1);
+
     return 2;
 }
 
