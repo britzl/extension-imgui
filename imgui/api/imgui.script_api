@@ -3,9 +3,155 @@
   desc: Functions and constants for interacting with Dear ImGUI
 
   members:
+  - name: None
+    type: function
+    desc: |
+      IMAGES.
+
+  - name: None
+    type: function
+    desc: |
+      PRIMITIVES.
+
+  - name: None
+    type: function
+    desc: |
+      FRAMES.
+
+  - name: None
+    type: function
+    desc: |
+      INPUT.
+
+  - name: None
+    type: function
+    desc: |
+      KEY MODIFIERS.
+
+  - name: None
+    type: function
+    desc: |
+      TEXT INPUT.
+
+  - name: None
+    type: function
+    desc: |
+      TEXT INPUT.
+
+  - name: None
+    type: function
+    desc: |
+      TREE.
+
+  - name: None
+    type: function
+    desc: |
+      PUSH/POP ID.
+
+  - name: None
+    type: function
+    desc: |
+      WINDOW.
+
+  - name: None
+    type: function
+    desc: |
+      CHILD WINDOW.
+
+  - name: None
+    type: function
+    desc: |
+      POPUP FLAGS.
+
+  - name: None
+    type: function
+    desc: |
+      DRAG AND DROP.
+
+  - name: None
+    type: function
+    desc: |
+      COMBO.
+
+  - name: None
+    type: function
+    desc: |
+      TABLE.
+      -
+
+  - name: None
+    type: function
+    desc: |
+      TOOLTIP.
+
+  - name: None
+    type: function
+    desc: |
+      TAB BAR.
+
+  - name: None
+    type: function
+    desc: |
+      WIDGETS.
+
+  - name: None
+    type: function
+    desc: |
+      LAYOUT.
+
+  - name: None
+    type: function
+    desc: |
+      IMGUI PLOT.
+
+  - name: None
+    type: function
+    desc: |
+      IMGUI DEMO.
+
+  - name: None
+    type: function
+    desc: |
+      STYLE.
+
+  - name: None
+    type: function
+    desc: |
+      ITEM WIDTH.
+
+  - name: None
+    type: function
+    desc: |
+      NAVIGATION.
+
+  - name: None
+    type: function
+    desc: |
+      FONT.
+      -
+
+  - name: None
+    type: function
+    desc: |
+      DRAW.
+      -
+
+  - name: None
+    type: function
+    desc: |
+      INPUT CAPTURE.
+      -
+
+  - name: None
+    type: function
+    desc: |
+      CONFIG.
+      -
+
   - name: image_b64_decode
     type: function
-    desc: ImageB64Decode. 
+    desc: |
+      ImageB64Decode.
     parameters:
     - name: data
       type: string
@@ -20,7 +166,8 @@
 
   - name: image_load_data
     type: function
-    desc: ImageLoadData. 
+    desc: |
+      ImageLoadData.
     parameters:
     - name: filename
       type: string
@@ -38,7 +185,8 @@
 
   - name: image_load
     type: function
-    desc: ImageLoad. 
+    desc: |
+      ImageLoad.
     parameters:
     - name: filename
       type: string
@@ -50,30 +198,70 @@
     - name: height
       type: number
 
+  - name: image_get
+    type: function
+    desc: |
+      ImageGet.
+    parameters:
+    - name: texture_id
+      type: number
+      desc: |
+        Texture id
+        
+    returns:
+    - name: texture_id
+      type: number
+      desc: |
+        Texture id
+        
+    - name: width
+      type: number
+      desc: |
+        Image width
+        
+    - name: Image
+      type: height
+      desc: |
+        Height
+        
+
+  - name: image_add
+    type: function
+    desc: |
+      ImageAdd.
+    parameters:
+    - name: texture_id
+      type: number
+      desc: |
+        Texture id
+        
+    - name: width
+      type: number
+      desc: |
+        Image width
+        
+    - name: height
+      type: number
+      desc: |
+        Image height
+        
+    - name: uv0x
+      type: number
+      optional: True
+    - name: uv0y
+      type: number
+      optional: True
+    - name: uv1x
+      type: number
+      optional: True
+    - name: uv2x
+      type: number
+      optional: True
+
   - name: add_line
     type: function
-    desc: DrawListAddLine. 
-    parameters:
-    - name: x1
-      type: number
-    - name: y1
-      type: number
-    - name: x2
-      type: number
-    - name: y2
-      type: number
-    - name: r
-      type: number
-    - name: g
-      type: number
-    - name: b
-      type: number
-    - name: a
-      type: number
-
-  - name: add_rect
-    type: function
-    desc: DrawListAddRect. 
+    desc: |
+      DrawListAddLine.
     parameters:
     - name: x1
       type: number
@@ -93,10 +281,37 @@
       type: number
     - name: thickness
       type: number
+      optional: True
+
+  - name: add_rect
+    type: function
+    desc: |
+      DrawListAddRect.
+    parameters:
+    - name: x1
+      type: number
+    - name: y1
+      type: number
+    - name: x2
+      type: number
+    - name: y2
+      type: number
+    - name: r
+      type: number
+    - name: g
+      type: number
+    - name: b
+      type: number
+    - name: a
+      type: number
+    - name: thickness
+      type: number
+      optional: True
 
   - name: set_display_size
     type: function
-    desc: SetDisplaySize. 
+    desc: |
+      SetDisplaySize.
     parameters:
     - name: w
       type: number
@@ -105,7 +320,8 @@
 
   - name: set_mouse_input
     type: function
-    desc: SetMouseInput. 
+    desc: |
+      SetMouseInput.
     parameters:
     - name: x
       type: number
@@ -122,7 +338,8 @@
 
   - name: set_mouse_pos
     type: function
-    desc: SetMousePos. 
+    desc: |
+      SetMousePos.
     parameters:
     - name: x
       type: number
@@ -131,7 +348,8 @@
 
   - name: set_mouse_button
     type: function
-    desc: SetMouseButton. 
+    desc: |
+      SetMouseButton.
     parameters:
     - name: index
       type: number
@@ -140,14 +358,16 @@
 
   - name: set_mouse_wheel
     type: function
-    desc: SetMouseWheel. 
+    desc: |
+      SetMouseWheel.
     parameters:
     - name: wheel
       type: number
 
   - name: set_key_down
     type: function
-    desc: SetKeyDown. 
+    desc: |
+      SetKeyDown.
     parameters:
     - name: key
       type: number
@@ -156,49 +376,56 @@
 
   - name: set_key_modifier_ctrl
     type: function
-    desc: SetKeyModifierCtrl. 
+    desc: |
+      SetKeyModifierCtrl.
     parameters:
     - name: down
       type: boolean
 
   - name: set_key_modifier_shift
     type: function
-    desc: SetKeyModifierShift. 
+    desc: |
+      SetKeyModifierShift.
     parameters:
     - name: down
       type: boolean
 
   - name: set_key_modifier_alt
     type: function
-    desc: SetKeyModifierAlt. 
+    desc: |
+      SetKeyModifierAlt.
     parameters:
     - name: down
       type: boolean
 
   - name: set_key_modifier_super
     type: function
-    desc: SetKeyModifierSuper. 
+    desc: |
+      SetKeyModifierSuper.
     parameters:
     - name: down
       type: boolean
 
   - name: add_input_character
     type: function
-    desc: AddInputCharacter. 
+    desc: |
+      AddInputCharacter.
     parameters:
     - name: character
       type: string
 
   - name: add_input_characters
     type: function
-    desc: AddInputCharacters. 
+    desc: |
+      AddInputCharacters.
     parameters:
     - name: characters
       type: string
 
   - name: tree_node
     type: function
-    desc: TreeNode. 
+    desc: |
+      TreeNode.
     parameters:
     - name: text
       type: string
@@ -207,11 +434,13 @@
 
   - name: tree_pop
     type: function
-    desc: TreePop. 
+    desc: |
+      TreePop.
 
   - name: collapsing_header
     type: function
-    desc: CollapsingHeader. 
+    desc: |
+      CollapsingHeader.
     parameters:
     - name: label
       type: string
@@ -231,18 +460,21 @@
 
   - name: push_id
     type: function
-    desc: PushId. 
+    desc: |
+      PushId.
     parameters:
     - name: text
       type: string
 
   - name: pop_id
     type: function
-    desc: PopId. 
+    desc: |
+      PopId.
 
-  - name: begin
+  - name: begin_window
     type: function
-    desc: Begin. 
+    desc: |
+      Begin.
     parameters:
     - name: title
       type: string
@@ -256,13 +488,15 @@
     - name: is_open
       type: bool
 
-  - name: end
+  - name: end_window
     type: function
-    desc: End. 
+    desc: |
+      End.
 
   - name: set_next_window_size
     type: function
-    desc: SetNextWindowSize. 
+    desc: |
+      SetNextWindowSize.
     parameters:
     - name: width
       type: number
@@ -273,7 +507,8 @@
 
   - name: set_next_window_pos
     type: function
-    desc: SetNextWindowPos. 
+    desc: |
+      SetNextWindowPos.
     parameters:
     - name: x
       type: number
@@ -288,7 +523,8 @@
 
   - name: set_next_window_collapsed
     type: function
-    desc: SetNextWindowCollapsed. 
+    desc: |
+      SetNextWindowCollapsed.
     parameters:
     - name: collapsed
       type: boolean
@@ -297,7 +533,8 @@
 
   - name: get_window_size
     type: function
-    desc: GetWindowSize. 
+    desc: |
+      GetWindowSize.
     returns:
     - name: width
       type: number
@@ -306,7 +543,8 @@
 
   - name: get_window_pos
     type: function
-    desc: GetWindowPos. 
+    desc: |
+      GetWindowPos.
     returns:
     - name: x
       type: number
@@ -315,7 +553,8 @@
 
   - name: is_window_focused
     type: function
-    desc: IsWindowFocused. 
+    desc: |
+      IsWindowFocused.
     parameters:
     - name: flags
       type: number
@@ -325,14 +564,16 @@
 
   - name: is_window_hovered
     type: function
-    desc: IsWindowHovered. 
+    desc: |
+      IsWindowHovered.
     returns:
     - name: result
       type: bool
 
   - name: get_content_region_avail
     type: function
-    desc: GetContentRegionAvail. 
+    desc: |
+      GetContentRegionAvail.
     returns:
     - name: x
       type: number
@@ -341,7 +582,8 @@
 
   - name: get_window_content_region_max
     type: function
-    desc: GetWindowContentRegionMax. 
+    desc: |
+      GetWindowContentRegionMax.
     returns:
     - name: x
       type: number
@@ -350,7 +592,8 @@
 
   - name: begin_child
     type: function
-    desc: BeginChild. 
+    desc: |
+      BeginChild.
     parameters:
     - name: title
       type: string
@@ -366,11 +609,14 @@
 
   - name: end_child
     type: function
-    desc: EndChild. 
+    desc: |
+      EndChild.
 
   - name: begin_popup_context_item
     type: function
-    desc: BeginPopupContextItem. If id is omitted, uses the last item ID (same as ImGui helper behavior). Lua - call with no arguments to use the last item; passing nil is not accepted.
+    desc: |
+      BeginPopupContextItem.
+      If id is omitted, uses the last item ID (same as ImGui helper behavior). Lua - call with no arguments to use the last item; passing nil is not accepted.
     parameters:
     - name: id
       type: string
@@ -383,7 +629,8 @@
 
   - name: begin_popup
     type: function
-    desc: BeginPopup. 
+    desc: |
+      BeginPopup.
     parameters:
     - name: id
       type: string
@@ -395,7 +642,8 @@
 
   - name: begin_popup_modal
     type: function
-    desc: BeginPopupModal. 
+    desc: |
+      BeginPopupModal.
     parameters:
     - name: id
       type: string
@@ -407,7 +655,8 @@
 
   - name: open_popup
     type: function
-    desc: OpenPopup. 
+    desc: |
+      OpenPopup.
     parameters:
     - name: id
       type: string
@@ -419,15 +668,18 @@
 
   - name: close_current_popup
     type: function
-    desc: CloseCurrentPopup. 
+    desc: |
+      CloseCurrentPopup.
 
   - name: end_popup
     type: function
-    desc: EndPopup. 
+    desc: |
+      EndPopup.
 
   - name: begin_drag_drop_source
     type: function
-    desc: BeginDragDropSource. 
+    desc: |
+      BeginDragDropSource.
     parameters:
     - name: flags
       type: number
@@ -437,22 +689,26 @@
 
   - name: end_drag_drop_source
     type: function
-    desc: EndDragDropSource. 
+    desc: |
+      EndDragDropSource.
 
   - name: begin_drag_drop_target
     type: function
-    desc: BeginDragDropTarget. 
+    desc: |
+      BeginDragDropTarget.
     returns:
     - name: result
       type: boolean
 
   - name: end_drag_drop_target
     type: function
-    desc: EndDragDropTarget. 
+    desc: |
+      EndDragDropTarget.
 
   - name: set_drag_drop_payload
     type: function
-    desc: SetDragDropPayload. 
+    desc: |
+      SetDragDropPayload.
     parameters:
     - name: type
       type: string
@@ -464,7 +720,8 @@
 
   - name: accept_drag_drop_payload
     type: function
-    desc: AcceptDragDropPayload. 
+    desc: |
+      AcceptDragDropPayload.
     parameters:
     - name: type
       type: string
@@ -476,7 +733,8 @@
 
   - name: begin_combo
     type: function
-    desc: BeginCombo. 
+    desc: |
+      BeginCombo.
     parameters:
     - name: label
       type: string
@@ -488,11 +746,13 @@
 
   - name: end_combo
     type: function
-    desc: EndCombo. 
+    desc: |
+      EndCombo.
 
   - name: combo
     type: function
-    desc: Combo. 
+    desc: |
+      Combo.
     parameters:
     - name: label
       type: string
@@ -508,107 +768,329 @@
 
   - name: begin_table
     type: function
-    desc: BeginTable. 
+    desc: |
+      BeginTable.
+    parameters:
+    - name: id
+      type: string
+    - name: column
+      type: number
+    - name: flags
+      type: number
+      optional: True
+    - name: x
+      type: number
+      optional: True
+    - name: y
+      type: number
+      optional: True
+    returns:
+    - name: result
+      type: boolean
 
   - name: end_table
     type: function
-    desc: EndTable. 
+    desc: |
+      EndTable.
 
   - name: table_headers_row
     type: function
-    desc: TableHeadersRow. 
+    desc: |
+      TableHeadersRow.
 
   - name: table_setup_column
     type: function
-    desc: TableSetupColumn. 
+    desc: |
+      TableSetupColumn.
+    parameters:
+    - name: label
+      type: string
+    - name: flags
+      type: number
+      optional: True
+    - name: weight
+      type: number
+      optional: True
 
   - name: table_set_column_index
     type: function
-    desc: TableSetColumnIndex. 
+    desc: |
+      TableSetColumnIndex.
+    parameters:
+    - name: column_index
+      type: number
 
   - name: table_next_column
     type: function
-    desc: TableNextColumn. 
+    desc: |
+      TableNextColumn.
 
   - name: table_next_row
     type: function
-    desc: TableNextRow. 
+    desc: |
+      TableNextRow.
 
   - name: table_setup_scroll_freeze
     type: function
-    desc: TableSetupScrollFreeze. 
+    desc: |
+      TableSetupScrollFreeze.
+    parameters:
+    - name: freeze_cols
+      type: number
+    - name: freeze_rows
+      type: number
 
   - name: begin_tooltip
     type: function
-    desc: BeginTooltip. 
+    desc: |
+      BeginTooltip.
 
   - name: end_tooltip
     type: function
-    desc: EndTooltip. 
+    desc: |
+      EndTooltip.
 
   - name: begin_tab_bar
     type: function
-    desc: BeginTabBar. 
+    desc: |
+      BeginTabBar.
 
   - name: end_tab_bar
     type: function
-    desc: EndTabBar. 
+    desc: |
+      EndTabBar.
 
   - name: begin_tab_item
     type: function
-    desc: BeginTabItem. 
+    desc: |
+      BeginTabItem.
 
   - name: end_tab_item
     type: function
-    desc: EndTabItem. 
+    desc: |
+      EndTabItem.
 
   - name: text
     type: function
-    desc: Text. 
+    desc: |
+      Text.
+    parameters:
+    - name: text
+      type: string
+    - name: wrapped
+      type: number
+      optional: True
 
   - name: text_get_size
     type: function
-    desc: TextGetSize. 
+    desc: |
+      TextGetSize.
+    parameters:
+    - name: text
+      type: string
+    - name: font_size
+      type: number
+    - name: fontid
+      type: number
+      optional: True
+    returns:
+    - name: width
+      type: number
+    - name: height
+      type: number
 
   - name: text_colored
     type: function
-    desc: TextColored. 
+    desc: |
+      TextColored.
+    parameters:
+    - name: text
+      type: string
+    - name: r
+      type: number
+    - name: g
+      type: number
+    - name: b
+      type: number
+    - name: a
+      type: number
 
   - name: input_text
     type: function
-    desc: InputText. 
+    desc: |
+      InputText.
+    parameters:
+    - name: label
+      type: string
+    - name: text
+      type: string
+    - name: flags
+      type: number
+      optional: True
+    returns:
+    - name: changed
+      type: boolean
+    - name: text
+      type: string
 
   - name: input_int
     type: function
-    desc: InputInt. 
+    desc: |
+      InputInt.
+    parameters:
+    - name: label
+      type: string
+    - name: value
+      type: number
+    - name: flags
+      type: number
+      optional: True
+    returns:
+    - name: changed
+      type: boolean
+    - name: value
+      type: number
 
   - name: input_float
     type: function
-    desc: InputFloat. 
+    desc: |
+      InputFloat.
+    parameters:
+    - name: label
+      type: string
+    - name: value
+      type: number
+    - name: step
+      type: number
+    - name: step_fast
+      type: number
+    - name: precision_count
+      type: number
+    - name: flags
+      type: number
+      optional: True
+    returns:
+    - name: changed
+      type: boolean
+    - name: value
+      type: number
 
   - name: input_double
     type: function
-    desc: InputDouble. 
+    desc: |
+      InputDouble.
+    parameters:
+    - name: label
+      type: string
+    - name: value
+      type: number
+    - name: step
+      type: number
+    - name: step_fast
+      type: number
+    - name: precision_count
+      type: number
+    - name: flags
+      type: number
+      optional: True
+    returns:
+    - name: changed
+      type: boolean
+    - name: value
+      type: number
 
   - name: input_int4
     type: function
-    desc: InputInt4. 
+    desc: |
+      InputInt4.
+    parameters:
+    - name: label
+      type: string
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    - name: v3
+      type: number
+    - name: v4
+      type: number
+    returns:
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    - name: v3
+      type: number
+    - name: v4
+      type: number
 
   - name: input_int2
     type: function
-    desc: InputInt2. 
+    desc: |
+      InputInt2.
+    parameters:
+    - name: label
+      type: string
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    returns:
+    - name: v1
+      type: number
+    - name: v2
+      type: number
 
   - name: input_float3
     type: function
-    desc: InputFloat3. 
+    desc: |
+      InputFloat3.
+    parameters:
+    - name: label
+      type: string
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    - name: v3
+      type: number
+    returns:
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    - name: v3
+      type: number
 
   - name: input_float4
     type: function
-    desc: InputFloat4. 
+    desc: |
+      InputFloat4.
+    parameters:
+    - name: label
+      type: string
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    - name: v3
+      type: number
+    - name: v4
+      type: number
+    returns:
+    - name: v1
+      type: number
+    - name: v2
+      type: number
+    - name: v3
+      type: number
+    - name: v4
+      type: number
 
   - name: drag_float
     type: function
-    desc: DragFloat. 
+    desc: |
+      DragFloat.
     parameters:
     - name: label
       type: string
@@ -628,7 +1110,8 @@
 
   - name: slider_float
     type: function
-    desc: SliderFloat. 
+    desc: |
+      SliderFloat.
     parameters:
     - name: label
       type: string
@@ -646,7 +1129,8 @@
 
   - name: slider_float3
     type: function
-    desc: SliderFloat3. 
+    desc: |
+      SliderFloat3.
     parameters:
     - name: label
       type: string
@@ -672,7 +1156,8 @@
 
   - name: slider_float4
     type: function
-    desc: SliderFloat4. 
+    desc: |
+      SliderFloat4.
     parameters:
     - name: label
       type: string
@@ -702,7 +1187,8 @@
 
   - name: color_edit4
     type: function
-    desc: ColorEdit4. 
+    desc: |
+      ColorEdit4.
     parameters:
     - name: label
       type: string
@@ -713,19 +1199,58 @@
 
   - name: selectable
     type: function
-    desc: Selectable. 
+    desc: |
+      Selectable.
+    parameters:
+    - name: text
+      type: string
+    - name: selected
+      type: boolean
+    - name: flags
+      type: number
+      optional: True
+    returns:
+    - name: selected
+      type: boolean
 
   - name: button
     type: function
-    desc: Button. 
+    desc: |
+      Button.
+    parameters:
+    - name: text
+      type: string
+    - name: width
+      type: number
+      optional: True
+    - name: height
+      type: number
+      optional: True
+    returns:
+    - name: pushed
+      type: boolean
 
   - name: button_image
     type: function
-    desc: ButtonImage. 
+    desc: |
+      ButtonImage.
+    parameters:
+    - name: texture_id
+      type: number
+    - name: width
+      type: number
+      optional: True
+    - name: height
+      type: number
+      optional: True
+    returns:
+    - name: pushed
+      type: boolean
 
   - name: button_arrow
     type: function
-    desc: ButtonArrow. 
+    desc: |
+      ButtonArrow.
     parameters:
     - name: label
       type: string
@@ -737,71 +1262,142 @@
 
   - name: checkbox
     type: function
-    desc: Checkbox. 
+    desc: |
+      Checkbox.
+    parameters:
+    - name: text
+      type: string
+    - name: checked
+      type: boolean
+    returns:
+    - name: changed
+      type: boolean
+    - name: checked
+      type: boolean
 
   - name: radio_button
     type: function
-    desc: RadioButton. 
+    desc: |
+      RadioButton.
+    parameters:
+    - name: text
+      type: string
+    - name: checked
+      type: boolean
+    returns:
+    - name: changed
+      type: boolean
+    - name: clicked
+      type: boolean
 
   - name: begin_menu_bar
     type: function
-    desc: BeginMenuBar. 
+    desc: |
+      BeginMenuBar.
+    returns:
+    - name: result
+      type: boolean
 
   - name: end_menu_bar
     type: function
-    desc: EndMenuBar. 
+    desc: |
+      EndMenuBar.
 
   - name: begin_main_menu_bar
     type: function
-    desc: BeginMainMenuBar. 
+    desc: |
+      BeginMainMenuBar.
+    returns:
+    - name: result
+      type: boolean
 
   - name: end_main_menu_bar
     type: function
-    desc: EndMainMenuBar. 
+    desc: |
+      EndMainMenuBar.
 
   - name: begin_menu
     type: function
-    desc: BeginMenu. 
+    desc: |
+      BeginMenu.
+    parameters:
+    - name: label
+      type: string
+    - name: enabled
+      type: boolean
+      optional: True
+    returns:
+    - name: result
+      type: boolean
 
   - name: end_menu
     type: function
-    desc: EndMenu. 
+    desc: |
+      EndMenu.
 
   - name: menu_item
     type: function
-    desc: MenuItem. 
+    desc: |
+      MenuItem.
+    parameters:
+    - name: label
+      type: string
+    - name: shortcut
+      type: string
+    - name: selected
+      type: boolean
+    - name: enabled
+      type: boolean
+      optional: True
+    returns:
+    - name: result
+      type: boolean
+    - name: selected
+      type: boolean
 
   - name: same_line
     type: function
-    desc: SameLine. 
+    desc: |
+      SameLine.
+    parameters:
+    - name: offset
+      type: number
+      optional: True
 
   - name: new_line
     type: function
-    desc: NewLine. 
+    desc: |
+      NewLine.
 
   - name: bullet
     type: function
-    desc: Bullet. 
+    desc: |
+      Bullet.
 
   - name: indent
     type: function
-    desc: Indent. 
+    desc: |
+      Indent.
 
   - name: unindent
     type: function
-    desc: Unindent. 
+    desc: |
+      Unindent.
 
   - name: spacing
     type: function
-    desc: Spacing. 
+    desc: |
+      Spacing.
 
   - name: separator
     type: function
-    desc: Separator. 
+    desc: |
+      Separator.
 
   - name: get_cursor_screen_pos
     type: function
-    desc: GetCursorScreenPos. 
+    desc: |
+      GetCursorScreenPos.
     returns:
     - name: x
       type: number
@@ -816,7 +1412,8 @@
 
   - name: get_cursor_pos
     type: function
-    desc: GetCursorPos. 
+    desc: |
+      GetCursorPos.
     returns:
     - name: x
       type: number
@@ -831,75 +1428,181 @@
 
   - name: plot_lines
     type: function
-    desc: PlotLines. 
+    desc: |
+      PlotLines.
+    parameters:
+    - name: label
+      type: string
+    - name: offset
+      type: number
+    - name: width
+      type: number
+    - name: height
+      type: number
+    - name: values
+      type: number[]
 
   - name: plot_histogram
     type: function
-    desc: PlotHistogram. 
+    desc: |
+      PlotHistogram.
+    parameters:
+    - name: label
+      type: string
+    - name: offset
+      type: number
+    - name: width
+      type: number
+    - name: height
+      type: number
+    - name: values
+      type: table
 
   - name: demo
     type: function
-    desc: Demo. 
+    desc: |
+      Demo.
 
   - name: is_mouse_double_clicked
     type: function
-    desc: IsMouseDoubleClicked. 
+    desc: |
+      IsMouseDoubleClicked.
+    parameters:
+    - name: button
+      type: number
+    returns:
+    - name: double_clicked
+      type: boolean
 
   - name: is_mouse_clicked
     type: function
-    desc: IsMouseClicked. 
+    desc: |
+      IsMouseClicked.
+    parameters:
+    - name: button
+      type: number
+    returns:
+    - name: clicked
+      type: boolean
 
   - name: is_item_active
     type: function
-    desc: IsItemActive. 
+    desc: |
+      IsItemActive.
+    returns:
+    - name: active
+      type: boolean
 
   - name: is_item_focused
     type: function
-    desc: IsItemFocused. 
+    desc: |
+      IsItemFocused.
+    returns:
+    - name: focused
+      type: boolean
 
   - name: is_item_clicked
     type: function
-    desc: IsItemClicked. 
+    desc: |
+      IsItemClicked.
+    returns:
+    - name: clicked
+      type: boolean
 
   - name: is_item_double_clicked
     type: function
-    desc: IsItemDoubleClicked. 
+    desc: |
+      IsItemDoubleClicked.
+    returns:
+    - name: double_clicked
+      type: boolean
 
   - name: is_item_hovered
     type: function
-    desc: IsItemHovered. 
+    desc: |
+      IsItemHovered.
+    returns:
+    - name: hovered
+      type: boolean
 
   - name: get_item_rect_max
     type: function
-    desc: GetItemRectMax. 
+    desc: |
+      GetItemRectMax.
+    returns:
+    - name: x
+      type: number
+    - name: y
+      type: number
 
   - name: set_keyboard_focus_here
     type: function
-    desc: SetKeyboardFocusHere. 
+    desc: |
+      SetKeyboardFocusHere.
+    parameters:
+    - name: offset
+      type: number
 
   - name: get_style
     type: function
-    desc: GetStyle. 
+    desc: |
+      GetStyle.
+    returns:
+    - name: style
+      type: table
 
   - name: set_style
     type: function
-    desc: SetStyle. 
+    desc: |
+      SetStyle.
+    parameters:
+    - name: style
+      type: table
 
   - name: set_style_color
     type: function
-    desc: SetStyleColor. 
+    desc: |
+      SetStyleColor.
+    parameters:
+    - name: color_index
+      type: number
+    - name: r
+      type: number
+    - name: g
+      type: number
+    - name: b
+      type: number
+    - name: a
+      type: number
 
   - name: push_style_color
     type: function
-    desc: PushStyleColor. 
+    desc: |
+      PushStyleColor.
+    parameters:
+    - name: color_index
+      type: number
+    - name: r
+      type: number
+    - name: g
+      type: number
+    - name: b
+      type: number
+    - name: a
+      type: number
 
   - name: pop_style_color
     type: function
-    desc: PopStyleColor. 
+    desc: |
+      PopStyleColor.
+    parameters:
+    - name: count
+      type: number
 
   - name: push_style_var
     type: function
-    desc: PushStyleVar. 
+    desc: |
+      PushStyleVar.
     parameters:
     - name: style_var
       type: number
@@ -914,7 +1617,8 @@
 
   - name: pop_style_var
     type: function
-    desc: PopStyleVar. 
+    desc: |
+      PopStyleVar.
     parameters:
     - name: count
       type: number
@@ -924,105 +1628,1757 @@
 
   - name: set_window_font_scale
     type: function
-    desc: SetWindowFontScale. 
+    desc: |
+      SetWindowFontScale.
+    parameters:
+    - name: scale
+      type: number
 
   - name: set_global_font_scale
     type: function
-    desc: SetGlobalFontScale. 
+    desc: |
+      SetGlobalFontScale.
+    parameters:
+    - name: scale
+      type: number
 
   - name: scale_all_sizes
     type: function
-    desc: ScaleAllSizes. 
+    desc: |
+      ScaleAllSizes.
+    parameters:
+    - name: scale
+      type: number
 
   - name: set_cursor_pos
     type: function
-    desc: SetCursorPos. 
+    desc: |
+      SetCursorPos.
+    parameters:
+    - name: x
+      type: number
+    - name: y
+      type: number
 
   - name: push_item_width
     type: function
-    desc: PushItemWidth. 
+    desc: |
+      PushItemWidth.
+    parameters:
+    - name: width
+      type: number
 
   - name: pop_item_width
     type: function
-    desc: PopItemWidth. 
+    desc: |
+      PopItemWidth.
 
   - name: set_next_item_width
     type: function
-    desc: SetNextItemWidth. 
+    desc: |
+      SetNextItemWidth.
+    parameters:
+    - name: width
+      type: number
 
   - name: calc_item_width
     type: function
-    desc: CalcItemWidth. 
+    desc: |
+      CalcItemWidth.
+    returns:
+    - name: width
+      type: number
 
   - name: set_item_default_focus
     type: function
-    desc: SetItemDefaultFocus. 
+    desc: |
+      SetItemDefaultFocus.
 
   - name: set_scroll_here_y
     type: function
-    desc: SetScrollHereY. 
+    desc: |
+      SetScrollHereY.
+    parameters:
+    - name: center_y_ratio
+      type: number
 
-  - name: font_add_t_t_f_file
+  - name: font_add_ttf_file
     type: function
-    desc: FontAddTTFFile. 
+    desc: |
+      FontAddTTFFile.
+    parameters:
+    - name: filename
+      type: string
+    - name: font_size
+      type: number
+    - name: glyph_ranges
+      type: string
+    returns:
+    - name: font_index
+      type: number
 
-  - name: font_add_t_t_f_data
+  - name: font_add_ttf_data
     type: function
-    desc: FontAddTTFData. 
+    desc: |
+      FontAddTTFData.
+    parameters:
+    - name: ttf_data
+      type: string
+    - name: font_size
+      type: number
+    - name: font_pixels
+      type: number
+    - name: glyph_ranges
+      type: string
+    returns:
+    - name: font_index
+      type: number
 
   - name: font_push
     type: function
-    desc: FontPush. 
+    desc: |
+      FontPush.
+    parameters:
+    - name: font_index
+      type: number
 
   - name: font_pop
     type: function
-    desc: FontPop. 
+    desc: |
+      FontPop.
 
   - name: font_scale
     type: function
-    desc: FontScale. 
+    desc: |
+      FontScale.
+    parameters:
+    - name: font_id
+      type: number
+    - name: font_scale
+      type: number
+    returns:
+    - name: old_scale
+      type: number
 
   - name: get_frame_height
     type: function
-    desc: GetFrameHeight. 
+    desc: |
+      GetFrameHeight.
 
   - name: draw_line
     type: function
-    desc: DrawLine. 
+    desc: |
+      DrawLine.
+    parameters:
+    - name: x1
+      type: number
+    - name: y1
+      type: number
+    - name: x2
+      type: number
+    - name: y2
+      type: number
+    - name: color
+      type: number
 
   - name: draw_rect
     type: function
-    desc: DrawRect. 
+    desc: |
+      DrawRect.
+    parameters:
+    - name: x
+      type: number
+    - name: y
+      type: number
+    - name: width
+      type: number
+    - name: height
+      type: number
+    - name: color
+      type: number
 
   - name: draw_rect_filled
     type: function
-    desc: DrawRectFilled. 
+    desc: |
+      DrawRectFilled.
+    parameters:
+    - name: x
+      type: number
+    - name: y
+      type: number
+    - name: width
+      type: number
+    - name: height
+      type: number
+    - name: color
+      type: number
 
   - name: draw_progress_bar
     type: function
-    desc: DrawProgressBar. 
+    desc: |
+      DrawProgressBar.
+    parameters:
+    - name: progress
+      type: number
+    - name: xsize
+      type: number
+    - name: ysize
+      type: number
 
   - name: set_rendering_enabled
     type: function
-    desc: SetRenderingEnabled. 
+    desc: |
+      SetRenderingEnabled.
+    parameters:
+    - name: enabled
+      type: boolean
 
   - name: want_capture_mouse
     type: function
-    desc: WantCaptureMouse. 
+    desc: |
+      WantCaptureMouse.
 
   - name: want_capture_keyboard
     type: function
-    desc: WantCaptureKeyboard. 
+    desc: |
+      WantCaptureKeyboard.
 
   - name: want_capture_text
     type: function
-    desc: WantCaptureText. 
+    desc: |
+      WantCaptureText.
 
   - name: set_defaults
     type: function
-    desc: SetDefaults. 
+    desc: |
+      SetDefaults.
 
   - name: set_ini_filename
     type: function
-    desc: SetIniFilename. 
+    desc: |
+      SetIniFilename.
+    parameters:
+    - name: filename
+      type: string
+      optional: True
+
+  - name: MOUSEBUTTON_LEFT
+    type: number
+    desc: |
+      MOUSEBUTTON_LEFT
+
+  - name: MOUSEBUTTON_RIGHT
+    type: number
+    desc: |
+      MOUSEBUTTON_RIGHT
+
+  - name: MOUSEBUTTON_MIDDLE
+    type: number
+    desc: |
+      MOUSEBUTTON_MIDDLE
+
+  - name: SELECTABLE_DONT_CLOSE_POPUPS
+    type: number
+    desc: |
+      SELECTABLE_DONT_CLOSE_POPUPS
+
+  - name: SELECTABLE_SPAN_ALL_COLUMNS
+    type: number
+    desc: |
+      SELECTABLE_SPAN_ALL_COLUMNS
+
+  - name: SELECTABLE_ALLOW_DOUBLE_CLICK
+    type: number
+    desc: |
+      SELECTABLE_ALLOW_DOUBLE_CLICK
+
+  - name: SELECTABLE_DISABLED
+    type: number
+    desc: |
+      SELECTABLE_DISABLED
+
+  - name: SELECTABLE_ALLOW_ITEM_OVERLAP
+    type: number
+    desc: |
+      SELECTABLE_ALLOW_ITEM_OVERLAP
+
+  - name: TABITEM_UNSAVED_DOCUMENT
+    type: number
+    desc: |
+      TABITEM_UNSAVED_DOCUMENT
+
+  - name: TABITEM_SET_SELECTED
+    type: number
+    desc: |
+      TABITEM_SET_SELECTED
+
+  - name: TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
+    type: number
+    desc: |
+      TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
+
+  - name: TABITEM_NO_PUSH_ID
+    type: number
+    desc: |
+      TABITEM_NO_PUSH_ID
+
+  - name: TABITEM_NO_TOOLTIP
+    type: number
+    desc: |
+      TABITEM_NO_TOOLTIP
+
+  - name: TABITEM_NO_REORDER
+    type: number
+    desc: |
+      TABITEM_NO_REORDER
+
+  - name: TABITEM_LEADING
+    type: number
+    desc: |
+      TABITEM_LEADING
+
+  - name: TABITEM_TRAILING
+    type: number
+    desc: |
+      TABITEM_TRAILING
+
+  - name: FOCUSED_CHILD_WINDOWS
+    type: number
+    desc: |
+      FOCUSED_CHILD_WINDOWS
+
+  - name: FOCUSED_ROOT_WINDOW
+    type: number
+    desc: |
+      FOCUSED_ROOT_WINDOW
+
+  - name: FOCUSED_ANY_WINDOW
+    type: number
+    desc: |
+      FOCUSED_ANY_WINDOW
+
+  - name: FOCUSED_ROOT_AND_CHILD_WINDOWS
+    type: number
+    desc: |
+      FOCUSED_ROOT_AND_CHILD_WINDOWS
+
+  - name: TREENODE_SELECTED
+    type: number
+    desc: |
+      TREENODE_SELECTED
+
+  - name: TREENODE_FRAMED
+    type: number
+    desc: |
+      TREENODE_FRAMED
+
+  - name: TREENODE_ALLOW_ITEM_OVERLAP
+    type: number
+    desc: |
+      TREENODE_ALLOW_ITEM_OVERLAP
+
+  - name: TREENODE_NO_TREE_PUSH_ON_OPEN
+    type: number
+    desc: |
+      TREENODE_NO_TREE_PUSH_ON_OPEN
+
+  - name: TREENODE_NO_AUTO_OPEN_ON_LOG
+    type: number
+    desc: |
+      TREENODE_NO_AUTO_OPEN_ON_LOG
+
+  - name: TREENODE_DEFAULT_OPEN
+    type: number
+    desc: |
+      TREENODE_DEFAULT_OPEN
+
+  - name: TREENODE_OPEN_ON_DOUBLE_CLICK
+    type: number
+    desc: |
+      TREENODE_OPEN_ON_DOUBLE_CLICK
+
+  - name: TREENODE_OPEN_ON_ARROW
+    type: number
+    desc: |
+      TREENODE_OPEN_ON_ARROW
+
+  - name: TREENODE_LEAF
+    type: number
+    desc: |
+      TREENODE_LEAF
+
+  - name: TREENODE_BULLET
+    type: number
+    desc: |
+      TREENODE_BULLET
+
+  - name: TREENODE_FRAME_PADDING
+    type: number
+    desc: |
+      TREENODE_FRAME_PADDING
+
+  - name: TREENODE_SPAN_AVAILABLE_WIDTH
+    type: number
+    desc: |
+      TREENODE_SPAN_AVAILABLE_WIDTH
+
+  - name: TREENODE_SPAN_FULL_WIDTH
+    type: number
+    desc: |
+      TREENODE_SPAN_FULL_WIDTH
+
+  - name: TREENODE_NAV_LEFT_JUMPS_BACK_HERE
+    type: number
+    desc: |
+      TREENODE_NAV_LEFT_JUMPS_BACK_HERE
+
+  - name: KEY_TAB
+    type: number
+    desc: |
+      KEY_TAB
+
+  - name: KEY_LEFTARROW
+    type: number
+    desc: |
+      KEY_LEFTARROW
+
+  - name: KEY_RIGHTARROW
+    type: number
+    desc: |
+      KEY_RIGHTARROW
+
+  - name: KEY_UPARROW
+    type: number
+    desc: |
+      KEY_UPARROW
+
+  - name: KEY_DOWNARROW
+    type: number
+    desc: |
+      KEY_DOWNARROW
+
+  - name: KEY_PAGEUP
+    type: number
+    desc: |
+      KEY_PAGEUP
+
+  - name: KEY_PAGEDOWN
+    type: number
+    desc: |
+      KEY_PAGEDOWN
+
+  - name: KEY_HOME
+    type: number
+    desc: |
+      KEY_HOME
+
+  - name: KEY_END
+    type: number
+    desc: |
+      KEY_END
+
+  - name: KEY_INSERT
+    type: number
+    desc: |
+      KEY_INSERT
+
+  - name: KEY_DELETE
+    type: number
+    desc: |
+      KEY_DELETE
+
+  - name: KEY_BACKSPACE
+    type: number
+    desc: |
+      KEY_BACKSPACE
+
+  - name: KEY_SPACE
+    type: number
+    desc: |
+      KEY_SPACE
+
+  - name: KEY_ENTER
+    type: number
+    desc: |
+      KEY_ENTER
+
+  - name: KEY_ESCAPE
+    type: number
+    desc: |
+      KEY_ESCAPE
+
+  - name: KEY_KEYPADENTER
+    type: number
+    desc: |
+      KEY_KEYPADENTER
+
+  - name: KEY_A
+    type: number
+    desc: |
+      KEY_A
+
+  - name: KEY_C
+    type: number
+    desc: |
+      KEY_C
+
+  - name: KEY_V
+    type: number
+    desc: |
+      KEY_V
+
+  - name: KEY_X
+    type: number
+    desc: |
+      KEY_X
+
+  - name: KEY_Y
+    type: number
+    desc: |
+      KEY_Y
+
+  - name: KEY_Z
+    type: number
+    desc: |
+      KEY_Z
+
+  - name: ImGuiCol_Text
+    type: number
+    desc: |
+      ImGuiCol_Text
+
+  - name: ImGuiCol_TextDisabled
+    type: number
+    desc: |
+      ImGuiCol_TextDisabled
+
+  - name: ImGuiCol_WindowBg
+    type: number
+    desc: |
+      ImGuiCol_WindowBg
+
+  - name: ImGuiCol_ChildBg
+    type: number
+    desc: |
+      ImGuiCol_ChildBg
+
+  - name: ImGuiCol_PopupBg
+    type: number
+    desc: |
+      ImGuiCol_PopupBg
+
+  - name: ImGuiCol_Border
+    type: number
+    desc: |
+      ImGuiCol_Border
+
+  - name: ImGuiCol_BorderShadow
+    type: number
+    desc: |
+      ImGuiCol_BorderShadow
+
+  - name: ImGuiCol_FrameBg
+    type: number
+    desc: |
+      ImGuiCol_FrameBg
+
+  - name: ImGuiCol_FrameBgHovered
+    type: number
+    desc: |
+      ImGuiCol_FrameBgHovered
+
+  - name: ImGuiCol_FrameBgActive
+    type: number
+    desc: |
+      ImGuiCol_FrameBgActive
+
+  - name: ImGuiCol_TitleBg
+    type: number
+    desc: |
+      ImGuiCol_TitleBg
+
+  - name: ImGuiCol_TitleBgActive
+    type: number
+    desc: |
+      ImGuiCol_TitleBgActive
+
+  - name: ImGuiCol_TitleBgCollapsed
+    type: number
+    desc: |
+      ImGuiCol_TitleBgCollapsed
+
+  - name: ImGuiCol_MenuBarBg
+    type: number
+    desc: |
+      ImGuiCol_MenuBarBg
+
+  - name: ImGuiCol_ScrollbarBg
+    type: number
+    desc: |
+      ImGuiCol_ScrollbarBg
+
+  - name: ImGuiCol_ScrollbarGrab
+    type: number
+    desc: |
+      ImGuiCol_ScrollbarGrab
+
+  - name: ImGuiCol_ScrollbarGrabHovered
+    type: number
+    desc: |
+      ImGuiCol_ScrollbarGrabHovered
+
+  - name: ImGuiCol_ScrollbarGrabActive
+    type: number
+    desc: |
+      ImGuiCol_ScrollbarGrabActive
+
+  - name: ImGuiCol_CheckMark
+    type: number
+    desc: |
+      ImGuiCol_CheckMark
+
+  - name: ImGuiCol_SliderGrab
+    type: number
+    desc: |
+      ImGuiCol_SliderGrab
+
+  - name: ImGuiCol_SliderGrabActive
+    type: number
+    desc: |
+      ImGuiCol_SliderGrabActive
+
+  - name: ImGuiCol_Button
+    type: number
+    desc: |
+      ImGuiCol_Button
+
+  - name: ImGuiCol_ButtonHovered
+    type: number
+    desc: |
+      ImGuiCol_ButtonHovered
+
+  - name: ImGuiCol_ButtonActive
+    type: number
+    desc: |
+      ImGuiCol_ButtonActive
+
+  - name: ImGuiCol_Header
+    type: number
+    desc: |
+      ImGuiCol_Header
+
+  - name: ImGuiCol_HeaderHovered
+    type: number
+    desc: |
+      ImGuiCol_HeaderHovered
+
+  - name: ImGuiCol_HeaderActive
+    type: number
+    desc: |
+      ImGuiCol_HeaderActive
+
+  - name: ImGuiCol_Separator
+    type: number
+    desc: |
+      ImGuiCol_Separator
+
+  - name: ImGuiCol_SeparatorHovered
+    type: number
+    desc: |
+      ImGuiCol_SeparatorHovered
+
+  - name: ImGuiCol_SeparatorActive
+    type: number
+    desc: |
+      ImGuiCol_SeparatorActive
+
+  - name: ImGuiCol_ResizeGrip
+    type: number
+    desc: |
+      ImGuiCol_ResizeGrip
+
+  - name: ImGuiCol_ResizeGripHovered
+    type: number
+    desc: |
+      ImGuiCol_ResizeGripHovered
+
+  - name: ImGuiCol_ResizeGripActive
+    type: number
+    desc: |
+      ImGuiCol_ResizeGripActive
+
+  - name: ImGuiCol_Tab
+    type: number
+    desc: |
+      ImGuiCol_Tab
+
+  - name: ImGuiCol_TabHovered
+    type: number
+    desc: |
+      ImGuiCol_TabHovered
+
+  - name: ImGuiCol_TabActive
+    type: number
+    desc: |
+      ImGuiCol_TabActive
+
+  - name: ImGuiCol_TabUnfocused
+    type: number
+    desc: |
+      ImGuiCol_TabUnfocused
+
+  - name: ImGuiCol_TabUnfocusedActive
+    type: number
+    desc: |
+      ImGuiCol_TabUnfocusedActive
+
+  - name: ImGuiCol_PlotLines
+    type: number
+    desc: |
+      ImGuiCol_PlotLines
+
+  - name: ImGuiCol_PlotLinesHovered
+    type: number
+    desc: |
+      ImGuiCol_PlotLinesHovered
+
+  - name: ImGuiCol_PlotHistogram
+    type: number
+    desc: |
+      ImGuiCol_PlotHistogram
+
+  - name: ImGuiCol_PlotHistogramHovered
+    type: number
+    desc: |
+      ImGuiCol_PlotHistogramHovered
+
+  - name: ImGuiCol_TableHeaderBg
+    type: number
+    desc: |
+      ImGuiCol_TableHeaderBg
+
+  - name: ImGuiCol_TableBorderStrong
+    type: number
+    desc: |
+      ImGuiCol_TableBorderStrong
+
+  - name: ImGuiCol_TableBorderLight
+    type: number
+    desc: |
+      ImGuiCol_TableBorderLight
+
+  - name: ImGuiCol_TableRowBg
+    type: number
+    desc: |
+      ImGuiCol_TableRowBg
+
+  - name: ImGuiCol_TableRowBgAlt
+    type: number
+    desc: |
+      ImGuiCol_TableRowBgAlt
+
+  - name: ImGuiCol_TextSelectedBg
+    type: number
+    desc: |
+      ImGuiCol_TextSelectedBg
+
+  - name: ImGuiCol_DragDropTarget
+    type: number
+    desc: |
+      ImGuiCol_DragDropTarget
+
+  - name: ImGuiCol_NavHighlight
+    type: number
+    desc: |
+      ImGuiCol_NavHighlight
+
+  - name: ImGuiCol_NavWindowingHighlight
+    type: number
+    desc: |
+      ImGuiCol_NavWindowingHighlight
+
+  - name: ImGuiCol_NavWindowingDimBg
+    type: number
+    desc: |
+      ImGuiCol_NavWindowingDimBg
+
+  - name: ImGuiCol_ModalWindowDimBg
+    type: number
+    desc: |
+      ImGuiCol_ModalWindowDimBg
+
+  - name: TABLECOLUMN_NONE
+    type: number
+    desc: |
+      TABLECOLUMN_NONE
+
+  - name: TABLECOLUMN_DEFAULTHIDE
+    type: number
+    desc: |
+      TABLECOLUMN_DEFAULTHIDE Default as a hidden/disabled column.
+
+  - name: TABLECOLUMN_DEFAULTSORT
+    type: number
+    desc: |
+      TABLECOLUMN_DEFAULTSORT Default as a sorting column.
+
+  - name: TABLECOLUMN_WIDTHSTRETCH
+    type: number
+    desc: |
+      TABLECOLUMN_WIDTHSTRETCH Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
+
+  - name: TABLECOLUMN_WIDTHFIXED
+    type: number
+    desc: |
+      TABLECOLUMN_WIDTHFIXED Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
+
+  - name: TABLECOLUMN_NORESIZE
+    type: number
+    desc: |
+      TABLECOLUMN_NORESIZE Disable manual resizing.
+
+  - name: TABLECOLUMN_NOREORDER
+    type: number
+    desc: |
+      TABLECOLUMN_NOREORDER Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+
+  - name: TABLECOLUMN_NOHIDE
+    type: number
+    desc: |
+      TABLECOLUMN_NOHIDE Disable ability to hide/disable this column.
+
+  - name: TABLECOLUMN_NOCLIP
+    type: number
+    desc: |
+      TABLECOLUMN_NOCLIP Disable clipping for this column (all NoClip columns will render in a same draw command).
+
+  - name: TABLECOLUMN_NOSORT
+    type: number
+    desc: |
+      TABLECOLUMN_NOSORT Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
+
+  - name: TABLECOLUMN_NOSORTASCENDING
+    type: number
+    desc: |
+      TABLECOLUMN_NOSORTASCENDING Disable ability to sort in the ascending direction.
+
+  - name: TABLECOLUMN_NOSORTDESCENDING
+    type: number
+    desc: |
+      TABLECOLUMN_NOSORTDESCENDING Disable ability to sort in the descending direction.
+
+  - name: TABLECOLUMN_NOHEADERWIDTH
+    type: number
+    desc: |
+      TABLECOLUMN_NOHEADERWIDTH Disable header text width contribution to automatic column width.
+
+  - name: TABLECOLUMN_PREFERSORTASCENDING
+    type: number
+    desc: |
+      TABLECOLUMN_PREFERSORTASCENDING Make the initial sort direction Ascending when first sorting on this column (default).
+
+  - name: TABLECOLUMN_PREFERSORTDESCENDING
+    type: number
+    desc: |
+      TABLECOLUMN_PREFERSORTDESCENDING Make the initial sort direction Descending when first sorting on this column.
+
+  - name: TABLECOLUMN_INDENTENABLE
+    type: number
+    desc: |
+      TABLECOLUMN_INDENTENABLE Use current Indent value when entering cell (default for column 0).
+
+  - name: TABLECOLUMN_INDENTDISABLE
+    type: number
+    desc: |
+      TABLECOLUMN_INDENTDISABLE Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+
+  - name: TABLE_NONE
+    type: number
+    desc: |
+      TABLE_NONE
+
+  - name: TABLE_RESIZABLE
+    type: number
+    desc: |
+      TABLE_RESIZABLE Enable resizing columns.
+
+  - name: TABLE_REORDERABLE
+    type: number
+    desc: |
+      TABLE_REORDERABLE Enable reordering columns in header row (need calling TableSetupColumn() + TableHeadersRow() to display headers)
+
+  - name: TABLE_HIDEABLE
+    type: number
+    desc: |
+      TABLE_HIDEABLE Enable hiding/disabling columns in context menu.
+
+  - name: TABLE_SORTABLE
+    type: number
+    desc: |
+      TABLE_SORTABLE Enable sorting. Call TableGetSortSpecs() to obtain sort specs. Also see ImGuiTableFlags_SortMulti and ImGuiTableFlags_SortTristate.
+
+  - name: TABLE_NOSAVEDSETTINGS
+    type: number
+    desc: |
+      TABLE_NOSAVEDSETTINGS Disable persisting columns order, width and sort settings in the .ini file.
+
+  - name: TABLE_CONTEXTMENUINBODY
+    type: number
+    desc: |
+      TABLE_CONTEXTMENUINBODY Right-click on columns body/contents will display table context menu. By default it is available in TableHeadersRow().
+
+  - name: TABLE_ROWBG
+    type: number
+    desc: |
+      TABLE_ROWBG Set each RowBg color with ImGuiCol_TableRowBg or ImGuiCol_TableRowBgAlt (equivalent of calling TableSetBgColor with ImGuiTableBgFlags_RowBg0 on each row manually)
+
+  - name: TABLE_BORDERSINNERH
+    type: number
+    desc: |
+      TABLE_BORDERSINNERH Draw horizontal borders between rows.
+
+  - name: TABLE_BORDERSOUTERH
+    type: number
+    desc: |
+      TABLE_BORDERSOUTERH Draw horizontal borders at the top and bottom.
+
+  - name: TABLE_BORDERSINNERV
+    type: number
+    desc: |
+      TABLE_BORDERSINNERV Draw vertical borders between columns.
+
+  - name: TABLE_BORDERSOUTERV
+    type: number
+    desc: |
+      TABLE_BORDERSOUTERV Draw vertical borders on the left and right sides.
+
+  - name: TABLE_BORDERSH
+    type: number
+    desc: |
+      TABLE_BORDERSH Draw horizontal borders.
+
+  - name: TABLE_BORDERSV
+    type: number
+    desc: |
+      TABLE_BORDERSV Draw vertical borders.
+
+  - name: TABLE_BORDERSINNER
+    type: number
+    desc: |
+      TABLE_BORDERSINNER Draw inner borders.
+
+  - name: TABLE_BORDERSOUTER
+    type: number
+    desc: |
+      TABLE_BORDERSOUTER Draw outer borders.
+
+  - name: TABLE_BORDERS
+    type: number
+    desc: |
+      TABLE_BORDERS Draw all borders.
+
+  - name: TABLE_NOBORDERSINBODY
+    type: number
+    desc: |
+      TABLE_NOBORDERSINBODY [ALPHA] Disable vertical borders in columns Body (borders will always appears in Headers). -> May move to style
+
+  - name: TABLE_NOBORDERSINBODYUNTILRESIZE
+    type: number
+    desc: |
+      TABLE_NOBORDERSINBODYUNTILRESIZE [ALPHA] Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers). -> May move to style
+
+  - name: TABLE_SIZINGFIXEDFIT
+    type: number
+    desc: |
+      TABLE_SIZINGFIXEDFIT Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching contents width.
+
+  - name: TABLE_SIZINGFIXEDSAME
+    type: number
+    desc: |
+      TABLE_SIZINGFIXEDSAME Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching the maximum contents width of all columns. Implicitly enable ImGuiTableFlags_NoKeepColumnsVisible.
+
+  - name: TABLE_SIZINGSTRETCHPROP
+    type: number
+    desc: |
+      TABLE_SIZINGSTRETCHPROP Columns default to _WidthStretch with default weights proportional to each columns contents widths.
+
+  - name: TABLE_SIZINGSTRETCHSAME
+    type: number
+    desc: |
+      TABLE_SIZINGSTRETCHSAME Columns default to _WidthStretch with default weights all equal, unless overriden by TableSetupColumn().
+
+  - name: TABLE_NOHOSTEXTENDX
+    type: number
+    desc: |
+      TABLE_NOHOSTEXTENDX Make outer width auto-fit to columns, overriding outer_size.x value. Only available when ScrollX/ScrollY are disabled and Stretch columns are not used.
+
+  - name: TABLE_NOHOSTEXTENDY
+    type: number
+    desc: |
+      TABLE_NOHOSTEXTENDY Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.
+
+  - name: TABLE_NOKEEPCOLUMNSVISIBLE
+    type: number
+    desc: |
+      TABLE_NOKEEPCOLUMNSVISIBLE Disable keeping column always minimally visible when ScrollX is off and table gets too small. Not recommended if columns are resizable.
+
+  - name: TABLE_PRECISEWIDTHS
+    type: number
+    desc: |
+      TABLE_PRECISEWIDTHS Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.
+
+  - name: TABLE_NOCLIP
+    type: number
+    desc: |
+      TABLE_NOCLIP Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). Generally incompatible with TableSetupScrollFreeze().
+
+  - name: TABLE_PADOUTERX
+    type: number
+    desc: |
+      TABLE_PADOUTERX Default if BordersOuterV is on. Enable outer-most padding. Generally desirable if you have headers.
+
+  - name: TABLE_NOPADOUTERX
+    type: number
+    desc: |
+      TABLE_NOPADOUTERX Default if BordersOuterV is off. Disable outer-most padding.
+
+  - name: TABLE_NOPADINNERX
+    type: number
+    desc: |
+      TABLE_NOPADINNERX Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off).
+
+  - name: TABLE_SCROLLX
+    type: number
+    desc: |
+      TABLE_SCROLLX Enable horizontal scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size. Changes default sizing policy. Because this create a child window, ScrollY is currently generally recommended when using ScrollX.
+
+  - name: TABLE_SCROLLY
+    type: number
+    desc: |
+      TABLE_SCROLLY Enable vertical scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size.
+
+  - name: TABLE_SORTMULTI
+    type: number
+    desc: |
+      TABLE_SORTMULTI Hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).
+
+  - name: TABLE_SORTTRISTATE
+    type: number
+    desc: |
+      TABLE_SORTTRISTATE Allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).
+
+  - name: WINDOWFLAGS_NONE
+    type: number
+    desc: |
+      WINDOWFLAGS_NONE
+
+  - name: WINDOWFLAGS_NOTITLEBAR
+    type: number
+    desc: |
+      WINDOWFLAGS_NOTITLEBAR Disable title-bar
+
+  - name: WINDOWFLAGS_NORESIZE
+    type: number
+    desc: |
+      WINDOWFLAGS_NORESIZE Disable user resizing with the lower-right grip
+
+  - name: WINDOWFLAGS_NOMOVE
+    type: number
+    desc: |
+      WINDOWFLAGS_NOMOVE Disable user moving the window
+
+  - name: WINDOWFLAGS_NOSCROLLBAR
+    type: number
+    desc: |
+      WINDOWFLAGS_NOSCROLLBAR Disable scrollbars (window can still scroll with mouse or programmatically)
+
+  - name: WINDOWFLAGS_NOSCROLLWITHMOUSE
+    type: number
+    desc: |
+      WINDOWFLAGS_NOSCROLLWITHMOUSE Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
+
+  - name: WINDOWFLAGS_NOCOLLAPSE
+    type: number
+    desc: |
+      WINDOWFLAGS_NOCOLLAPSE Disable user collapsing window by double-clicking on it
+
+  - name: WINDOWFLAGS_ALWAYSAUTORESIZE
+    type: number
+    desc: |
+      WINDOWFLAGS_ALWAYSAUTORESIZE Resize every window to its content every frame
+
+  - name: WINDOWFLAGS_NOBACKGROUND
+    type: number
+    desc: |
+      WINDOWFLAGS_NOBACKGROUND Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
+
+  - name: WINDOWFLAGS_NOSAVEDSETTINGS
+    type: number
+    desc: |
+      WINDOWFLAGS_NOSAVEDSETTINGS Never load/save settings in .ini file
+
+  - name: WINDOWFLAGS_NOMOUSEINPUTS
+    type: number
+    desc: |
+      WINDOWFLAGS_NOMOUSEINPUTS Disable catching mouse, hovering test with pass through.
+
+  - name: WINDOWFLAGS_MENUBAR
+    type: number
+    desc: |
+      WINDOWFLAGS_MENUBAR Has a menu-bar
+
+  - name: WINDOWFLAGS_HORIZONTALSCROLLBAR
+    type: number
+    desc: |
+      WINDOWFLAGS_HORIZONTALSCROLLBAR prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+
+  - name: WINDOWFLAGS_NOFOCUSONAPPEARING
+    type: number
+    desc: |
+      WINDOWFLAGS_NOFOCUSONAPPEARING Disable taking focus when transitioning from hidden to visible state
+
+  - name: WINDOWFLAGS_NOBRINGTOFRONTONFOCUS
+    type: number
+    desc: |
+      WINDOWFLAGS_NOBRINGTOFRONTONFOCUS Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
+
+  - name: WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR
+    type: number
+    desc: |
+      WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR Always show vertical scrollbar (even if ContentSize.y < Size.y)
+
+  - name: WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR
+    type: number
+    desc: |
+      WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+
+  - name: WINDOWFLAGS_ALWAYSUSEWINDOWPADDING
+    type: number
+    desc: |
+      WINDOWFLAGS_ALWAYSUSEWINDOWPADDING Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
+
+  - name: WINDOWFLAGS_NONAVINPUTS
+    type: number
+    desc: |
+      WINDOWFLAGS_NONAVINPUTS No gamepad/keyboard navigation within the window
+
+  - name: WINDOWFLAGS_NONAVFOCUS
+    type: number
+    desc: |
+      WINDOWFLAGS_NONAVFOCUS No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
+
+  - name: WINDOWFLAGS_UNSAVEDDOCUMENT
+    type: number
+    desc: |
+      WINDOWFLAGS_UNSAVEDDOCUMENT Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. When used in a tab/docking context, tab is selected on closure and closure is deferred by one frame to allow code to cancel the closure (with a confirmation popup, etc.) without flicker.
+
+  - name: WINDOWFLAGS_NONAV
+    type: number
+    desc: |
+      WINDOWFLAGS_NONAV ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+
+  - name: WINDOWFLAGS_NODECORATION
+    type: number
+    desc: |
+      WINDOWFLAGS_NODECORATION ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse,
+
+  - name: WINDOWFLAGS_NOINPUTS
+    type: number
+    desc: |
+      WINDOWFLAGS_NOINPUTS ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+
+  - name: POPUPFLAGS_NONE
+    type: number
+    desc: |
+      POPUPFLAGS_NONE
+
+  - name: POPUPFLAGS_MOUSEBUTTONLEFT
+    type: number
+    desc: |
+      POPUPFLAGS_MOUSEBUTTONLEFT // For BeginPopupContext*(): open on Left Mouse release. Guaranteed to always be == 0 (same as ImGuiMouseButton_Left)
+
+  - name: POPUPFLAGS_MOUSEBUTTONRIGHT
+    type: number
+    desc: |
+      POPUPFLAGS_MOUSEBUTTONRIGHT // For BeginPopupContext*(): open on Right Mouse release. Guaranteed to always be == 1 (same as ImGuiMouseButton_Right)
+
+  - name: POPUPFLAGS_MOUSEBUTTONMIDDLE
+    type: number
+    desc: |
+      POPUPFLAGS_MOUSEBUTTONMIDDLE // For BeginPopupContext*(): open on Middle Mouse release. Guaranteed to always be == 2 (same as ImGuiMouseButton_Middle)
+
+  - name: POPUPFLAGS_MOUSEBUTTONMASK
+    type: number
+    desc: |
+      POPUPFLAGS_MOUSEBUTTONMASK
+
+  - name: POPUPFLAGS_MOUSEBUTTONDEFAULT
+    type: number
+    desc: |
+      POPUPFLAGS_MOUSEBUTTONDEFAULT
+
+  - name: POPUPFLAGS_NOOPENOVEREXISTINGPOPUP
+    type: number
+    desc: |
+      POPUPFLAGS_NOOPENOVEREXISTINGPOPUP For OpenPopup*(), BeginPopupContext*(): don't open if there's already a popup at the same level of the popup stack
+
+  - name: POPUPFLAGS_NOOPENOVERITEMS
+    type: number
+    desc: |
+      POPUPFLAGS_NOOPENOVERITEMS For BeginPopupContextWindow(): don't return true when hovering items, only when hovering empty space
+
+  - name: POPUPFLAGS_ANYPOPUPID
+    type: number
+    desc: |
+      POPUPFLAGS_ANYPOPUPID For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
+
+  - name: POPUPFLAGS_ANYPOPUPLEVEL
+    type: number
+    desc: |
+      POPUPFLAGS_ANYPOPUPLEVEL For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
+
+  - name: POPUPFLAGS_ANYPOPUP
+    type: number
+    desc: |
+      POPUPFLAGS_ANYPOPUP
+
+  - name: DROPFLAGS_NONE
+    type: number
+    desc: |
+      DROPFLAGS_NONE
+
+  - name: DROPFLAGS_SOURCENOPREVIEWTOOLTIP
+    type: number
+    desc: |
+      DROPFLAGS_SOURCENOPREVIEWTOOLTIP By default, a successful call to BeginDragDropSource opens a tooltip so you can display a preview or description of the source contents. This flag disable this behavior.
+
+  - name: DROPFLAGS_SOURCENODISABLEHOVER
+    type: number
+    desc: |
+      DROPFLAGS_SOURCENODISABLEHOVER By default, when dragging we clear data so that IsItemHovered() will return false, to avoid subsequent user code submitting tooltips. This flag disable this behavior so you can still call IsItemHovered() on the source item.
+
+  - name: DROPFLAGS_SOURCENOHOLDTOOPENOTHERS
+    type: number
+    desc: |
+      DROPFLAGS_SOURCENOHOLDTOOPENOTHERS Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
+
+  - name: DROPFLAGS_SOURCEALLOWNULLID
+    type: number
+    desc: |
+      DROPFLAGS_SOURCEALLOWNULLID Allow items such as Text(), Image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. This is extremely unusual within the dear imgui ecosystem and so we made it explicit.
+
+  - name: DROPFLAGS_SOURCEEXTERN
+    type: number
+    desc: |
+      DROPFLAGS_SOURCEEXTERN External source (from outside of dear imgui), won't attempt to read current item/window info. Will always return true. Only one Extern source can be active simultaneously.
+
+  - name: DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD
+    type: number
+    desc: |
+      DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+
+  - name: DROPFLAGS_ACCEPTBEFOREDELIVERY
+    type: number
+    desc: |
+      DROPFLAGS_ACCEPTBEFOREDELIVERY AcceptDragDropPayload() will returns true even before the mouse button is released. You can then call IsDelivery() to test if the payload needs to be delivered.
+
+  - name: DROPFLAGS_ACCEPTNODRAWDEFAULTRECT
+    type: number
+    desc: |
+      DROPFLAGS_ACCEPTNODRAWDEFAULTRECT Do not draw the default highlight rectangle when hovering over target.
+
+  - name: DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP
+    type: number
+    desc: |
+      DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP Request hiding the BeginDragDropSource tooltip from the BeginDragDropTarget site.
+
+  - name: DROPFLAGS_ACCEPTPEEKONLY
+    type: number
+    desc: |
+      DROPFLAGS_ACCEPTPEEKONLY For peeking ahead and inspecting the payload before delivery.
+
+  - name: INPUTFLAGS_NONE
+    type: number
+    desc: |
+      INPUTFLAGS_NONE
+
+  - name: INPUTFLAGS_CHARSDECIMAL
+    type: number
+    desc: |
+      INPUTFLAGS_CHARSDECIMAL
+
+  - name: INPUTFLAGS_CHARSHEXADECIMAL
+    type: number
+    desc: |
+      INPUTFLAGS_CHARSHEXADECIMAL
+
+  - name: INPUTFLAGS_CHARSUPPERCASE
+    type: number
+    desc: |
+      INPUTFLAGS_CHARSUPPERCASE Turn a..z into A..Z
+
+  - name: INPUTFLAGS_CHARSNOBLANK
+    type: number
+    desc: |
+      INPUTFLAGS_CHARSNOBLANK Filter out spaces, tabs
+
+  - name: INPUTFLAGS_AUTOSELECTALL
+    type: number
+    desc: |
+      INPUTFLAGS_AUTOSELECTALL Select entire text when first taking mouse focus
+
+  - name: INPUTFLAGS_ENTERRETURNSTRUE
+    type: number
+    desc: |
+      INPUTFLAGS_ENTERRETURNSTRUE Return 'true' when Enter is pressed (as opposed to every time the value was modified). Consider looking at the IsItemDeactivatedAfterEdit() function.
+
+  - name: INPUTFLAGS_CALLBACKCOMPLETION
+    type: number
+    desc: |
+      INPUTFLAGS_CALLBACKCOMPLETION Callback on pressing TAB (for completion handling)
+
+  - name: INPUTFLAGS_CALLBACKHISTORY
+    type: number
+    desc: |
+      INPUTFLAGS_CALLBACKHISTORY Callback on pressing Up/Down arrows (for history handling)
+
+  - name: INPUTFLAGS_CALLBACKALWAYS
+    type: number
+    desc: |
+      INPUTFLAGS_CALLBACKALWAYS Callback on each iteration. User code may query cursor position, modify text buffer.
+
+  - name: INPUTFLAGS_CALLBACKCHARFILTER
+    type: number
+    desc: |
+      INPUTFLAGS_CALLBACKCHARFILTER Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
+
+  - name: INPUTFLAGS_ALLOWTABINPUT
+    type: number
+    desc: |
+      INPUTFLAGS_ALLOWTABINPUT Pressing TAB input a '\t' character into the text field
+
+  - name: INPUTFLAGS_CTRLENTERFORNEWLINE
+    type: number
+    desc: |
+      INPUTFLAGS_CTRLENTERFORNEWLINE In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
+
+  - name: INPUTFLAGS_NOHORIZONTALSCROLL
+    type: number
+    desc: |
+      INPUTFLAGS_NOHORIZONTALSCROLL Disable following the cursor horizontally
+
+  - name: INPUTFLAGS_ALWAYSOVERWRITE
+    type: number
+    desc: |
+      INPUTFLAGS_ALWAYSOVERWRITE Insert mode
+
+  - name: INPUTFLAGS_READONLY
+    type: number
+    desc: |
+      INPUTFLAGS_READONLY Read-only mode
+
+  - name: INPUTFLAGS_PASSWORD
+    type: number
+    desc: |
+      INPUTFLAGS_PASSWORD Password mode, display all characters as '*'
+
+  - name: INPUTFLAGS_NOUNDOREDO
+    type: number
+    desc: |
+      INPUTFLAGS_NOUNDOREDO Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
+
+  - name: INPUTFLAGS_CHARSSCIENTIFIC
+    type: number
+    desc: |
+      INPUTFLAGS_CHARSSCIENTIFIC Allow 0123456789.+-*/eE (Scientific notation input)
+
+  - name: INPUTFLAGS_CALLBACKRESIZE
+    type: number
+    desc: |
+      INPUTFLAGS_CALLBACKRESIZE Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
+
+  - name: INPUTFLAGS_CALLBACKEDIT
+    type: number
+    desc: |
+      INPUTFLAGS_CALLBACKEDIT Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+
+  - name: INPUTFLAGS_ESCAPECLEARSALL
+    type: number
+    desc: |
+      INPUTFLAGS_ESCAPECLEARSALL Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+
+  - name: COLOREDITFLAGS_NONE
+    type: number
+    desc: |
+      COLOREDITFLAGS_NONE
+
+  - name: COLOREDITFLAGS_NOALPHA
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOALPHA // ColorEdit, ColorPicker, ColorButton: ignore Alpha component (will only read 3 components from the input pointer).
+
+  - name: COLOREDITFLAGS_NOPICKER
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOPICKER // ColorEdit: disable picker when clicking on color square.
+
+  - name: COLOREDITFLAGS_NOOPTIONS
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOOPTIONS // ColorEdit: disable toggling options menu when right-clicking on inputs/small preview.
+
+  - name: COLOREDITFLAGS_NOSMALLPREVIEW
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOSMALLPREVIEW // ColorEdit, ColorPicker: disable color square preview next to the inputs. (e.g. to show only the inputs)
+
+  - name: COLOREDITFLAGS_NOINPUTS
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOINPUTS // ColorEdit, ColorPicker: disable inputs sliders/text widgets (e.g. to show only the small preview color square).
+
+  - name: COLOREDITFLAGS_NOTOOLTIP
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOTOOLTIP // ColorEdit, ColorPicker, ColorButton: disable tooltip when hovering the preview.
+
+  - name: COLOREDITFLAGS_NOLABEL
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOLABEL // ColorEdit, ColorPicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
+
+  - name: COLOREDITFLAGS_NOSIDEPREVIEW
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOSIDEPREVIEW // ColorPicker: disable bigger color preview on right side of the picker, use small color square preview instead.
+
+  - name: COLOREDITFLAGS_NODRAGDROP
+    type: number
+    desc: |
+      COLOREDITFLAGS_NODRAGDROP // ColorEdit: disable drag and drop target. ColorButton: disable drag and drop source.
+
+  - name: COLOREDITFLAGS_NOBORDER
+    type: number
+    desc: |
+      COLOREDITFLAGS_NOBORDER // ColorButton: disable border (which is enforced by default)
+
+  - name: COLOREDITFLAGS_ALPHABAR
+    type: number
+    desc: |
+      COLOREDITFLAGS_ALPHABAR // ColorEdit, ColorPicker: show vertical alpha bar/gradient in picker.
+
+  - name: COLOREDITFLAGS_ALPHAPREVIEW
+    type: number
+    desc: |
+      COLOREDITFLAGS_ALPHAPREVIEW // ColorEdit, ColorPicker, ColorButton: display preview as a transparent color over a checkerboard, instead of opaque.
+
+  - name: COLOREDITFLAGS_ALPHAPREVIEWHALF
+    type: number
+    desc: |
+      COLOREDITFLAGS_ALPHAPREVIEWHALF // ColorEdit, ColorPicker, ColorButton: display half opaque / half checkerboard, instead of opaque.
+
+  - name: COLOREDITFLAGS_HDR
+    type: number
+    desc: |
+      COLOREDITFLAGS_HDR // (WIP) ColorEdit: Currently only disable 0.0f..1.0f limits in RGBA edition (note: you probably want to use ImGuiColorEditFlags_Float flag as well).
+
+  - name: COLOREDITFLAGS_DISPLAYRGB
+    type: number
+    desc: |
+      COLOREDITFLAGS_DISPLAYRGB [Display]    // ColorEdit: override _display_ type among RGB/HSV/Hex. ColorPicker: select any combination using one or more of RGB/HSV/Hex.
+
+  - name: COLOREDITFLAGS_DISPLAYHSV
+    type: number
+    desc: |
+      COLOREDITFLAGS_DISPLAYHSV [Display]    // "
+
+  - name: COLOREDITFLAGS_DISPLAYHEX
+    type: number
+    desc: |
+      COLOREDITFLAGS_DISPLAYHEX [Display]    // "
+
+  - name: COLOREDITFLAGS_UINT8
+    type: number
+    desc: |
+      COLOREDITFLAGS_UINT8 [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0..255.
+
+  - name: COLOREDITFLAGS_FLOAT
+    type: number
+    desc: |
+      COLOREDITFLAGS_FLOAT [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. No round-trip of value via integers.
+
+  - name: COLOREDITFLAGS_PICKERHUEBAR
+    type: number
+    desc: |
+      COLOREDITFLAGS_PICKERHUEBAR [Picker]     // ColorPicker: bar for Hue, rectangle for Sat/Value.
+
+  - name: COLOREDITFLAGS_PICKERHUEWHEEL
+    type: number
+    desc: |
+      COLOREDITFLAGS_PICKERHUEWHEEL [Picker]     // ColorPicker: wheel for Hue, triangle for Sat/Value.
+
+  - name: COLOREDITFLAGS_INPUTRGB
+    type: number
+    desc: |
+      COLOREDITFLAGS_INPUTRGB [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
+
+  - name: COLOREDITFLAGS_INPUTHSV
+    type: number
+    desc: |
+      COLOREDITFLAGS_INPUTHSV [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
+
+  - name: COND_NONE
+    type: number
+    desc: |
+      COND_NONE No condition (always set the variable), same as _Always
+
+  - name: COND_ALWAYS
+    type: number
+    desc: |
+      COND_ALWAYS No condition (always set the variable)
+
+  - name: COND_ONCE
+    type: number
+    desc: |
+      COND_ONCE Set the variable once per runtime session (only the first call will succeed)
+
+  - name: COND_FIRSTUSEEVER
+    type: number
+    desc: |
+      COND_FIRSTUSEEVER Set the variable if the object/window has no persistently saved data (no entry in .ini file)
+
+  - name: COND_APPEARING
+    type: number
+    desc: |
+      COND_APPEARING Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+
+  - name: DIR_NONE
+    type: number
+    desc: |
+      DIR_NONE
+
+  - name: DIR_LEFT
+    type: number
+    desc: |
+      DIR_LEFT
+
+  - name: DIR_RIGHT
+    type: number
+    desc: |
+      DIR_RIGHT
+
+  - name: DIR_UP
+    type: number
+    desc: |
+      DIR_UP
+
+  - name: DIR_DOWN
+    type: number
+    desc: |
+      DIR_DOWN
+
+  - name: GLYPH_RANGES_DEFAULT
+    type: number
+    desc: |
+      GLYPH_RANGES_DEFAULT // Basic Latin, Extended Latin
+
+  - name: GLYPH_RANGES_GREEK
+    type: number
+    desc: |
+      GLYPH_RANGES_GREEK // Default + Greek and Coptic
+
+  - name: GLYPH_RANGES_KOREAN
+    type: number
+    desc: |
+      GLYPH_RANGES_KOREAN // Default + Korean characters
+
+  - name: GLYPH_RANGES_JAPANESE
+    type: number
+    desc: |
+      GLYPH_RANGES_JAPANESE // Default + Hiragana, Katakana, Half-Width, Selection of 2999 Ideographs
+
+  - name: GLYPH_RANGES_CHINESEFULL
+    type: number
+    desc: |
+      GLYPH_RANGES_CHINESEFULL // Default + Half-Width + Japanese Hiragana/Katakana + full set of about 21000 CJK Unified Ideographs
+
+  - name: GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON
+    type: number
+    desc: |
+      GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON // Default + Half-Width + Japanese Hiragana/Katakana + set of 2500 CJK Unified Ideographs for common simplified Chinese
+
+  - name: GLYPH_RANGES_CYRILLIC
+    type: number
+    desc: |
+      GLYPH_RANGES_CYRILLIC // Default + about 400 Cyrillic characters
+
+  - name: GLYPH_RANGES_THAI
+    type: number
+    desc: |
+      GLYPH_RANGES_THAI // Default + Thai characters
+
+  - name: GLYPH_RANGES_VIETNAMESE
+    type: number
+    desc: |
+      GLYPH_RANGES_VIETNAMESE // Default + Vietnamese characters
+
+  - name: STYLEVAR_ALPHA
+    type: number
+    desc: |
+      STYLEVAR_ALPHA // float  Alpha
+
+  - name: STYLEVAR_DISABLEDALPHA
+    type: number
+    desc: |
+      STYLEVAR_DISABLEDALPHA float  DisabledAlpha
+
+  - name: STYLEVAR_WINDOWPADDING
+    type: number
+    desc: |
+      STYLEVAR_WINDOWPADDING ImVec2 WindowPadding
+
+  - name: STYLEVAR_WINDOWROUNDING
+    type: number
+    desc: |
+      STYLEVAR_WINDOWROUNDING // float  WindowRounding
+
+  - name: STYLEVAR_WINDOWBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_WINDOWBORDERSIZE // float  WindowBorderSize
+
+  - name: STYLEVAR_WINDOWMINSIZE
+    type: number
+    desc: |
+      STYLEVAR_WINDOWMINSIZE ImVec2 WindowMinSize
+
+  - name: STYLEVAR_WINDOWTITLEALIGN
+    type: number
+    desc: |
+      STYLEVAR_WINDOWTITLEALIGN // ImVec2 WindowTitleAlign
+
+  - name: STYLEVAR_CHILDROUNDING
+    type: number
+    desc: |
+      STYLEVAR_CHILDROUNDING float  ChildRounding
+
+  - name: STYLEVAR_CHILDBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_CHILDBORDERSIZE // float  ChildBorderSize
+
+  - name: STYLEVAR_POPUPROUNDING
+    type: number
+    desc: |
+      STYLEVAR_POPUPROUNDING float  PopupRounding
+
+  - name: STYLEVAR_POPUPBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_POPUPBORDERSIZE // float  PopupBorderSize
+
+  - name: STYLEVAR_FRAMEPADDING
+    type: number
+    desc: |
+      STYLEVAR_FRAMEPADDING // ImVec2 FramePadding
+
+  - name: STYLEVAR_FRAMEROUNDING
+    type: number
+    desc: |
+      STYLEVAR_FRAMEROUNDING float  FrameRounding
+
+  - name: STYLEVAR_FRAMEBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_FRAMEBORDERSIZE // float  FrameBorderSize
+
+  - name: STYLEVAR_ITEMSPACING
+    type: number
+    desc: |
+      STYLEVAR_ITEMSPACING // ImVec2 ItemSpacing
+
+  - name: STYLEVAR_ITEMINNERSPACING
+    type: number
+    desc: |
+      STYLEVAR_ITEMINNERSPACING // ImVec2 ItemInnerSpacing
+
+  - name: STYLEVAR_INDENTSPACING
+    type: number
+    desc: |
+      STYLEVAR_INDENTSPACING float  IndentSpacing
+
+  - name: STYLEVAR_CELLPADDING
+    type: number
+    desc: |
+      STYLEVAR_CELLPADDING // ImVec2 CellPadding
+
+  - name: STYLEVAR_SCROLLBARSIZE
+    type: number
+    desc: |
+      STYLEVAR_SCROLLBARSIZE float  ScrollbarSize
+
+  - name: STYLEVAR_SCROLLBARROUNDING
+    type: number
+    desc: |
+      STYLEVAR_SCROLLBARROUNDING // float  ScrollbarRounding
+
+  - name: STYLEVAR_GRABMINSIZE
+    type: number
+    desc: |
+      STYLEVAR_GRABMINSIZE // float  GrabMinSize
+
+  - name: STYLEVAR_GRABROUNDING
+    type: number
+    desc: |
+      STYLEVAR_GRABROUNDING // float  GrabRounding
+
+  - name: STYLEVAR_TABROUNDING
+    type: number
+    desc: |
+      STYLEVAR_TABROUNDING // float  TabRounding
+
+  - name: STYLEVAR_TABBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_TABBORDERSIZE float  TabBorderSize
+
+  - name: STYLEVAR_TABBARBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_TABBARBORDERSIZE // float  TabBarBorderSize
+
+  - name: STYLEVAR_TABLEANGLEDHEADERSANGLE
+    type: number
+    desc: |
+      STYLEVAR_TABLEANGLEDHEADERSANGLE // float  TableAngledHeadersAngle
+
+  - name: STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN
+    type: number
+    desc: |
+      STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN ImVec2 TableAngledHeadersTextAlign
+
+  - name: STYLEVAR_BUTTONTEXTALIGN
+    type: number
+    desc: |
+      STYLEVAR_BUTTONTEXTALIGN // ImVec2 ButtonTextAlign
+
+  - name: STYLEVAR_SELECTABLETEXTALIGN
+    type: number
+    desc: |
+      STYLEVAR_SELECTABLETEXTALIGN // ImVec2 SelectableTextAlign
+
+  - name: STYLEVAR_SEPARATORTEXTBORDERSIZE
+    type: number
+    desc: |
+      STYLEVAR_SEPARATORTEXTBORDERSIZE // float  SeparatorTextBorderSize
+
+  - name: STYLEVAR_SEPARATORTEXTALIGN
+    type: number
+    desc: |
+      STYLEVAR_SEPARATORTEXTALIGN // ImVec2 SeparatorTextAlign
+
+  - name: STYLEVAR_SEPARATORTEXTPADDING
+    type: number
+    desc: |
+      STYLEVAR_SEPARATORTEXTPADDING // ImVec2 SeparatorTextPadding
 
