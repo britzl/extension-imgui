@@ -251,6 +251,13 @@ static int imgui_ImageLoad(lua_State* L)
     return 3;
 }
 
+/** ImageGet
+ * @name image_get
+ * @number texture_id Texture id
+ * @treturn number texture_id Texture id
+ * @treturn number width Image width
+ * @treturn height Image height
+ */
 static int imgui_ImageGet( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 3);
@@ -274,6 +281,16 @@ static int imgui_ImageGet( lua_State *L )
     return 3;
 }
 
+/** ImageAdd
+ * @name image_add
+ * @number texture_id Texture id
+ * @number width Image width
+ * @number height Image height
+ * @number [uv0x]
+ * @number [uv0y]
+ * @number [uv1x]
+ * @number [uv2x]
+ */
 static int imgui_ImageAdd( lua_State *L )
 {
     DM_LUA_STACK_CHECK(L, 0);
@@ -325,6 +342,7 @@ static int imgui_ImageFree( lua_State *L )
  * @number g
  * @number b
  * @number a
+ * @number [thickness]
  */
 static int imgui_DrawListAddLine(lua_State* L)
 {
@@ -359,7 +377,7 @@ static int imgui_DrawListAddLine(lua_State* L)
  * @number g
  * @number b
  * @number a
- * @number thickness
+ * @number [thickness]
  */
 static int imgui_DrawListAddRect(lua_State* L)
 {
@@ -702,7 +720,7 @@ static int imgui_PopId(lua_State* L)
 // ----- WINDOW ---------------
 // ----------------------------
 /** Begin
- * @name begin
+ * @name begin_window
  * @string title
  * @bool is_open
  * @number flags
@@ -731,7 +749,7 @@ static int imgui_Begin(lua_State* L)
     return 2;
 }
 /** End
- * @name end
+ * @name end_window
  */
 static int imgui_End(lua_State* L)
 {
@@ -1180,30 +1198,43 @@ static int imgui_Combo(lua_State* L)
     imgui_NewFrame();
     const char* label = luaL_checkstring(L, 1);
 
-    int current = luaL_checknumber(L, 2) - 1 ;
+    int current = luaL_checknumber(L, 2) - 1;
     if(!lua_istable(L, 3))
     {
         luaL_error(L, "You must provide a table");
     }
 
-    size_t len = lua_objlen(L, 3);
-    if (len > 1024)
-        len = 1024;
+    int next = current;
 
-    const char* items[1024];
-    for(int i=0; i<len; i++)
-    {
-        lua_pushnumber(L, i + 1);
-        int top = lua_gettop(L);
-        lua_gettable(L, 3);
-        const char* item = luaL_checkstring(L, 4);
-        items[i] = item;
-        lua_pop(L, 1);
-    }
-
-    bool result = ImGui::Combo(label, &current, items, len);
-    lua_pushboolean(L, result);
+    // get the current value and use it as the combo box preview
     lua_pushnumber(L, current + 1);
+    lua_gettable(L, 3);
+    const char* preview = luaL_checkstring(L, -1);
+    bool result = ImGui::BeginCombo(label, preview);
+    lua_pop(L, 1); // pop the current value
+
+    if (result)
+    {
+        // iterate the full list of values and create Selectables for each
+        const size_t len = lua_objlen(L, 3);
+        for(int i=0; i<len; i++)
+        {
+            lua_pushnumber(L, i + 1);
+            lua_gettable(L, 3);
+            const char* item = luaL_checkstring(L, -1);
+            bool selected = (i == current);
+            bool clicked = ImGui::Selectable(item, &selected, 0);
+            lua_pop(L, 1); // pop the item
+            if (clicked)
+            {
+                next = i;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    lua_pushboolean(L, result);
+    lua_pushnumber(L, next + 1);
+
     return 2;
 }
 
@@ -1213,6 +1244,12 @@ static int imgui_Combo(lua_State* L)
 // ----------------------------
 /** BeginTable
  * @name begin_table
+ * @string id
+ * @number column
+ * @number [flags]
+ * @number [x]
+ * @number [y]
+ * @treturn boolean result
  */
 static int imgui_BeginTable(lua_State* L)
 {
@@ -1257,6 +1294,9 @@ static int imgui_TableHeadersRow(lua_State* L)
 }
 /** TableSetupColumn
  * @name table_setup_column
+ * @string label
+ * @number [flags]
+ * @number [weight]
  */
 static int imgui_TableSetupColumn(lua_State* L)
 {
@@ -1278,6 +1318,7 @@ static int imgui_TableSetupColumn(lua_State* L)
 }
 /** TableSetColumnIndex
  * @name table_set_column_index
+ * @number column_index
  */
 static int imgui_TableSetColumnIndex(lua_State* L)
 {
@@ -1311,6 +1352,8 @@ static int imgui_TableNextRow(lua_State* L)
 
 /** TableSetupScrollFreeze
  * @name table_setup_scroll_freeze
+ * @number freeze_cols
+ * @number freeze_rows
  */
 static int imgui_TableSetupScrollFreeze(lua_State* L)
 {
@@ -1418,6 +1461,8 @@ static int imgui_EndTabItem(lua_State* L)
 
 /** Text
  * @name text
+ * @string text
+ * @number [wrapped]
  */
 static int imgui_Text(lua_State* L)
 {
@@ -1428,14 +1473,23 @@ static int imgui_Text(lua_State* L)
     if(lua_isnumber(L, 2)) wrapped = luaL_checknumber(L, 2);
 
     if(wrapped == 1)
+    {
         ImGui::TextWrapped("%s", text);
+    }
     else
+    {
         ImGui::Text("%s", text);
+    }
     return 0;
 }
 
 /** TextGetSize
  * @name text_get_size
+ * @string text
+ * @number font_size
+ * @number [fontid]
+ * @treturn number width
+ * @treturn number height
  */
 static int imgui_TextGetSize(lua_State* L)
 {
@@ -1458,6 +1512,11 @@ static int imgui_TextGetSize(lua_State* L)
 
 /** TextColored
  * @name text_colored
+ * @string text
+ * @number r
+ * @number g
+ * @number b
+ * @number a
  */
 static int imgui_TextColored(lua_State* L)
 {
@@ -1475,6 +1534,11 @@ static int imgui_TextColored(lua_State* L)
 
 /** InputText
  * @name input_text
+ * @string label
+ * @string text
+ * @number [flags]
+ * @treturn boolean changed
+ * @treturn string text
  */
 static int imgui_InputText(lua_State* L)
 {
@@ -1503,6 +1567,11 @@ static int imgui_InputText(lua_State* L)
 
 /** InputInt
  * @name input_int
+ * @string label
+ * @number value
+ * @number [flags]
+ * @treturn boolean changed
+ * @treturn number value
  */
 static int imgui_InputInt(lua_State* L)
 {
@@ -1525,6 +1594,14 @@ static int imgui_InputInt(lua_State* L)
 
 /** InputFloat
  * @name input_float
+ * @string label
+ * @number value
+ * @number step
+ * @number step_fast
+ * @number precision_count
+ * @number [flags]
+ * @treturn boolean changed
+ * @treturn number value
  */
 static int imgui_InputFloat(lua_State* L)
 {
@@ -1568,6 +1645,14 @@ static int imgui_InputFloat(lua_State* L)
 
 /** InputDouble
  * @name input_double
+ * @string label
+ * @number value
+ * @number step
+ * @number step_fast
+ * @number precision_count
+ * @number [flags]
+ * @treturn boolean changed
+ * @treturn number value
  */
 static int imgui_InputDouble(lua_State* L)
 {
@@ -1611,6 +1696,15 @@ static int imgui_InputDouble(lua_State* L)
 
 /** InputInt4
  * @name input_int4
+ * @string label
+ * @number v1
+ * @number v2
+ * @number v3
+ * @number v4
+ * @treturn number v1
+ * @treturn number v2
+ * @treturn number v3
+ * @treturn number v4
  */
 static int imgui_InputInt4(lua_State* L)
 {
@@ -1644,6 +1738,11 @@ static int imgui_InputInt4(lua_State* L)
 
 /** InputInt2
  * @name input_int2
+ * @string label
+ * @number v1
+ * @number v2
+ * @treturn number v1
+ * @treturn number v2
  */
 static int imgui_InputInt2(lua_State* L)
 {
@@ -1672,6 +1771,13 @@ static int imgui_InputInt2(lua_State* L)
 
 /** InputFloat3
  * @name input_float3
+ * @string label
+ * @number v1
+ * @number v2
+ * @number v3
+ * @treturn number v1
+ * @treturn number v2
+ * @treturn number v3
  */
 static int imgui_InputFloat3(lua_State* L)
 {
@@ -1702,6 +1808,15 @@ static int imgui_InputFloat3(lua_State* L)
 
 /** InputFloat4
  * @name input_float4
+ * @string label
+ * @number v1
+ * @number v2
+ * @number v3
+ * @number v4
+ * @treturn number v1
+ * @treturn number v2
+ * @treturn number v3
+ * @treturn number v4
  */
 static int imgui_InputFloat4(lua_State* L)
 {
@@ -1944,6 +2059,10 @@ static int imgui_ColorEdit4(lua_State* L)
 
 /** Selectable
  * @name selectable
+ * @string text
+ * @boolean selected
+ * @number [flags]
+ * @treturn boolean selected
  */
 static int imgui_Selectable(lua_State* L)
 {
@@ -1963,6 +2082,10 @@ static int imgui_Selectable(lua_State* L)
 
 /** Button
  * @name button
+ * @string text
+ * @number [width]
+ * @number [height]
+ * @treturn boolean pushed
  */
 static int imgui_Button(lua_State* L)
 {
@@ -1987,6 +2110,10 @@ static int imgui_Button(lua_State* L)
 
 /** ButtonImage
  * @name button_image
+ * @number texture_id
+ * @number [width]
+ * @number [height]
+ * @treturn boolean pushed
  */
 static int imgui_ButtonImage(lua_State* L)
 {
@@ -2028,6 +2155,10 @@ static int imgui_ButtonArrow(lua_State* L)
 
 /** Checkbox
  * @name checkbox
+ * @string text
+ * @boolean checked
+ * @treturn boolean changed
+ * @treturn boolean checked
  */
 static int imgui_Checkbox(lua_State* L)
 {
@@ -2043,6 +2174,10 @@ static int imgui_Checkbox(lua_State* L)
 
 /** RadioButton
  * @name radio_button
+ * @string text
+ * @boolean checked
+ * @treturn boolean changed
+ * @treturn boolean clicked
  */
 static int imgui_RadioButton(lua_State* L)
 {
@@ -2058,6 +2193,7 @@ static int imgui_RadioButton(lua_State* L)
 
 /** BeginMenuBar
  * @name begin_menu_bar
+ * @treturn boolean result
  */
 static int imgui_BeginMenuBar(lua_State* L)
 {
@@ -2085,6 +2221,7 @@ static int imgui_EndMenuBar(lua_State* L)
 
 /** BeginMainMenuBar
  * @name begin_main_menu_bar
+ * @treturn boolean result
  */
 static int imgui_BeginMainMenuBar(lua_State* L)
 {
@@ -2112,6 +2249,9 @@ static int imgui_EndMainMenuBar(lua_State* L)
 
 /** BeginMenu
  * @name begin_menu
+ * @string label
+ * @boolean [enabled]
+ * @treturn boolean result
  */
 static int imgui_BeginMenu(lua_State* L)
 {
@@ -2146,6 +2286,12 @@ static int imgui_EndMenu(lua_State* L)
 
 /** MenuItem
  * @name menu_item
+ * @string label
+ * @string shortcut
+ * @boolean selected
+ * @boolean [enabled]
+ * @treturn boolean result
+ * @treturn boolean selected
  */
 static int imgui_MenuItem(lua_State* L)
 {
@@ -2173,6 +2319,7 @@ static int imgui_MenuItem(lua_State* L)
 // ----------------------------
 /** SameLine
  * @name same_line
+ * @number [offset]
  */
 static int imgui_SameLine(lua_State* L)
 {
@@ -2291,6 +2438,11 @@ static float     values_lines[MAX_HISTOGRAM_VALUES];
 
 /** PlotLines
  * @name plot_lines
+ * @string label
+ * @integer offset
+ * @integer width
+ * @integer height
+ * @number[] values
  */
 static int imgui_PlotLines(lua_State* L)
 {
@@ -2321,6 +2473,11 @@ static float     values_hist[MAX_HISTOGRAM_VALUES];
 
 /** PlotHistogram
  * @name plot_histogram
+ * @string label
+ * @integer offset
+ * @integer width
+ * @integer height
+ * @table values
  */
 static int imgui_PlotHistogram(lua_State* L)
 {
@@ -2368,6 +2525,8 @@ static int imgui_Demo(lua_State* L)
 // ----------------------------
 /** IsMouseDoubleClicked
  * @name is_mouse_double_clicked
+ * @number button
+ * @treturn boolean double_clicked
  */
 static int imgui_IsMouseDoubleClicked(lua_State* L)
 {
@@ -2381,6 +2540,8 @@ static int imgui_IsMouseDoubleClicked(lua_State* L)
 
 /** IsMouseClicked
  * @name is_mouse_clicked
+ * @number button
+ * @treturn boolean clicked
  */
 static int imgui_IsMouseClicked(lua_State* L)
 {
@@ -2394,6 +2555,7 @@ static int imgui_IsMouseClicked(lua_State* L)
 
 /** IsItemActive
  * @name is_item_active
+ * @treturn boolean active
  */
 static int imgui_IsItemActive(lua_State* L)
 {
@@ -2406,6 +2568,7 @@ static int imgui_IsItemActive(lua_State* L)
 
 /** IsItemFocused
  * @name is_item_focused
+ * @treturn boolean focused
  */
 static int imgui_IsItemFocused(lua_State* L)
 {
@@ -2418,6 +2581,7 @@ static int imgui_IsItemFocused(lua_State* L)
 
 /** IsItemClicked
  * @name is_item_clicked
+ * @treturn boolean clicked
  */
 static int imgui_IsItemClicked(lua_State* L)
 {
@@ -2431,6 +2595,7 @@ static int imgui_IsItemClicked(lua_State* L)
 
 /** IsItemDoubleClicked
  * @name is_item_double_clicked
+ * @treturn boolean double_clicked
  */
 static int imgui_IsItemDoubleClicked(lua_State* L)
 {
@@ -2445,6 +2610,7 @@ static int imgui_IsItemDoubleClicked(lua_State* L)
 
 /** IsItemHovered
  * @name is_item_hovered
+ * @treturn boolean hovered
  */
 static int imgui_IsItemHovered(lua_State* L)
 {
@@ -2457,6 +2623,8 @@ static int imgui_IsItemHovered(lua_State* L)
 
 /** GetItemRectMax
  * @name get_item_rect_max
+ * @treturn number x
+ * @treturn number y
  */
 static int imgui_GetItemRectMax(lua_State* L)
 {
@@ -2470,6 +2638,7 @@ static int imgui_GetItemRectMax(lua_State* L)
 
 /** SetKeyboardFocusHere
  * @name set_keyboard_focus_here
+ * @number offset
  */
 static int imgui_SetKeyboardFocusHere(lua_State* L)
 {
@@ -2487,6 +2656,7 @@ static int imgui_SetKeyboardFocusHere(lua_State* L)
 
 /** GetStyle
  * @name get_style
+ * @treturn table style
  */
 static int imgui_GetStyle(lua_State* L)
 {
@@ -2671,6 +2841,7 @@ static int imgui_GetStyle(lua_State* L)
 
 /** SetStyle
  * @name set_style
+ * @table style
  */
 static int imgui_SetStyle(lua_State* L)
 {
@@ -2884,6 +3055,11 @@ static int imgui_SetStyle(lua_State* L)
 
 /** SetStyleColor
  * @name set_style_color
+ * @number color_index
+ * @number r
+ * @number g
+ * @number b
+ * @number a
  */
 static int imgui_SetStyleColor(lua_State* L)
 {
@@ -2898,6 +3074,11 @@ static int imgui_SetStyleColor(lua_State* L)
 }
 /** PushStyleColor
  * @name push_style_color
+ * @number color_index
+ * @number r
+ * @number g
+ * @number b
+ * @number a
  */
 static int imgui_PushStyleColor(lua_State* L)
 {
@@ -2912,6 +3093,7 @@ static int imgui_PushStyleColor(lua_State* L)
 }
 /** PopStyleColor
  * @name pop_style_color
+ * @number count
  */
 static int imgui_PopStyleColor(lua_State* L)
 {
@@ -3001,6 +3183,7 @@ static int imgui_PopStyleVar(lua_State *L)
 
 /** SetWindowFontScale
  * @name set_window_font_scale
+ * @number scale
  */
 static int imgui_SetWindowFontScale(lua_State *L)
 {
@@ -3012,6 +3195,7 @@ static int imgui_SetWindowFontScale(lua_State *L)
 
 /** SetGlobalFontScale
  * @name set_global_font_scale
+ * @number scale
  */
 static int imgui_SetGlobalFontScale(lua_State *L)
 {
@@ -3024,6 +3208,7 @@ static int imgui_SetGlobalFontScale(lua_State *L)
 
 /** ScaleAllSizes
  * @name scale_all_sizes
+ * @number scale
  */
 static int imgui_ScaleAllSizes(lua_State *L)
 {
@@ -3037,6 +3222,8 @@ static int imgui_ScaleAllSizes(lua_State *L)
 
 /** SetCursorPos
  * @name set_cursor_pos
+ * @number x
+ * @number y
  */
 static int imgui_SetCursorPos(lua_State *L)
 {
@@ -3054,6 +3241,7 @@ static int imgui_SetCursorPos(lua_State *L)
 
 /** PushItemWidth
  * @name push_item_width
+ * @number width
  */
 static int imgui_PushItemWidth(lua_State *L)
 {
@@ -3075,6 +3263,7 @@ static int imgui_PopItemWidth(lua_State *L)
 
 /** SetNextItemWidth
  * @name set_next_item_width
+ * @number width
  */
 static int imgui_SetNextItemWidth(lua_State *L)
 {
@@ -3086,6 +3275,7 @@ static int imgui_SetNextItemWidth(lua_State *L)
 
 /** CalcItemWidth
  * @name calc_item_width
+ * @treturn number width
  */
 static int imgui_CalcItemWidth(lua_State *L)
 {
@@ -3112,6 +3302,7 @@ static int imgui_SetItemDefaultFocus(lua_State* L)
 
 /** SetScrollHereY
  * @name set_scroll_here_y
+ * @number center_y_ratio
  */
 static int imgui_SetScrollHereY(lua_State *L)
 {
@@ -3186,7 +3377,11 @@ ImWchar* LuaToGlyphRanges(lua_State * L, int index) {
 }
 
 /** FontAddTTFFile
- * @name font_add_t_t_f_file
+ * @name font_add_ttf_file
+ * @string filename
+ * @number font_size
+ * @string glyph_ranges
+ * @treturn number font_index
  */
 static int imgui_FontAddTTFFile(lua_State * L)
 {
@@ -3212,7 +3407,12 @@ static int imgui_FontAddTTFFile(lua_State * L)
 }
 
 /** FontAddTTFData
- * @name font_add_t_t_f_data
+ * @name font_add_ttf_data
+ * @string ttf_data
+ * @number font_size
+ * @number font_pixels
+ * @string glyph_ranges
+ * @treturn number font_index
  */
 static int imgui_FontAddTTFData(lua_State * L)
 {
@@ -3255,6 +3455,7 @@ static int imgui_FontAddTTFData(lua_State * L)
 
 /** FontPush
  * @name font_push
+ * @number font_index
  */
 static int imgui_FontPush(lua_State *L)
 {
@@ -3280,6 +3481,9 @@ static int imgui_FontPop(lua_State *L)
 
 /** FontScale
  * @name font_scale
+ * @number font_id
+ * @number font_scale
+ * @treturn number old_scale
  */
 static int imgui_FontScale(lua_State *L)
 {
@@ -3332,6 +3536,11 @@ static dmExtension::Result imgui_Draw(dmExtension::Params* params)
 
 /** DrawLine
  * @name draw_line
+ * @number x1
+ * @number y1
+ * @number x2
+ * @number y2
+ * @number color
  */
 static int imgui_DrawLine(lua_State* L)
 {
@@ -3350,6 +3559,11 @@ static int imgui_DrawLine(lua_State* L)
 
 /** DrawRect
  * @name draw_rect
+ * @number x
+ * @number y
+ * @number width
+ * @number height
+ * @number color
  */
 static int imgui_DrawRect(lua_State* L)
 {
@@ -3368,6 +3582,11 @@ static int imgui_DrawRect(lua_State* L)
 
 /** DrawRectFilled
  * @name draw_rect_filled
+ * @number x
+ * @number y
+ * @number width
+ * @number height
+ * @number color
  */
 static int imgui_DrawRectFilled(lua_State* L)
 {
@@ -3386,6 +3605,9 @@ static int imgui_DrawRectFilled(lua_State* L)
 
 /** DrawProgressBar
  * @name draw_progress_bar
+ * @number progress
+ * @number xsize
+ * @number ysize
  */
 static int imgui_DrawProgressBar(lua_State* L)
 {
@@ -3401,6 +3623,7 @@ static int imgui_DrawProgressBar(lua_State* L)
 
 /** SetRenderingEnabled
  * @name set_rendering_enabled
+ * @boolean enabled
  */
 static int imgui_SetRenderingEnabled(lua_State* L)
 {
@@ -3465,6 +3688,7 @@ static int imgui_SetDefaults(lua_State* L)
 
 /** SetIniFilename
  * @name set_ini_filename
+ * @string [filename]
  */
 static int imgui_SetIniFilename(lua_State* L)
 {
@@ -3755,330 +3979,1848 @@ static void LuaInit(lua_State* L)
     // Register lua names
     luaL_register(L, MODULE_NAME, Module_methods);
 
-    lua_setfieldstringint(L, "MOUSEBUTTON_LEFT", ImGuiMouseButton_Left);
-    lua_setfieldstringint(L, "MOUSEBUTTON_RIGHT", ImGuiMouseButton_Right);
-    lua_setfieldstringint(L, "MOUSEBUTTON_MIDDLE", ImGuiMouseButton_Middle);
+    /**
+     * MOUSEBUTTON_LEFT
+     *
+     * @field MOUSEBUTTON_LEFT
+     */
+     lua_setfieldstringint(L, "MOUSEBUTTON_LEFT", ImGuiMouseButton_Left);
+    /**
+     * MOUSEBUTTON_RIGHT
+     *
+     * @field MOUSEBUTTON_RIGHT
+     */
+     lua_setfieldstringint(L, "MOUSEBUTTON_RIGHT", ImGuiMouseButton_Right);
+    /**
+     * MOUSEBUTTON_MIDDLE
+     *
+     * @field MOUSEBUTTON_MIDDLE
+     */
+     lua_setfieldstringint(L, "MOUSEBUTTON_MIDDLE", ImGuiMouseButton_Middle);
 
-    lua_setfieldstringint(L, "SELECTABLE_DONT_CLOSE_POPUPS", ImGuiSelectableFlags_DontClosePopups);
-    lua_setfieldstringint(L, "SELECTABLE_SPAN_ALL_COLUMNS", ImGuiSelectableFlags_SpanAllColumns);
-    lua_setfieldstringint(L, "SELECTABLE_ALLOW_DOUBLE_CLICK", ImGuiSelectableFlags_AllowDoubleClick);
-    lua_setfieldstringint(L, "SELECTABLE_DISABLED", ImGuiSelectableFlags_Disabled);
-    lua_setfieldstringint(L, "SELECTABLE_ALLOW_ITEM_OVERLAP", ImGuiSelectableFlags_AllowItemOverlap);
+    /**
+     * SELECTABLE_DONT_CLOSE_POPUPS
+     *
+     * @field SELECTABLE_DONT_CLOSE_POPUPS
+     */
+     lua_setfieldstringint(L, "SELECTABLE_DONT_CLOSE_POPUPS", ImGuiSelectableFlags_DontClosePopups);
+    /**
+     * SELECTABLE_SPAN_ALL_COLUMNS
+     *
+     * @field SELECTABLE_SPAN_ALL_COLUMNS
+     */
+     lua_setfieldstringint(L, "SELECTABLE_SPAN_ALL_COLUMNS", ImGuiSelectableFlags_SpanAllColumns);
+    /**
+     * SELECTABLE_ALLOW_DOUBLE_CLICK
+     *
+     * @field SELECTABLE_ALLOW_DOUBLE_CLICK
+     */
+     lua_setfieldstringint(L, "SELECTABLE_ALLOW_DOUBLE_CLICK", ImGuiSelectableFlags_AllowDoubleClick);
+    /**
+     * SELECTABLE_DISABLED
+     *
+     * @field SELECTABLE_DISABLED
+     */
+     lua_setfieldstringint(L, "SELECTABLE_DISABLED", ImGuiSelectableFlags_Disabled);
+    /**
+     * SELECTABLE_ALLOW_ITEM_OVERLAP
+     *
+     * @field SELECTABLE_ALLOW_ITEM_OVERLAP
+     */
+     lua_setfieldstringint(L, "SELECTABLE_ALLOW_ITEM_OVERLAP", ImGuiSelectableFlags_AllowItemOverlap);
 
-    lua_setfieldstringint(L, "TABITEM_UNSAVED_DOCUMENT", ImGuiTabItemFlags_UnsavedDocument);
-    lua_setfieldstringint(L, "TABITEM_SET_SELECTED", ImGuiTabItemFlags_SetSelected);
-    lua_setfieldstringint(L, "TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON", ImGuiTabItemFlags_NoCloseWithMiddleMouseButton);
-    lua_setfieldstringint(L, "TABITEM_NO_PUSH_ID", ImGuiTabItemFlags_NoPushId);
-    lua_setfieldstringint(L, "TABITEM_NO_TOOLTIP", ImGuiTabItemFlags_NoTooltip);
-    lua_setfieldstringint(L, "TABITEM_NO_REORDER", ImGuiTabItemFlags_NoReorder);
-    lua_setfieldstringint(L, "TABITEM_LEADING", ImGuiTabItemFlags_Leading);
-    lua_setfieldstringint(L, "TABITEM_TRAILING", ImGuiTabItemFlags_Trailing);
+    /**
+     * TABITEM_UNSAVED_DOCUMENT
+     *
+     * @field TABITEM_UNSAVED_DOCUMENT
+     */
+     lua_setfieldstringint(L, "TABITEM_UNSAVED_DOCUMENT", ImGuiTabItemFlags_UnsavedDocument);
+    /**
+     * TABITEM_SET_SELECTED
+     *
+     * @field TABITEM_SET_SELECTED
+     */
+     lua_setfieldstringint(L, "TABITEM_SET_SELECTED", ImGuiTabItemFlags_SetSelected);
+    /**
+     * TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
+     *
+     * @field TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
+     */
+     lua_setfieldstringint(L, "TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON", ImGuiTabItemFlags_NoCloseWithMiddleMouseButton);
+    /**
+     * TABITEM_NO_PUSH_ID
+     *
+     * @field TABITEM_NO_PUSH_ID
+     */
+     lua_setfieldstringint(L, "TABITEM_NO_PUSH_ID", ImGuiTabItemFlags_NoPushId);
+    /**
+     * TABITEM_NO_TOOLTIP
+     *
+     * @field TABITEM_NO_TOOLTIP
+     */
+     lua_setfieldstringint(L, "TABITEM_NO_TOOLTIP", ImGuiTabItemFlags_NoTooltip);
+    /**
+     * TABITEM_NO_REORDER
+     *
+     * @field TABITEM_NO_REORDER
+     */
+     lua_setfieldstringint(L, "TABITEM_NO_REORDER", ImGuiTabItemFlags_NoReorder);
+    /**
+     * TABITEM_LEADING
+     *
+     * @field TABITEM_LEADING
+     */
+     lua_setfieldstringint(L, "TABITEM_LEADING", ImGuiTabItemFlags_Leading);
+    /**
+     * TABITEM_TRAILING
+     *
+     * @field TABITEM_TRAILING
+     */
+     lua_setfieldstringint(L, "TABITEM_TRAILING", ImGuiTabItemFlags_Trailing);
 
-    lua_setfieldstringint(L, "FOCUSED_CHILD_WINDOWS", ImGuiFocusedFlags_ChildWindows);
-    lua_setfieldstringint(L, "FOCUSED_ROOT_WINDOW", ImGuiFocusedFlags_RootWindow);
-    lua_setfieldstringint(L, "FOCUSED_ANY_WINDOW", ImGuiFocusedFlags_AnyWindow);
-    lua_setfieldstringint(L, "FOCUSED_ROOT_AND_CHILD_WINDOWS", ImGuiFocusedFlags_RootAndChildWindows);
+    /**
+     * FOCUSED_CHILD_WINDOWS
+     *
+     * @field FOCUSED_CHILD_WINDOWS
+     */
+     lua_setfieldstringint(L, "FOCUSED_CHILD_WINDOWS", ImGuiFocusedFlags_ChildWindows);
+    /**
+     * FOCUSED_ROOT_WINDOW
+     *
+     * @field FOCUSED_ROOT_WINDOW
+     */
+     lua_setfieldstringint(L, "FOCUSED_ROOT_WINDOW", ImGuiFocusedFlags_RootWindow);
+    /**
+     * FOCUSED_ANY_WINDOW
+     *
+     * @field FOCUSED_ANY_WINDOW
+     */
+     lua_setfieldstringint(L, "FOCUSED_ANY_WINDOW", ImGuiFocusedFlags_AnyWindow);
+    /**
+     * FOCUSED_ROOT_AND_CHILD_WINDOWS
+     *
+     * @field FOCUSED_ROOT_AND_CHILD_WINDOWS
+     */
+     lua_setfieldstringint(L, "FOCUSED_ROOT_AND_CHILD_WINDOWS", ImGuiFocusedFlags_RootAndChildWindows);
 
-    lua_setfieldstringint(L, "TREENODE_SELECTED", ImGuiTreeNodeFlags_Selected);
-    lua_setfieldstringint(L, "TREENODE_FRAMED", ImGuiTreeNodeFlags_Framed);
-    lua_setfieldstringint(L, "TREENODE_ALLOW_ITEM_OVERLAP", ImGuiTreeNodeFlags_AllowItemOverlap);
-    lua_setfieldstringint(L, "TREENODE_NO_TREE_PUSH_ON_OPEN", ImGuiTreeNodeFlags_NoTreePushOnOpen);
-    lua_setfieldstringint(L, "TREENODE_NO_AUTO_OPEN_ON_LOG", ImGuiTreeNodeFlags_NoAutoOpenOnLog);
-    lua_setfieldstringint(L, "TREENODE_DEFAULT_OPEN", ImGuiTreeNodeFlags_DefaultOpen);
-    lua_setfieldstringint(L, "TREENODE_OPEN_ON_DOUBLE_CLICK", ImGuiTreeNodeFlags_OpenOnDoubleClick);
-    lua_setfieldstringint(L, "TREENODE_OPEN_ON_ARROW", ImGuiTreeNodeFlags_OpenOnArrow);
-    lua_setfieldstringint(L, "TREENODE_LEAF", ImGuiTreeNodeFlags_Leaf);
-    lua_setfieldstringint(L, "TREENODE_BULLET", ImGuiTreeNodeFlags_Bullet);
-    lua_setfieldstringint(L, "TREENODE_FRAME_PADDING", ImGuiTreeNodeFlags_FramePadding);
-    lua_setfieldstringint(L, "TREENODE_SPAN_AVAILABLE_WIDTH", ImGuiTreeNodeFlags_SpanAvailWidth);
-    lua_setfieldstringint(L, "TREENODE_SPAN_FULL_WIDTH", ImGuiTreeNodeFlags_SpanFullWidth);
-    lua_setfieldstringint(L, "TREENODE_NAV_LEFT_JUMPS_BACK_HERE", ImGuiTreeNodeFlags_NavLeftJumpsBackHere);
+    /**
+     * TREENODE_SELECTED
+     *
+     * @field TREENODE_SELECTED
+     */
+     lua_setfieldstringint(L, "TREENODE_SELECTED", ImGuiTreeNodeFlags_Selected);
+    /**
+     * TREENODE_FRAMED
+     *
+     * @field TREENODE_FRAMED
+     */
+     lua_setfieldstringint(L, "TREENODE_FRAMED", ImGuiTreeNodeFlags_Framed);
+    /**
+     * TREENODE_ALLOW_ITEM_OVERLAP
+     *
+     * @field TREENODE_ALLOW_ITEM_OVERLAP
+     */
+     lua_setfieldstringint(L, "TREENODE_ALLOW_ITEM_OVERLAP", ImGuiTreeNodeFlags_AllowItemOverlap);
+    /**
+     * TREENODE_NO_TREE_PUSH_ON_OPEN
+     *
+     * @field TREENODE_NO_TREE_PUSH_ON_OPEN
+     */
+     lua_setfieldstringint(L, "TREENODE_NO_TREE_PUSH_ON_OPEN", ImGuiTreeNodeFlags_NoTreePushOnOpen);
+    /**
+     * TREENODE_NO_AUTO_OPEN_ON_LOG
+     *
+     * @field TREENODE_NO_AUTO_OPEN_ON_LOG
+     */
+     lua_setfieldstringint(L, "TREENODE_NO_AUTO_OPEN_ON_LOG", ImGuiTreeNodeFlags_NoAutoOpenOnLog);
+    /**
+     * TREENODE_DEFAULT_OPEN
+     *
+     * @field TREENODE_DEFAULT_OPEN
+     */
+     lua_setfieldstringint(L, "TREENODE_DEFAULT_OPEN", ImGuiTreeNodeFlags_DefaultOpen);
+    /**
+     * TREENODE_OPEN_ON_DOUBLE_CLICK
+     *
+     * @field TREENODE_OPEN_ON_DOUBLE_CLICK
+     */
+     lua_setfieldstringint(L, "TREENODE_OPEN_ON_DOUBLE_CLICK", ImGuiTreeNodeFlags_OpenOnDoubleClick);
+    /**
+     * TREENODE_OPEN_ON_ARROW
+     *
+     * @field TREENODE_OPEN_ON_ARROW
+     */
+     lua_setfieldstringint(L, "TREENODE_OPEN_ON_ARROW", ImGuiTreeNodeFlags_OpenOnArrow);
+    /**
+     * TREENODE_LEAF
+     *
+     * @field TREENODE_LEAF
+     */
+     lua_setfieldstringint(L, "TREENODE_LEAF", ImGuiTreeNodeFlags_Leaf);
+    /**
+     * TREENODE_BULLET
+     *
+     * @field TREENODE_BULLET
+     */
+     lua_setfieldstringint(L, "TREENODE_BULLET", ImGuiTreeNodeFlags_Bullet);
+    /**
+     * TREENODE_FRAME_PADDING
+     *
+     * @field TREENODE_FRAME_PADDING
+     */
+     lua_setfieldstringint(L, "TREENODE_FRAME_PADDING", ImGuiTreeNodeFlags_FramePadding);
+    /**
+     * TREENODE_SPAN_AVAILABLE_WIDTH
+     *
+     * @field TREENODE_SPAN_AVAILABLE_WIDTH
+     */
+     lua_setfieldstringint(L, "TREENODE_SPAN_AVAILABLE_WIDTH", ImGuiTreeNodeFlags_SpanAvailWidth);
+    /**
+     * TREENODE_SPAN_FULL_WIDTH
+     *
+     * @field TREENODE_SPAN_FULL_WIDTH
+     */
+     lua_setfieldstringint(L, "TREENODE_SPAN_FULL_WIDTH", ImGuiTreeNodeFlags_SpanFullWidth);
+    /**
+     * TREENODE_NAV_LEFT_JUMPS_BACK_HERE
+     *
+     * @field TREENODE_NAV_LEFT_JUMPS_BACK_HERE
+     */
+     lua_setfieldstringint(L, "TREENODE_NAV_LEFT_JUMPS_BACK_HERE", ImGuiTreeNodeFlags_NavLeftJumpsBackHere);
 
-    lua_setfieldstringint(L, "KEY_TAB", ImGuiKey_Tab);
-    lua_setfieldstringint(L, "KEY_LEFTARROW", ImGuiKey_LeftArrow);
-    lua_setfieldstringint(L, "KEY_RIGHTARROW", ImGuiKey_RightArrow);
-    lua_setfieldstringint(L, "KEY_UPARROW", ImGuiKey_UpArrow);
-    lua_setfieldstringint(L, "KEY_DOWNARROW", ImGuiKey_DownArrow);
-    lua_setfieldstringint(L, "KEY_PAGEUP", ImGuiKey_PageUp);
-    lua_setfieldstringint(L, "KEY_PAGEDOWN", ImGuiKey_PageDown);
-    lua_setfieldstringint(L, "KEY_HOME", ImGuiKey_Home);
-    lua_setfieldstringint(L, "KEY_END", ImGuiKey_End);
-    lua_setfieldstringint(L, "KEY_INSERT", ImGuiKey_Insert);
-    lua_setfieldstringint(L, "KEY_DELETE", ImGuiKey_Delete);
-    lua_setfieldstringint(L, "KEY_BACKSPACE", ImGuiKey_Backspace);
-    lua_setfieldstringint(L, "KEY_SPACE", ImGuiKey_Space);
-    lua_setfieldstringint(L, "KEY_ENTER", ImGuiKey_Enter);
-    lua_setfieldstringint(L, "KEY_ESCAPE", ImGuiKey_Escape);
-    lua_setfieldstringint(L, "KEY_KEYPADENTER", ImGuiKey_KeypadEnter);
-    lua_setfieldstringint(L, "KEY_A", ImGuiKey_A);
-    lua_setfieldstringint(L, "KEY_C", ImGuiKey_C);
-    lua_setfieldstringint(L, "KEY_V", ImGuiKey_V);
-    lua_setfieldstringint(L, "KEY_X", ImGuiKey_X);
-    lua_setfieldstringint(L, "KEY_Y", ImGuiKey_Y);
-    lua_setfieldstringint(L, "KEY_Z", ImGuiKey_Z);
+    /**
+     * KEY_TAB
+     *
+     * @field KEY_TAB
+     */
+     lua_setfieldstringint(L, "KEY_TAB", ImGuiKey_Tab);
+    /**
+     * KEY_LEFTARROW
+     *
+     * @field KEY_LEFTARROW
+     */
+     lua_setfieldstringint(L, "KEY_LEFTARROW", ImGuiKey_LeftArrow);
+    /**
+     * KEY_RIGHTARROW
+     *
+     * @field KEY_RIGHTARROW
+     */
+     lua_setfieldstringint(L, "KEY_RIGHTARROW", ImGuiKey_RightArrow);
+    /**
+     * KEY_UPARROW
+     *
+     * @field KEY_UPARROW
+     */
+     lua_setfieldstringint(L, "KEY_UPARROW", ImGuiKey_UpArrow);
+    /**
+     * KEY_DOWNARROW
+     *
+     * @field KEY_DOWNARROW
+     */
+     lua_setfieldstringint(L, "KEY_DOWNARROW", ImGuiKey_DownArrow);
+    /**
+     * KEY_PAGEUP
+     *
+     * @field KEY_PAGEUP
+     */
+     lua_setfieldstringint(L, "KEY_PAGEUP", ImGuiKey_PageUp);
+    /**
+     * KEY_PAGEDOWN
+     *
+     * @field KEY_PAGEDOWN
+     */
+     lua_setfieldstringint(L, "KEY_PAGEDOWN", ImGuiKey_PageDown);
+    /**
+     * KEY_HOME
+     *
+     * @field KEY_HOME
+     */
+     lua_setfieldstringint(L, "KEY_HOME", ImGuiKey_Home);
+    /**
+     * KEY_END
+     *
+     * @field KEY_END
+     */
+     lua_setfieldstringint(L, "KEY_END", ImGuiKey_End);
+    /**
+     * KEY_INSERT
+     *
+     * @field KEY_INSERT
+     */
+     lua_setfieldstringint(L, "KEY_INSERT", ImGuiKey_Insert);
+    /**
+     * KEY_DELETE
+     *
+     * @field KEY_DELETE
+     */
+     lua_setfieldstringint(L, "KEY_DELETE", ImGuiKey_Delete);
+    /**
+     * KEY_BACKSPACE
+     *
+     * @field KEY_BACKSPACE
+     */
+     lua_setfieldstringint(L, "KEY_BACKSPACE", ImGuiKey_Backspace);
+    /**
+     * KEY_SPACE
+     *
+     * @field KEY_SPACE
+     */
+     lua_setfieldstringint(L, "KEY_SPACE", ImGuiKey_Space);
+    /**
+     * KEY_ENTER
+     *
+     * @field KEY_ENTER
+     */
+     lua_setfieldstringint(L, "KEY_ENTER", ImGuiKey_Enter);
+    /**
+     * KEY_ESCAPE
+     *
+     * @field KEY_ESCAPE
+     */
+     lua_setfieldstringint(L, "KEY_ESCAPE", ImGuiKey_Escape);
+    /**
+     * KEY_KEYPADENTER
+     *
+     * @field KEY_KEYPADENTER
+     */
+     lua_setfieldstringint(L, "KEY_KEYPADENTER", ImGuiKey_KeypadEnter);
+    /**
+     * KEY_A
+     *
+     * @field KEY_A
+     */
+     lua_setfieldstringint(L, "KEY_A", ImGuiKey_A);
+    /**
+     * KEY_C
+     *
+     * @field KEY_C
+     */
+     lua_setfieldstringint(L, "KEY_C", ImGuiKey_C);
+    /**
+     * KEY_V
+     *
+     * @field KEY_V
+     */
+     lua_setfieldstringint(L, "KEY_V", ImGuiKey_V);
+    /**
+     * KEY_X
+     *
+     * @field KEY_X
+     */
+     lua_setfieldstringint(L, "KEY_X", ImGuiKey_X);
+    /**
+     * KEY_Y
+     *
+     * @field KEY_Y
+     */
+     lua_setfieldstringint(L, "KEY_Y", ImGuiKey_Y);
+    /**
+     * KEY_Z
+     *
+     * @field KEY_Z
+     */
+     lua_setfieldstringint(L, "KEY_Z", ImGuiKey_Z);
 
-    lua_setfieldstringint(L, "ImGuiCol_Text", ImGuiCol_Text);
-    lua_setfieldstringint(L, "ImGuiCol_TextDisabled", ImGuiCol_TextDisabled);
-    lua_setfieldstringint(L, "ImGuiCol_WindowBg", ImGuiCol_WindowBg);
-    lua_setfieldstringint(L, "ImGuiCol_ChildBg", ImGuiCol_ChildBg);
-    lua_setfieldstringint(L, "ImGuiCol_PopupBg", ImGuiCol_PopupBg);
-    lua_setfieldstringint(L, "ImGuiCol_Border", ImGuiCol_Border);
-    lua_setfieldstringint(L, "ImGuiCol_BorderShadow", ImGuiCol_BorderShadow);
-    lua_setfieldstringint(L, "ImGuiCol_FrameBg", ImGuiCol_FrameBg);
-    lua_setfieldstringint(L, "ImGuiCol_FrameBgHovered", ImGuiCol_FrameBgHovered);
-    lua_setfieldstringint(L, "ImGuiCol_FrameBgActive", ImGuiCol_FrameBgActive);
-    lua_setfieldstringint(L, "ImGuiCol_TitleBg", ImGuiCol_TitleBg);
-    lua_setfieldstringint(L, "ImGuiCol_TitleBgActive", ImGuiCol_TitleBgActive);
-    lua_setfieldstringint(L, "ImGuiCol_TitleBgCollapsed", ImGuiCol_TitleBgCollapsed);
-    lua_setfieldstringint(L, "ImGuiCol_MenuBarBg", ImGuiCol_MenuBarBg);
-    lua_setfieldstringint(L, "ImGuiCol_ScrollbarBg", ImGuiCol_ScrollbarBg);
-    lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrab", ImGuiCol_ScrollbarGrab);
-    lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabHovered", ImGuiCol_ScrollbarGrabHovered);
-    lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabActive", ImGuiCol_ScrollbarGrabActive);
-    lua_setfieldstringint(L, "ImGuiCol_CheckMark", ImGuiCol_CheckMark);
-    lua_setfieldstringint(L, "ImGuiCol_SliderGrab", ImGuiCol_SliderGrab);
-    lua_setfieldstringint(L, "ImGuiCol_SliderGrabActive", ImGuiCol_SliderGrabActive);
-    lua_setfieldstringint(L, "ImGuiCol_Button", ImGuiCol_Button);
-    lua_setfieldstringint(L, "ImGuiCol_ButtonHovered", ImGuiCol_ButtonHovered);
-    lua_setfieldstringint(L, "ImGuiCol_ButtonActive", ImGuiCol_ButtonActive);
-    lua_setfieldstringint(L, "ImGuiCol_Header", ImGuiCol_Header);
-    lua_setfieldstringint(L, "ImGuiCol_HeaderHovered", ImGuiCol_HeaderHovered);
-    lua_setfieldstringint(L, "ImGuiCol_HeaderActive", ImGuiCol_HeaderActive);
-    lua_setfieldstringint(L, "ImGuiCol_Separator", ImGuiCol_Separator);
-    lua_setfieldstringint(L, "ImGuiCol_SeparatorHovered", ImGuiCol_SeparatorHovered);
-    lua_setfieldstringint(L, "ImGuiCol_SeparatorActive", ImGuiCol_SeparatorActive);
-    lua_setfieldstringint(L, "ImGuiCol_ResizeGrip", ImGuiCol_ResizeGrip);
-    lua_setfieldstringint(L, "ImGuiCol_ResizeGripHovered", ImGuiCol_ResizeGripHovered);
-    lua_setfieldstringint(L, "ImGuiCol_ResizeGripActive", ImGuiCol_ResizeGripActive);
-    lua_setfieldstringint(L, "ImGuiCol_Tab", ImGuiCol_Tab);
-    lua_setfieldstringint(L, "ImGuiCol_TabHovered", ImGuiCol_TabHovered);
-    lua_setfieldstringint(L, "ImGuiCol_TabActive", ImGuiCol_TabActive);
-    lua_setfieldstringint(L, "ImGuiCol_TabUnfocused", ImGuiCol_TabUnfocused);
-    lua_setfieldstringint(L, "ImGuiCol_TabUnfocusedActive", ImGuiCol_TabUnfocusedActive);
-    lua_setfieldstringint(L, "ImGuiCol_PlotLines", ImGuiCol_PlotLines);
-    lua_setfieldstringint(L, "ImGuiCol_PlotLinesHovered", ImGuiCol_PlotLinesHovered);
-    lua_setfieldstringint(L, "ImGuiCol_PlotHistogram", ImGuiCol_PlotHistogram);
-    lua_setfieldstringint(L, "ImGuiCol_PlotHistogramHovered", ImGuiCol_PlotHistogramHovered);
-    lua_setfieldstringint(L, "ImGuiCol_TableHeaderBg", ImGuiCol_TableHeaderBg);
-    lua_setfieldstringint(L, "ImGuiCol_TableBorderStrong", ImGuiCol_TableBorderStrong);
-    lua_setfieldstringint(L, "ImGuiCol_TableBorderLight", ImGuiCol_TableBorderLight);
-    lua_setfieldstringint(L, "ImGuiCol_TableRowBg", ImGuiCol_TableRowBg);
-    lua_setfieldstringint(L, "ImGuiCol_TableRowBgAlt", ImGuiCol_TableRowBgAlt);
-    lua_setfieldstringint(L, "ImGuiCol_TextSelectedBg", ImGuiCol_TextSelectedBg);
-    lua_setfieldstringint(L, "ImGuiCol_DragDropTarget", ImGuiCol_DragDropTarget);
-    lua_setfieldstringint(L, "ImGuiCol_NavHighlight", ImGuiCol_NavHighlight);
-    lua_setfieldstringint(L, "ImGuiCol_NavWindowingHighlight", ImGuiCol_NavWindowingHighlight);
-    lua_setfieldstringint(L, "ImGuiCol_NavWindowingDimBg", ImGuiCol_NavWindowingDimBg);
-    lua_setfieldstringint(L, "ImGuiCol_ModalWindowDimBg", ImGuiCol_ModalWindowDimBg);
+    /**
+     * ImGuiCol_Text
+     *
+     * @field ImGuiCol_Text
+     */
+     lua_setfieldstringint(L, "ImGuiCol_Text", ImGuiCol_Text);
+    /**
+     * ImGuiCol_TextDisabled
+     *
+     * @field ImGuiCol_TextDisabled
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TextDisabled", ImGuiCol_TextDisabled);
+    /**
+     * ImGuiCol_WindowBg
+     *
+     * @field ImGuiCol_WindowBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_WindowBg", ImGuiCol_WindowBg);
+    /**
+     * ImGuiCol_ChildBg
+     *
+     * @field ImGuiCol_ChildBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ChildBg", ImGuiCol_ChildBg);
+    /**
+     * ImGuiCol_PopupBg
+     *
+     * @field ImGuiCol_PopupBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_PopupBg", ImGuiCol_PopupBg);
+    /**
+     * ImGuiCol_Border
+     *
+     * @field ImGuiCol_Border
+     */
+     lua_setfieldstringint(L, "ImGuiCol_Border", ImGuiCol_Border);
+    /**
+     * ImGuiCol_BorderShadow
+     *
+     * @field ImGuiCol_BorderShadow
+     */
+     lua_setfieldstringint(L, "ImGuiCol_BorderShadow", ImGuiCol_BorderShadow);
+    /**
+     * ImGuiCol_FrameBg
+     *
+     * @field ImGuiCol_FrameBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_FrameBg", ImGuiCol_FrameBg);
+    /**
+     * ImGuiCol_FrameBgHovered
+     *
+     * @field ImGuiCol_FrameBgHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_FrameBgHovered", ImGuiCol_FrameBgHovered);
+    /**
+     * ImGuiCol_FrameBgActive
+     *
+     * @field ImGuiCol_FrameBgActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_FrameBgActive", ImGuiCol_FrameBgActive);
+    /**
+     * ImGuiCol_TitleBg
+     *
+     * @field ImGuiCol_TitleBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TitleBg", ImGuiCol_TitleBg);
+    /**
+     * ImGuiCol_TitleBgActive
+     *
+     * @field ImGuiCol_TitleBgActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TitleBgActive", ImGuiCol_TitleBgActive);
+    /**
+     * ImGuiCol_TitleBgCollapsed
+     *
+     * @field ImGuiCol_TitleBgCollapsed
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TitleBgCollapsed", ImGuiCol_TitleBgCollapsed);
+    /**
+     * ImGuiCol_MenuBarBg
+     *
+     * @field ImGuiCol_MenuBarBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_MenuBarBg", ImGuiCol_MenuBarBg);
+    /**
+     * ImGuiCol_ScrollbarBg
+     *
+     * @field ImGuiCol_ScrollbarBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ScrollbarBg", ImGuiCol_ScrollbarBg);
+    /**
+     * ImGuiCol_ScrollbarGrab
+     *
+     * @field ImGuiCol_ScrollbarGrab
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrab", ImGuiCol_ScrollbarGrab);
+    /**
+     * ImGuiCol_ScrollbarGrabHovered
+     *
+     * @field ImGuiCol_ScrollbarGrabHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabHovered", ImGuiCol_ScrollbarGrabHovered);
+    /**
+     * ImGuiCol_ScrollbarGrabActive
+     *
+     * @field ImGuiCol_ScrollbarGrabActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabActive", ImGuiCol_ScrollbarGrabActive);
+    /**
+     * ImGuiCol_CheckMark
+     *
+     * @field ImGuiCol_CheckMark
+     */
+     lua_setfieldstringint(L, "ImGuiCol_CheckMark", ImGuiCol_CheckMark);
+    /**
+     * ImGuiCol_SliderGrab
+     *
+     * @field ImGuiCol_SliderGrab
+     */
+     lua_setfieldstringint(L, "ImGuiCol_SliderGrab", ImGuiCol_SliderGrab);
+    /**
+     * ImGuiCol_SliderGrabActive
+     *
+     * @field ImGuiCol_SliderGrabActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_SliderGrabActive", ImGuiCol_SliderGrabActive);
+    /**
+     * ImGuiCol_Button
+     *
+     * @field ImGuiCol_Button
+     */
+     lua_setfieldstringint(L, "ImGuiCol_Button", ImGuiCol_Button);
+    /**
+     * ImGuiCol_ButtonHovered
+     *
+     * @field ImGuiCol_ButtonHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ButtonHovered", ImGuiCol_ButtonHovered);
+    /**
+     * ImGuiCol_ButtonActive
+     *
+     * @field ImGuiCol_ButtonActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ButtonActive", ImGuiCol_ButtonActive);
+    /**
+     * ImGuiCol_Header
+     *
+     * @field ImGuiCol_Header
+     */
+     lua_setfieldstringint(L, "ImGuiCol_Header", ImGuiCol_Header);
+    /**
+     * ImGuiCol_HeaderHovered
+     *
+     * @field ImGuiCol_HeaderHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_HeaderHovered", ImGuiCol_HeaderHovered);
+    /**
+     * ImGuiCol_HeaderActive
+     *
+     * @field ImGuiCol_HeaderActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_HeaderActive", ImGuiCol_HeaderActive);
+    /**
+     * ImGuiCol_Separator
+     *
+     * @field ImGuiCol_Separator
+     */
+     lua_setfieldstringint(L, "ImGuiCol_Separator", ImGuiCol_Separator);
+    /**
+     * ImGuiCol_SeparatorHovered
+     *
+     * @field ImGuiCol_SeparatorHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_SeparatorHovered", ImGuiCol_SeparatorHovered);
+    /**
+     * ImGuiCol_SeparatorActive
+     *
+     * @field ImGuiCol_SeparatorActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_SeparatorActive", ImGuiCol_SeparatorActive);
+    /**
+     * ImGuiCol_ResizeGrip
+     *
+     * @field ImGuiCol_ResizeGrip
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ResizeGrip", ImGuiCol_ResizeGrip);
+    /**
+     * ImGuiCol_ResizeGripHovered
+     *
+     * @field ImGuiCol_ResizeGripHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ResizeGripHovered", ImGuiCol_ResizeGripHovered);
+    /**
+     * ImGuiCol_ResizeGripActive
+     *
+     * @field ImGuiCol_ResizeGripActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ResizeGripActive", ImGuiCol_ResizeGripActive);
+    /**
+     * ImGuiCol_Tab
+     *
+     * @field ImGuiCol_Tab
+     */
+     lua_setfieldstringint(L, "ImGuiCol_Tab", ImGuiCol_Tab);
+    /**
+     * ImGuiCol_TabHovered
+     *
+     * @field ImGuiCol_TabHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TabHovered", ImGuiCol_TabHovered);
+    /**
+     * ImGuiCol_TabActive
+     *
+     * @field ImGuiCol_TabActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TabActive", ImGuiCol_TabActive);
+    /**
+     * ImGuiCol_TabUnfocused
+     *
+     * @field ImGuiCol_TabUnfocused
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TabUnfocused", ImGuiCol_TabUnfocused);
+    /**
+     * ImGuiCol_TabUnfocusedActive
+     *
+     * @field ImGuiCol_TabUnfocusedActive
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TabUnfocusedActive", ImGuiCol_TabUnfocusedActive);
+    /**
+     * ImGuiCol_PlotLines
+     *
+     * @field ImGuiCol_PlotLines
+     */
+     lua_setfieldstringint(L, "ImGuiCol_PlotLines", ImGuiCol_PlotLines);
+    /**
+     * ImGuiCol_PlotLinesHovered
+     *
+     * @field ImGuiCol_PlotLinesHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_PlotLinesHovered", ImGuiCol_PlotLinesHovered);
+    /**
+     * ImGuiCol_PlotHistogram
+     *
+     * @field ImGuiCol_PlotHistogram
+     */
+     lua_setfieldstringint(L, "ImGuiCol_PlotHistogram", ImGuiCol_PlotHistogram);
+    /**
+     * ImGuiCol_PlotHistogramHovered
+     *
+     * @field ImGuiCol_PlotHistogramHovered
+     */
+     lua_setfieldstringint(L, "ImGuiCol_PlotHistogramHovered", ImGuiCol_PlotHistogramHovered);
+    /**
+     * ImGuiCol_TableHeaderBg
+     *
+     * @field ImGuiCol_TableHeaderBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TableHeaderBg", ImGuiCol_TableHeaderBg);
+    /**
+     * ImGuiCol_TableBorderStrong
+     *
+     * @field ImGuiCol_TableBorderStrong
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TableBorderStrong", ImGuiCol_TableBorderStrong);
+    /**
+     * ImGuiCol_TableBorderLight
+     *
+     * @field ImGuiCol_TableBorderLight
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TableBorderLight", ImGuiCol_TableBorderLight);
+    /**
+     * ImGuiCol_TableRowBg
+     *
+     * @field ImGuiCol_TableRowBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TableRowBg", ImGuiCol_TableRowBg);
+    /**
+     * ImGuiCol_TableRowBgAlt
+     *
+     * @field ImGuiCol_TableRowBgAlt
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TableRowBgAlt", ImGuiCol_TableRowBgAlt);
+    /**
+     * ImGuiCol_TextSelectedBg
+     *
+     * @field ImGuiCol_TextSelectedBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_TextSelectedBg", ImGuiCol_TextSelectedBg);
+    /**
+     * ImGuiCol_DragDropTarget
+     *
+     * @field ImGuiCol_DragDropTarget
+     */
+     lua_setfieldstringint(L, "ImGuiCol_DragDropTarget", ImGuiCol_DragDropTarget);
+    /**
+     * ImGuiCol_NavHighlight
+     *
+     * @field ImGuiCol_NavHighlight
+     */
+     lua_setfieldstringint(L, "ImGuiCol_NavHighlight", ImGuiCol_NavHighlight);
+    /**
+     * ImGuiCol_NavWindowingHighlight
+     *
+     * @field ImGuiCol_NavWindowingHighlight
+     */
+     lua_setfieldstringint(L, "ImGuiCol_NavWindowingHighlight", ImGuiCol_NavWindowingHighlight);
+    /**
+     * ImGuiCol_NavWindowingDimBg
+     *
+     * @field ImGuiCol_NavWindowingDimBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_NavWindowingDimBg", ImGuiCol_NavWindowingDimBg);
+    /**
+     * ImGuiCol_ModalWindowDimBg
+     *
+     * @field ImGuiCol_ModalWindowDimBg
+     */
+     lua_setfieldstringint(L, "ImGuiCol_ModalWindowDimBg", ImGuiCol_ModalWindowDimBg);
 
-    lua_setfieldstringint(L, "TABLECOLUMN_NONE", ImGuiTableColumnFlags_None);
-    lua_setfieldstringint(L, "TABLECOLUMN_DEFAULTHIDE", ImGuiTableColumnFlags_DefaultHide);   // Default as a hidden/disabled column.
-    lua_setfieldstringint(L, "TABLECOLUMN_DEFAULTSORT", ImGuiTableColumnFlags_DefaultSort);   // Default as a sorting column.
-    lua_setfieldstringint(L, "TABLECOLUMN_WIDTHSTRETCH", ImGuiTableColumnFlags_WidthStretch);   // Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
-    lua_setfieldstringint(L, "TABLECOLUMN_WIDTHFIXED", ImGuiTableColumnFlags_WidthFixed);   // Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
-    lua_setfieldstringint(L, "TABLECOLUMN_NORESIZE", ImGuiTableColumnFlags_NoResize);   // Disable manual resizing.
-    lua_setfieldstringint(L, "TABLECOLUMN_NOREORDER", ImGuiTableColumnFlags_NoReorder);   // Disable manual reordering this column, this will also prevent other columns from crossing over this column.
-    lua_setfieldstringint(L, "TABLECOLUMN_NOHIDE", ImGuiTableColumnFlags_NoHide);   // Disable ability to hide/disable this column.
-    lua_setfieldstringint(L, "TABLECOLUMN_NOCLIP", ImGuiTableColumnFlags_NoClip);   // Disable clipping for this column (all NoClip columns will render in a same draw command).
-    lua_setfieldstringint(L, "TABLECOLUMN_NOSORT", ImGuiTableColumnFlags_NoSort);   // Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
-    lua_setfieldstringint(L, "TABLECOLUMN_NOSORTASCENDING", ImGuiTableColumnFlags_NoSortAscending);   // Disable ability to sort in the ascending direction.
-    lua_setfieldstringint(L, "TABLECOLUMN_NOSORTDESCENDING", ImGuiTableColumnFlags_NoSortDescending);  // Disable ability to sort in the descending direction.
-    lua_setfieldstringint(L, "TABLECOLUMN_NOHEADERWIDTH", ImGuiTableColumnFlags_NoHeaderWidth);  // Disable header text width contribution to automatic column width.
-    lua_setfieldstringint(L, "TABLECOLUMN_PREFERSORTASCENDING", ImGuiTableColumnFlags_PreferSortAscending);  // Make the initial sort direction Ascending when first sorting on this column (default).
-    lua_setfieldstringint(L, "TABLECOLUMN_PREFERSORTDESCENDING", ImGuiTableColumnFlags_PreferSortDescending);  // Make the initial sort direction Descending when first sorting on this column.
-    lua_setfieldstringint(L, "TABLECOLUMN_INDENTENABLE", ImGuiTableColumnFlags_IndentEnable);  // Use current Indent value when entering cell (default for column 0).
-    lua_setfieldstringint(L, "TABLECOLUMN_INDENTDISABLE", ImGuiTableColumnFlags_IndentDisable);  // Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+    /**
+     * TABLECOLUMN_NONE
+     *
+     * @field TABLECOLUMN_NONE
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NONE", ImGuiTableColumnFlags_None);
+    /**
+     * TABLECOLUMN_DEFAULTHIDE
+     * Default as a hidden/disabled column.
+     * @field TABLECOLUMN_DEFAULTHIDE
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_DEFAULTHIDE", ImGuiTableColumnFlags_DefaultHide);
+    /**
+     * TABLECOLUMN_DEFAULTSORT
+     * Default as a sorting column.
+     * @field TABLECOLUMN_DEFAULTSORT
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_DEFAULTSORT", ImGuiTableColumnFlags_DefaultSort);
+    /**
+     * TABLECOLUMN_WIDTHSTRETCH
+     * Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
+     * @field TABLECOLUMN_WIDTHSTRETCH
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_WIDTHSTRETCH", ImGuiTableColumnFlags_WidthStretch);
+    /**
+     * TABLECOLUMN_WIDTHFIXED
+     * Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
+     * @field TABLECOLUMN_WIDTHFIXED
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_WIDTHFIXED", ImGuiTableColumnFlags_WidthFixed);
+    /**
+     * TABLECOLUMN_NORESIZE
+     * Disable manual resizing.
+     * @field TABLECOLUMN_NORESIZE
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NORESIZE", ImGuiTableColumnFlags_NoResize);
+    /**
+     * TABLECOLUMN_NOREORDER
+     * Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+     * @field TABLECOLUMN_NOREORDER
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOREORDER", ImGuiTableColumnFlags_NoReorder);
+    /**
+     * TABLECOLUMN_NOHIDE
+     * Disable ability to hide/disable this column.
+     * @field TABLECOLUMN_NOHIDE
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOHIDE", ImGuiTableColumnFlags_NoHide);
+    /**
+     * TABLECOLUMN_NOCLIP
+     * Disable clipping for this column (all NoClip columns will render in a same draw command).
+     * @field TABLECOLUMN_NOCLIP
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOCLIP", ImGuiTableColumnFlags_NoClip);
+    /**
+     * TABLECOLUMN_NOSORT
+     * Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
+     * @field TABLECOLUMN_NOSORT
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOSORT", ImGuiTableColumnFlags_NoSort);
+    /**
+     * TABLECOLUMN_NOSORTASCENDING
+     * Disable ability to sort in the ascending direction.
+     * @field TABLECOLUMN_NOSORTASCENDING
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOSORTASCENDING", ImGuiTableColumnFlags_NoSortAscending);
+    /**
+     * TABLECOLUMN_NOSORTDESCENDING
+     * Disable ability to sort in the descending direction.
+     * @field TABLECOLUMN_NOSORTDESCENDING
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOSORTDESCENDING", ImGuiTableColumnFlags_NoSortDescending);
+    /**
+     * TABLECOLUMN_NOHEADERWIDTH
+     * Disable header text width contribution to automatic column width.
+     * @field TABLECOLUMN_NOHEADERWIDTH
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_NOHEADERWIDTH", ImGuiTableColumnFlags_NoHeaderWidth);
+    /**
+     * TABLECOLUMN_PREFERSORTASCENDING
+     * Make the initial sort direction Ascending when first sorting on this column (default).
+     * @field TABLECOLUMN_PREFERSORTASCENDING
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_PREFERSORTASCENDING", ImGuiTableColumnFlags_PreferSortAscending);
+    /**
+     * TABLECOLUMN_PREFERSORTDESCENDING
+     * Make the initial sort direction Descending when first sorting on this column.
+     * @field TABLECOLUMN_PREFERSORTDESCENDING
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_PREFERSORTDESCENDING", ImGuiTableColumnFlags_PreferSortDescending);
+    /**
+     * TABLECOLUMN_INDENTENABLE
+     * Use current Indent value when entering cell (default for column 0).
+     * @field TABLECOLUMN_INDENTENABLE
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_INDENTENABLE", ImGuiTableColumnFlags_IndentEnable);
+    /**
+     * TABLECOLUMN_INDENTDISABLE
+     * Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+     * @field TABLECOLUMN_INDENTDISABLE
+     */
+     lua_setfieldstringint(L, "TABLECOLUMN_INDENTDISABLE", ImGuiTableColumnFlags_IndentDisable);
 
-    lua_setfieldstringint(L, "TABLE_NONE", ImGuiTableFlags_None);
-    lua_setfieldstringint(L, "TABLE_RESIZABLE", ImGuiTableFlags_Resizable);   // Enable resizing columns.
-    lua_setfieldstringint(L, "TABLE_REORDERABLE", ImGuiTableFlags_Reorderable);   // Enable reordering columns in header row (need calling TableSetupColumn() + TableHeadersRow() to display headers)
-    lua_setfieldstringint(L, "TABLE_HIDEABLE", ImGuiTableFlags_Hideable);   // Enable hiding/disabling columns in context menu.
-    lua_setfieldstringint(L, "TABLE_SORTABLE", ImGuiTableFlags_Sortable);   // Enable sorting. Call TableGetSortSpecs() to obtain sort specs. Also see ImGuiTableFlags_SortMulti and ImGuiTableFlags_SortTristate.
-    lua_setfieldstringint(L, "TABLE_NOSAVEDSETTINGS", ImGuiTableFlags_NoSavedSettings);   // Disable persisting columns order, width and sort settings in the .ini file.
-    lua_setfieldstringint(L, "TABLE_CONTEXTMENUINBODY", ImGuiTableFlags_ContextMenuInBody);   // Right-click on columns body/contents will display table context menu. By default it is available in TableHeadersRow().
-    lua_setfieldstringint(L, "TABLE_ROWBG", ImGuiTableFlags_RowBg);   // Set each RowBg color with ImGuiCol_TableRowBg or ImGuiCol_TableRowBgAlt (equivalent of calling TableSetBgColor with ImGuiTableBgFlags_RowBg0 on each row manually)
-    lua_setfieldstringint(L, "TABLE_BORDERSINNERH", ImGuiTableFlags_BordersInnerH);   // Draw horizontal borders between rows.
-    lua_setfieldstringint(L, "TABLE_BORDERSOUTERH", ImGuiTableFlags_BordersOuterH);   // Draw horizontal borders at the top and bottom.
-    lua_setfieldstringint(L, "TABLE_BORDERSINNERV", ImGuiTableFlags_BordersInnerV);   // Draw vertical borders between columns.
-    lua_setfieldstringint(L, "TABLE_BORDERSOUTERV", ImGuiTableFlags_BordersOuterV);  // Draw vertical borders on the left and right sides.
-    lua_setfieldstringint(L, "TABLE_BORDERSH", ImGuiTableFlags_BordersH); // Draw horizontal borders.
-    lua_setfieldstringint(L, "TABLE_BORDERSV", ImGuiTableFlags_BordersV); // Draw vertical borders.
-    lua_setfieldstringint(L, "TABLE_BORDERSINNER", ImGuiTableFlags_BordersInner); // Draw inner borders.
-    lua_setfieldstringint(L, "TABLE_BORDERSOUTER", ImGuiTableFlags_BordersOuter); // Draw outer borders.
-    lua_setfieldstringint(L, "TABLE_BORDERS", ImGuiTableFlags_Borders);   // Draw all borders.
-    lua_setfieldstringint(L, "TABLE_NOBORDERSINBODY", ImGuiTableFlags_NoBordersInBody);  // [ALPHA] Disable vertical borders in columns Body (borders will always appears in Headers). -> May move to style
-    lua_setfieldstringint(L, "TABLE_NOBORDERSINBODYUNTILRESIZE", ImGuiTableFlags_NoBordersInBodyUntilResize);  // [ALPHA] Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers). -> May move to style
-    lua_setfieldstringint(L, "TABLE_SIZINGFIXEDFIT", ImGuiTableFlags_SizingFixedFit);  // Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching contents width.
-    lua_setfieldstringint(L, "TABLE_SIZINGFIXEDSAME", ImGuiTableFlags_SizingFixedSame);  // Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching the maximum contents width of all columns. Implicitly enable ImGuiTableFlags_NoKeepColumnsVisible.
-    lua_setfieldstringint(L, "TABLE_SIZINGSTRETCHPROP", ImGuiTableFlags_SizingStretchProp);  // Columns default to _WidthStretch with default weights proportional to each columns contents widths.
-    lua_setfieldstringint(L, "TABLE_SIZINGSTRETCHSAME", ImGuiTableFlags_SizingStretchSame);  // Columns default to _WidthStretch with default weights all equal, unless overriden by TableSetupColumn().
-    lua_setfieldstringint(L, "TABLE_NOHOSTEXTENDX", ImGuiTableFlags_NoHostExtendX);  // Make outer width auto-fit to columns, overriding outer_size.x value. Only available when ScrollX/ScrollY are disabled and Stretch columns are not used.
-    lua_setfieldstringint(L, "TABLE_NOHOSTEXTENDY", ImGuiTableFlags_NoHostExtendY);  // Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.
-    lua_setfieldstringint(L, "TABLE_NOKEEPCOLUMNSVISIBLE", ImGuiTableFlags_NoKeepColumnsVisible);  // Disable keeping column always minimally visible when ScrollX is off and table gets too small. Not recommended if columns are resizable.
-    lua_setfieldstringint(L, "TABLE_PRECISEWIDTHS", ImGuiTableFlags_PreciseWidths);  // Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.
-    lua_setfieldstringint(L, "TABLE_NOCLIP", ImGuiTableFlags_NoClip);  // Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). Generally incompatible with TableSetupScrollFreeze().
-    lua_setfieldstringint(L, "TABLE_PADOUTERX", ImGuiTableFlags_PadOuterX);  // Default if BordersOuterV is on. Enable outer-most padding. Generally desirable if you have headers.
-    lua_setfieldstringint(L, "TABLE_NOPADOUTERX", ImGuiTableFlags_NoPadOuterX);  // Default if BordersOuterV is off. Disable outer-most padding.
-    lua_setfieldstringint(L, "TABLE_NOPADINNERX", ImGuiTableFlags_NoPadInnerX);  // Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off).
-    lua_setfieldstringint(L, "TABLE_SCROLLX", ImGuiTableFlags_ScrollX);  // Enable horizontal scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size. Changes default sizing policy. Because this create a child window, ScrollY is currently generally recommended when using ScrollX.
-    lua_setfieldstringint(L, "TABLE_SCROLLY", ImGuiTableFlags_ScrollY);  // Enable vertical scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size.
-    lua_setfieldstringint(L, "TABLE_SORTMULTI", ImGuiTableFlags_SortMulti);  // Hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).
-    lua_setfieldstringint(L, "TABLE_SORTTRISTATE", ImGuiTableFlags_SortTristate);  // Allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).
+    /**
+     * TABLE_NONE
+     *
+     * @field TABLE_NONE
+     */
+     lua_setfieldstringint(L, "TABLE_NONE", ImGuiTableFlags_None);
+    /**
+     * TABLE_RESIZABLE
+     * Enable resizing columns.
+     * @field TABLE_RESIZABLE
+     */
+     lua_setfieldstringint(L, "TABLE_RESIZABLE", ImGuiTableFlags_Resizable);
+    /**
+     * TABLE_REORDERABLE
+     * Enable reordering columns in header row (need calling TableSetupColumn() + TableHeadersRow() to display headers)
+     * @field TABLE_REORDERABLE
+     */
+     lua_setfieldstringint(L, "TABLE_REORDERABLE", ImGuiTableFlags_Reorderable);
+    /**
+     * TABLE_HIDEABLE
+     * Enable hiding/disabling columns in context menu.
+     * @field TABLE_HIDEABLE
+     */
+     lua_setfieldstringint(L, "TABLE_HIDEABLE", ImGuiTableFlags_Hideable);
+    /**
+     * TABLE_SORTABLE
+     * Enable sorting. Call TableGetSortSpecs() to obtain sort specs. Also see ImGuiTableFlags_SortMulti and ImGuiTableFlags_SortTristate.
+     * @field TABLE_SORTABLE
+     */
+     lua_setfieldstringint(L, "TABLE_SORTABLE", ImGuiTableFlags_Sortable);
+    /**
+     * TABLE_NOSAVEDSETTINGS
+     * Disable persisting columns order, width and sort settings in the .ini file.
+     * @field TABLE_NOSAVEDSETTINGS
+     */
+     lua_setfieldstringint(L, "TABLE_NOSAVEDSETTINGS", ImGuiTableFlags_NoSavedSettings);
+    /**
+     * TABLE_CONTEXTMENUINBODY
+     * Right-click on columns body/contents will display table context menu. By default it is available in TableHeadersRow().
+     * @field TABLE_CONTEXTMENUINBODY
+     */
+     lua_setfieldstringint(L, "TABLE_CONTEXTMENUINBODY", ImGuiTableFlags_ContextMenuInBody);
+    /**
+     * TABLE_ROWBG
+     * Set each RowBg color with ImGuiCol_TableRowBg or ImGuiCol_TableRowBgAlt (equivalent of calling TableSetBgColor with ImGuiTableBgFlags_RowBg0 on each row manually)
+     * @field TABLE_ROWBG
+     */
+     lua_setfieldstringint(L, "TABLE_ROWBG", ImGuiTableFlags_RowBg);
+    /**
+     * TABLE_BORDERSINNERH
+     * Draw horizontal borders between rows.
+     * @field TABLE_BORDERSINNERH
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSINNERH", ImGuiTableFlags_BordersInnerH);
+    /**
+     * TABLE_BORDERSOUTERH
+     * Draw horizontal borders at the top and bottom.
+     * @field TABLE_BORDERSOUTERH
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSOUTERH", ImGuiTableFlags_BordersOuterH);
+    /**
+     * TABLE_BORDERSINNERV
+     * Draw vertical borders between columns.
+     * @field TABLE_BORDERSINNERV
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSINNERV", ImGuiTableFlags_BordersInnerV);
+    /**
+     * TABLE_BORDERSOUTERV
+     * Draw vertical borders on the left and right sides.
+     * @field TABLE_BORDERSOUTERV
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSOUTERV", ImGuiTableFlags_BordersOuterV);
+    /**
+     * TABLE_BORDERSH
+     * Draw horizontal borders.
+     * @field TABLE_BORDERSH
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSH", ImGuiTableFlags_BordersH);
+    /**
+     * TABLE_BORDERSV
+     * Draw vertical borders.
+     * @field TABLE_BORDERSV
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSV", ImGuiTableFlags_BordersV);
+    /**
+     * TABLE_BORDERSINNER
+     * Draw inner borders.
+     * @field TABLE_BORDERSINNER
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSINNER", ImGuiTableFlags_BordersInner);
+    /**
+     * TABLE_BORDERSOUTER
+     * Draw outer borders.
+     * @field TABLE_BORDERSOUTER
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERSOUTER", ImGuiTableFlags_BordersOuter);
+    /**
+     * TABLE_BORDERS
+     * Draw all borders.
+     * @field TABLE_BORDERS
+     */
+     lua_setfieldstringint(L, "TABLE_BORDERS", ImGuiTableFlags_Borders);
+    /**
+     * TABLE_NOBORDERSINBODY
+     * [ALPHA] Disable vertical borders in columns Body (borders will always appears in Headers). -> May move to style
+     * @field TABLE_NOBORDERSINBODY
+     */
+     lua_setfieldstringint(L, "TABLE_NOBORDERSINBODY", ImGuiTableFlags_NoBordersInBody);
+    /**
+     * TABLE_NOBORDERSINBODYUNTILRESIZE
+     * [ALPHA] Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers). -> May move to style
+     * @field TABLE_NOBORDERSINBODYUNTILRESIZE
+     */
+     lua_setfieldstringint(L, "TABLE_NOBORDERSINBODYUNTILRESIZE", ImGuiTableFlags_NoBordersInBodyUntilResize);
+    /**
+     * TABLE_SIZINGFIXEDFIT
+     * Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching contents width.
+     * @field TABLE_SIZINGFIXEDFIT
+     */
+     lua_setfieldstringint(L, "TABLE_SIZINGFIXEDFIT", ImGuiTableFlags_SizingFixedFit);
+    /**
+     * TABLE_SIZINGFIXEDSAME
+     * Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching the maximum contents width of all columns. Implicitly enable ImGuiTableFlags_NoKeepColumnsVisible.
+     * @field TABLE_SIZINGFIXEDSAME
+     */
+     lua_setfieldstringint(L, "TABLE_SIZINGFIXEDSAME", ImGuiTableFlags_SizingFixedSame);
+    /**
+     * TABLE_SIZINGSTRETCHPROP
+     * Columns default to _WidthStretch with default weights proportional to each columns contents widths.
+     * @field TABLE_SIZINGSTRETCHPROP
+     */
+     lua_setfieldstringint(L, "TABLE_SIZINGSTRETCHPROP", ImGuiTableFlags_SizingStretchProp);
+    /**
+     * TABLE_SIZINGSTRETCHSAME
+     * Columns default to _WidthStretch with default weights all equal, unless overriden by TableSetupColumn().
+     * @field TABLE_SIZINGSTRETCHSAME
+     */
+     lua_setfieldstringint(L, "TABLE_SIZINGSTRETCHSAME", ImGuiTableFlags_SizingStretchSame);
+    /**
+     * TABLE_NOHOSTEXTENDX
+     * Make outer width auto-fit to columns, overriding outer_size.x value. Only available when ScrollX/ScrollY are disabled and Stretch columns are not used.
+     * @field TABLE_NOHOSTEXTENDX
+     */
+     lua_setfieldstringint(L, "TABLE_NOHOSTEXTENDX", ImGuiTableFlags_NoHostExtendX);
+    /**
+     * TABLE_NOHOSTEXTENDY
+     * Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.
+     * @field TABLE_NOHOSTEXTENDY
+     */
+     lua_setfieldstringint(L, "TABLE_NOHOSTEXTENDY", ImGuiTableFlags_NoHostExtendY);
+    /**
+     * TABLE_NOKEEPCOLUMNSVISIBLE
+     * Disable keeping column always minimally visible when ScrollX is off and table gets too small. Not recommended if columns are resizable.
+     * @field TABLE_NOKEEPCOLUMNSVISIBLE
+     */
+     lua_setfieldstringint(L, "TABLE_NOKEEPCOLUMNSVISIBLE", ImGuiTableFlags_NoKeepColumnsVisible);
+    /**
+     * TABLE_PRECISEWIDTHS
+     * Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.
+     * @field TABLE_PRECISEWIDTHS
+     */
+     lua_setfieldstringint(L, "TABLE_PRECISEWIDTHS", ImGuiTableFlags_PreciseWidths);
+    /**
+     * TABLE_NOCLIP
+     * Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). Generally incompatible with TableSetupScrollFreeze().
+     * @field TABLE_NOCLIP
+     */
+     lua_setfieldstringint(L, "TABLE_NOCLIP", ImGuiTableFlags_NoClip);
+    /**
+     * TABLE_PADOUTERX
+     * Default if BordersOuterV is on. Enable outer-most padding. Generally desirable if you have headers.
+     * @field TABLE_PADOUTERX
+     */
+     lua_setfieldstringint(L, "TABLE_PADOUTERX", ImGuiTableFlags_PadOuterX);
+    /**
+     * TABLE_NOPADOUTERX
+     * Default if BordersOuterV is off. Disable outer-most padding.
+     * @field TABLE_NOPADOUTERX
+     */
+     lua_setfieldstringint(L, "TABLE_NOPADOUTERX", ImGuiTableFlags_NoPadOuterX);
+    /**
+     * TABLE_NOPADINNERX
+     * Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off).
+     * @field TABLE_NOPADINNERX
+     */
+     lua_setfieldstringint(L, "TABLE_NOPADINNERX", ImGuiTableFlags_NoPadInnerX);
+    /**
+     * TABLE_SCROLLX
+     * Enable horizontal scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size. Changes default sizing policy. Because this create a child window, ScrollY is currently generally recommended when using ScrollX.
+     * @field TABLE_SCROLLX
+     */
+     lua_setfieldstringint(L, "TABLE_SCROLLX", ImGuiTableFlags_ScrollX);
+    /**
+     * TABLE_SCROLLY
+     * Enable vertical scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size.
+     * @field TABLE_SCROLLY
+     */
+     lua_setfieldstringint(L, "TABLE_SCROLLY", ImGuiTableFlags_ScrollY);
+    /**
+     * TABLE_SORTMULTI
+     * Hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).
+     * @field TABLE_SORTMULTI
+     */
+     lua_setfieldstringint(L, "TABLE_SORTMULTI", ImGuiTableFlags_SortMulti);
+    /**
+     * TABLE_SORTTRISTATE
+     * Allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).
+     * @field TABLE_SORTTRISTATE
+     */
+     lua_setfieldstringint(L, "TABLE_SORTTRISTATE", ImGuiTableFlags_SortTristate);
 
-    lua_setfieldstringint(L, "WINDOWFLAGS_NONE", ImGuiWindowFlags_None);
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOTITLEBAR", ImGuiWindowFlags_NoTitleBar); // Disable title-bar
-    lua_setfieldstringint(L, "WINDOWFLAGS_NORESIZE", ImGuiWindowFlags_NoResize); // Disable user resizing with the lower-right grip
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOMOVE", ImGuiWindowFlags_NoMove); // Disable user moving the window
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOSCROLLBAR", ImGuiWindowFlags_NoScrollbar); // Disable scrollbars (window can still scroll with mouse or programmatically)
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOSCROLLWITHMOUSE", ImGuiWindowFlags_NoScrollWithMouse); // Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOCOLLAPSE", ImGuiWindowFlags_NoCollapse); // Disable user collapsing window by double-clicking on it
-    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSAUTORESIZE", ImGuiWindowFlags_AlwaysAutoResize); // Resize every window to its content every frame
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOBACKGROUND", ImGuiWindowFlags_NoBackground); // Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOSAVEDSETTINGS", ImGuiWindowFlags_NoSavedSettings); // Never load/save settings in .ini file
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOMOUSEINPUTS", ImGuiWindowFlags_NoMouseInputs); // Disable catching mouse, hovering test with pass through.
-    lua_setfieldstringint(L, "WINDOWFLAGS_MENUBAR", ImGuiWindowFlags_MenuBar); // Has a menu-bar
-    lua_setfieldstringint(L, "WINDOWFLAGS_HORIZONTALSCROLLBAR", ImGuiWindowFlags_HorizontalScrollbar); // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOFOCUSONAPPEARING", ImGuiWindowFlags_NoFocusOnAppearing); // Disable taking focus when transitioning from hidden to visible state
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOBRINGTOFRONTONFOCUS", ImGuiWindowFlags_NoBringToFrontOnFocus); // Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
-    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR", ImGuiWindowFlags_AlwaysVerticalScrollbar); // Always show vertical scrollbar (even if ContentSize.y < Size.y)
-    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR", ImGuiWindowFlags_AlwaysHorizontalScrollbar); // Always show horizontal scrollbar (even if ContentSize.x < Size.x)
-    lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSUSEWINDOWPADDING", ImGuiWindowFlags_AlwaysUseWindowPadding); // Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
-    lua_setfieldstringint(L, "WINDOWFLAGS_NONAVINPUTS", ImGuiWindowFlags_NoNavInputs); // No gamepad/keyboard navigation within the window
-    lua_setfieldstringint(L, "WINDOWFLAGS_NONAVFOCUS", ImGuiWindowFlags_NoNavFocus); // No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
-    lua_setfieldstringint(L, "WINDOWFLAGS_UNSAVEDDOCUMENT", ImGuiWindowFlags_UnsavedDocument); // Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. When used in a tab/docking context, tab is selected on closure and closure is deferred by one frame to allow code to cancel the closure (with a confirmation popup, etc.) without flicker.
-    lua_setfieldstringint(L, "WINDOWFLAGS_NONAV", ImGuiWindowFlags_NoNav); // ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
-    lua_setfieldstringint(L, "WINDOWFLAGS_NODECORATION", ImGuiWindowFlags_NoDecoration); // ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse,
-    lua_setfieldstringint(L, "WINDOWFLAGS_NOINPUTS", ImGuiWindowFlags_NoInputs); // ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+    /**
+     * WINDOWFLAGS_NONE
+     *
+     * @field WINDOWFLAGS_NONE
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NONE", ImGuiWindowFlags_None);
+    /**
+     * WINDOWFLAGS_NOTITLEBAR
+     * Disable title-bar
+     * @field WINDOWFLAGS_NOTITLEBAR
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOTITLEBAR", ImGuiWindowFlags_NoTitleBar);
+    /**
+     * WINDOWFLAGS_NORESIZE
+     * Disable user resizing with the lower-right grip
+     * @field WINDOWFLAGS_NORESIZE
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NORESIZE", ImGuiWindowFlags_NoResize);
+    /**
+     * WINDOWFLAGS_NOMOVE
+     * Disable user moving the window
+     * @field WINDOWFLAGS_NOMOVE
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOMOVE", ImGuiWindowFlags_NoMove);
+    /**
+     * WINDOWFLAGS_NOSCROLLBAR
+     * Disable scrollbars (window can still scroll with mouse or programmatically)
+     * @field WINDOWFLAGS_NOSCROLLBAR
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOSCROLLBAR", ImGuiWindowFlags_NoScrollbar);
+    /**
+     * WINDOWFLAGS_NOSCROLLWITHMOUSE
+     * Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
+     * @field WINDOWFLAGS_NOSCROLLWITHMOUSE
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOSCROLLWITHMOUSE", ImGuiWindowFlags_NoScrollWithMouse);
+    /**
+     * WINDOWFLAGS_NOCOLLAPSE
+     * Disable user collapsing window by double-clicking on it
+     * @field WINDOWFLAGS_NOCOLLAPSE
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOCOLLAPSE", ImGuiWindowFlags_NoCollapse);
+    /**
+     * WINDOWFLAGS_ALWAYSAUTORESIZE
+     * Resize every window to its content every frame
+     * @field WINDOWFLAGS_ALWAYSAUTORESIZE
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSAUTORESIZE", ImGuiWindowFlags_AlwaysAutoResize);
+    /**
+     * WINDOWFLAGS_NOBACKGROUND
+     * Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
+     * @field WINDOWFLAGS_NOBACKGROUND
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOBACKGROUND", ImGuiWindowFlags_NoBackground);
+    /**
+     * WINDOWFLAGS_NOSAVEDSETTINGS
+     * Never load/save settings in .ini file
+     * @field WINDOWFLAGS_NOSAVEDSETTINGS
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOSAVEDSETTINGS", ImGuiWindowFlags_NoSavedSettings);
+    /**
+     * WINDOWFLAGS_NOMOUSEINPUTS
+     * Disable catching mouse, hovering test with pass through.
+     * @field WINDOWFLAGS_NOMOUSEINPUTS
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOMOUSEINPUTS", ImGuiWindowFlags_NoMouseInputs);
+    /**
+     * WINDOWFLAGS_MENUBAR
+     * Has a menu-bar
+     * @field WINDOWFLAGS_MENUBAR
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_MENUBAR", ImGuiWindowFlags_MenuBar);
+    /**
+     * WINDOWFLAGS_HORIZONTALSCROLLBAR
+     *  prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+     * @field WINDOWFLAGS_HORIZONTALSCROLLBAR
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_HORIZONTALSCROLLBAR", ImGuiWindowFlags_HorizontalScrollbar); // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f));
+    /**
+     * WINDOWFLAGS_NOFOCUSONAPPEARING
+     * Disable taking focus when transitioning from hidden to visible state
+     * @field WINDOWFLAGS_NOFOCUSONAPPEARING
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOFOCUSONAPPEARING", ImGuiWindowFlags_NoFocusOnAppearing);
+    /**
+     * WINDOWFLAGS_NOBRINGTOFRONTONFOCUS
+     * Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
+     * @field WINDOWFLAGS_NOBRINGTOFRONTONFOCUS
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOBRINGTOFRONTONFOCUS", ImGuiWindowFlags_NoBringToFrontOnFocus);
+    /**
+     * WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR
+     * Always show vertical scrollbar (even if ContentSize.y < Size.y)
+     * @field WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSVERTICALSCROLLBAR", ImGuiWindowFlags_AlwaysVerticalScrollbar);
+    /**
+     * WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR
+     * Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+     * @field WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSHORIZONTALSCROLLBAR", ImGuiWindowFlags_AlwaysHorizontalScrollbar);
+    /**
+     * WINDOWFLAGS_ALWAYSUSEWINDOWPADDING
+     * Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
+     * @field WINDOWFLAGS_ALWAYSUSEWINDOWPADDING
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_ALWAYSUSEWINDOWPADDING", ImGuiWindowFlags_AlwaysUseWindowPadding);
+    /**
+     * WINDOWFLAGS_NONAVINPUTS
+     * No gamepad/keyboard navigation within the window
+     * @field WINDOWFLAGS_NONAVINPUTS
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NONAVINPUTS", ImGuiWindowFlags_NoNavInputs);
+    /**
+     * WINDOWFLAGS_NONAVFOCUS
+     * No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
+     * @field WINDOWFLAGS_NONAVFOCUS
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NONAVFOCUS", ImGuiWindowFlags_NoNavFocus);
+    /**
+     * WINDOWFLAGS_UNSAVEDDOCUMENT
+     * Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. When used in a tab/docking context, tab is selected on closure and closure is deferred by one frame to allow code to cancel the closure (with a confirmation popup, etc.) without flicker.
+     * @field WINDOWFLAGS_UNSAVEDDOCUMENT
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_UNSAVEDDOCUMENT", ImGuiWindowFlags_UnsavedDocument);
+    /**
+     * WINDOWFLAGS_NONAV
+     * ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+     * @field WINDOWFLAGS_NONAV
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NONAV", ImGuiWindowFlags_NoNav);
+    /**
+     * WINDOWFLAGS_NODECORATION
+     * ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse,
+     * @field WINDOWFLAGS_NODECORATION
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NODECORATION", ImGuiWindowFlags_NoDecoration);
+    /**
+     * WINDOWFLAGS_NOINPUTS
+     * ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoNavFocus,
+     * @field WINDOWFLAGS_NOINPUTS
+     */
+     lua_setfieldstringint(L, "WINDOWFLAGS_NOINPUTS", ImGuiWindowFlags_NoInputs);
 
-    lua_setfieldstringint(L, "POPUPFLAGS_NONE", ImGuiPopupFlags_None);
-    lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONLEFT", ImGuiPopupFlags_MouseButtonLeft);        // For BeginPopupContext*(): open on Left Mouse release. Guaranteed to always be == 0 (same as ImGuiMouseButton_Left)
-    lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONRIGHT", ImGuiPopupFlags_MouseButtonRight);        // For BeginPopupContext*(): open on Right Mouse release. Guaranteed to always be == 1 (same as ImGuiMouseButton_Right)
-    lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONMIDDLE", ImGuiPopupFlags_MouseButtonMiddle);        // For BeginPopupContext*(): open on Middle Mouse release. Guaranteed to always be == 2 (same as ImGuiMouseButton_Middle)
-    lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONMASK", ImGuiPopupFlags_MouseButtonMask_);
-    lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONDEFAULT", ImGuiPopupFlags_MouseButtonDefault_);
-    lua_setfieldstringint(L, "POPUPFLAGS_NOOPENOVEREXISTINGPOPUP", ImGuiPopupFlags_NoOpenOverExistingPopup);   // For OpenPopup*(), BeginPopupContext*(): don't open if there's already a popup at the same level of the popup stack
-    lua_setfieldstringint(L, "POPUPFLAGS_NOOPENOVERITEMS", ImGuiPopupFlags_NoOpenOverItems);   // For BeginPopupContextWindow(): don't return true when hovering items, only when hovering empty space
-    lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUPID", ImGuiPopupFlags_AnyPopupId);   // For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
-    lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUPLEVEL", ImGuiPopupFlags_AnyPopupLevel);   // For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
-    lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUP", ImGuiPopupFlags_AnyPopup);
+    /**
+     * POPUPFLAGS_NONE
+     *
+     * @field POPUPFLAGS_NONE
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_NONE", ImGuiPopupFlags_None);
+    /**
+     * POPUPFLAGS_MOUSEBUTTONLEFT
+     *         // For BeginPopupContext*(): open on Left Mouse release. Guaranteed to always be == 0 (same as ImGuiMouseButton_Left)
+     * @field POPUPFLAGS_MOUSEBUTTONLEFT
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONLEFT", ImGuiPopupFlags_MouseButtonLeft);
+    /**
+     * POPUPFLAGS_MOUSEBUTTONRIGHT
+     *         // For BeginPopupContext*(): open on Right Mouse release. Guaranteed to always be == 1 (same as ImGuiMouseButton_Right)
+     * @field POPUPFLAGS_MOUSEBUTTONRIGHT
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONRIGHT", ImGuiPopupFlags_MouseButtonRight);
+    /**
+     * POPUPFLAGS_MOUSEBUTTONMIDDLE
+     *         // For BeginPopupContext*(): open on Middle Mouse release. Guaranteed to always be == 2 (same as ImGuiMouseButton_Middle)
+     * @field POPUPFLAGS_MOUSEBUTTONMIDDLE
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONMIDDLE", ImGuiPopupFlags_MouseButtonMiddle);
+    /**
+     * POPUPFLAGS_MOUSEBUTTONMASK
+     *
+     * @field POPUPFLAGS_MOUSEBUTTONMASK
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONMASK", ImGuiPopupFlags_MouseButtonMask_);
+    /**
+     * POPUPFLAGS_MOUSEBUTTONDEFAULT
+     *
+     * @field POPUPFLAGS_MOUSEBUTTONDEFAULT
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONDEFAULT", ImGuiPopupFlags_MouseButtonDefault_);
+    /**
+     * POPUPFLAGS_NOOPENOVEREXISTINGPOPUP
+     * For OpenPopup*(), BeginPopupContext*(): don't open if there's already a popup at the same level of the popup stack
+     * @field POPUPFLAGS_NOOPENOVEREXISTINGPOPUP
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_NOOPENOVEREXISTINGPOPUP", ImGuiPopupFlags_NoOpenOverExistingPopup);
+    /**
+     * POPUPFLAGS_NOOPENOVERITEMS
+     * For BeginPopupContextWindow(): don't return true when hovering items, only when hovering empty space
+     * @field POPUPFLAGS_NOOPENOVERITEMS
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_NOOPENOVERITEMS", ImGuiPopupFlags_NoOpenOverItems);
+    /**
+     * POPUPFLAGS_ANYPOPUPID
+     * For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
+     * @field POPUPFLAGS_ANYPOPUPID
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUPID", ImGuiPopupFlags_AnyPopupId);
+    /**
+     * POPUPFLAGS_ANYPOPUPLEVEL
+     * For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
+     * @field POPUPFLAGS_ANYPOPUPLEVEL
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUPLEVEL", ImGuiPopupFlags_AnyPopupLevel);
+    /**
+     * POPUPFLAGS_ANYPOPUP
+     *
+     * @field POPUPFLAGS_ANYPOPUP
+     */
+     lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUP", ImGuiPopupFlags_AnyPopup);
 
-    lua_setfieldstringint(L, "DROPFLAGS_NONE", ImGuiDragDropFlags_None);
-    lua_setfieldstringint(L, "DROPFLAGS_SOURCENOPREVIEWTOOLTIP", ImGuiDragDropFlags_SourceNoPreviewTooltip);   // By default, a successful call to BeginDragDropSource opens a tooltip so you can display a preview or description of the source contents. This flag disable this behavior.
-    lua_setfieldstringint(L, "DROPFLAGS_SOURCENODISABLEHOVER", ImGuiDragDropFlags_SourceNoDisableHover);   // By default, when dragging we clear data so that IsItemHovered() will return false, to avoid subsequent user code submitting tooltips. This flag disable this behavior so you can still call IsItemHovered() on the source item.
-    lua_setfieldstringint(L, "DROPFLAGS_SOURCENOHOLDTOOPENOTHERS", ImGuiDragDropFlags_SourceNoHoldToOpenOthers);   // Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
-    lua_setfieldstringint(L, "DROPFLAGS_SOURCEALLOWNULLID", ImGuiDragDropFlags_SourceAllowNullID);   // Allow items such as Text(), Image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. This is extremely unusual within the dear imgui ecosystem and so we made it explicit.
-    lua_setfieldstringint(L, "DROPFLAGS_SOURCEEXTERN", ImGuiDragDropFlags_SourceExtern);   // External source (from outside of dear imgui), won't attempt to read current item/window info. Will always return true. Only one Extern source can be active simultaneously.
-    lua_setfieldstringint(L, "DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD", ImGuiDragDropFlags_SourceAutoExpirePayload);   // Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
-    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTBEFOREDELIVERY", ImGuiDragDropFlags_AcceptBeforeDelivery);  // AcceptDragDropPayload() will returns true even before the mouse button is released. You can then call IsDelivery() to test if the payload needs to be delivered.
-    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTNODRAWDEFAULTRECT", ImGuiDragDropFlags_AcceptNoDrawDefaultRect);  // Do not draw the default highlight rectangle when hovering over target.
-    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP", ImGuiDragDropFlags_AcceptNoPreviewTooltip);  // Request hiding the BeginDragDropSource tooltip from the BeginDragDropTarget site.
-    lua_setfieldstringint(L, "DROPFLAGS_ACCEPTPEEKONLY", ImGuiDragDropFlags_AcceptPeekOnly);  // For peeking ahead and inspecting the payload before delivery.
+    /**
+     * DROPFLAGS_NONE
+     *
+     * @field DROPFLAGS_NONE
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_NONE", ImGuiDragDropFlags_None);
+    /**
+     * DROPFLAGS_SOURCENOPREVIEWTOOLTIP
+     * By default, a successful call to BeginDragDropSource opens a tooltip so you can display a preview or description of the source contents. This flag disable this behavior.
+     * @field DROPFLAGS_SOURCENOPREVIEWTOOLTIP
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_SOURCENOPREVIEWTOOLTIP", ImGuiDragDropFlags_SourceNoPreviewTooltip);
+    /**
+     * DROPFLAGS_SOURCENODISABLEHOVER
+     * By default, when dragging we clear data so that IsItemHovered() will return false, to avoid subsequent user code submitting tooltips. This flag disable this behavior so you can still call IsItemHovered() on the source item.
+     * @field DROPFLAGS_SOURCENODISABLEHOVER
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_SOURCENODISABLEHOVER", ImGuiDragDropFlags_SourceNoDisableHover);
+    /**
+     * DROPFLAGS_SOURCENOHOLDTOOPENOTHERS
+     * Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
+     * @field DROPFLAGS_SOURCENOHOLDTOOPENOTHERS
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_SOURCENOHOLDTOOPENOTHERS", ImGuiDragDropFlags_SourceNoHoldToOpenOthers);
+    /**
+     * DROPFLAGS_SOURCEALLOWNULLID
+     * Allow items such as Text(), Image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. This is extremely unusual within the dear imgui ecosystem and so we made it explicit.
+     * @field DROPFLAGS_SOURCEALLOWNULLID
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_SOURCEALLOWNULLID", ImGuiDragDropFlags_SourceAllowNullID);
+    /**
+     * DROPFLAGS_SOURCEEXTERN
+     * External source (from outside of dear imgui), won't attempt to read current item/window info. Will always return true. Only one Extern source can be active simultaneously.
+     * @field DROPFLAGS_SOURCEEXTERN
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_SOURCEEXTERN", ImGuiDragDropFlags_SourceExtern);
+    /**
+     * DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD
+     * Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+     * @field DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_SOURCEAUTOEXPIREPAYLOAD", ImGuiDragDropFlags_SourceAutoExpirePayload);
+    /**
+     * DROPFLAGS_ACCEPTBEFOREDELIVERY
+     * AcceptDragDropPayload() will returns true even before the mouse button is released. You can then call IsDelivery() to test if the payload needs to be delivered.
+     * @field DROPFLAGS_ACCEPTBEFOREDELIVERY
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_ACCEPTBEFOREDELIVERY", ImGuiDragDropFlags_AcceptBeforeDelivery);
+    /**
+     * DROPFLAGS_ACCEPTNODRAWDEFAULTRECT
+     * Do not draw the default highlight rectangle when hovering over target.
+     * @field DROPFLAGS_ACCEPTNODRAWDEFAULTRECT
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_ACCEPTNODRAWDEFAULTRECT", ImGuiDragDropFlags_AcceptNoDrawDefaultRect);
+    /**
+     * DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP
+     * Request hiding the BeginDragDropSource tooltip from the BeginDragDropTarget site.
+     * @field DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_ACCEPTNOPREVIEWTOOLTIP", ImGuiDragDropFlags_AcceptNoPreviewTooltip);
+    /**
+     * DROPFLAGS_ACCEPTPEEKONLY
+     * For peeking ahead and inspecting the payload before delivery.
+     * @field DROPFLAGS_ACCEPTPEEKONLY
+     */
+     lua_setfieldstringint(L, "DROPFLAGS_ACCEPTPEEKONLY", ImGuiDragDropFlags_AcceptPeekOnly);
 
 
-    lua_setfieldstringint(L, "INPUTFLAGS_NONE", ImGuiInputTextFlags_None);
-    lua_setfieldstringint(L, "INPUTFLAGS_CHARSDECIMAL", ImGuiInputTextFlags_CharsDecimal);   // Allow 0123456789.+-*/
-    lua_setfieldstringint(L, "INPUTFLAGS_CHARSHEXADECIMAL", ImGuiInputTextFlags_CharsHexadecimal);   // Allow 0123456789ABCDEFabcdef
-    lua_setfieldstringint(L, "INPUTFLAGS_CHARSUPPERCASE", ImGuiInputTextFlags_CharsUppercase);   // Turn a..z into A..Z
-    lua_setfieldstringint(L, "INPUTFLAGS_CHARSNOBLANK", ImGuiInputTextFlags_CharsNoBlank);   // Filter out spaces, tabs
-    lua_setfieldstringint(L, "INPUTFLAGS_AUTOSELECTALL", ImGuiInputTextFlags_AutoSelectAll);   // Select entire text when first taking mouse focus
-    lua_setfieldstringint(L, "INPUTFLAGS_ENTERRETURNSTRUE", ImGuiInputTextFlags_EnterReturnsTrue);   // Return 'true' when Enter is pressed (as opposed to every time the value was modified). Consider looking at the IsItemDeactivatedAfterEdit() function.
-    lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKCOMPLETION", ImGuiInputTextFlags_CallbackCompletion);   // Callback on pressing TAB (for completion handling)
-    lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKHISTORY", ImGuiInputTextFlags_CallbackHistory);   // Callback on pressing Up/Down arrows (for history handling)
-    lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKALWAYS", ImGuiInputTextFlags_CallbackAlways);   // Callback on each iteration. User code may query cursor position, modify text buffer.
-    lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKCHARFILTER", ImGuiInputTextFlags_CallbackCharFilter);   // Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
-    lua_setfieldstringint(L, "INPUTFLAGS_ALLOWTABINPUT", ImGuiInputTextFlags_AllowTabInput);  // Pressing TAB input a '\t' character into the text field
-    lua_setfieldstringint(L, "INPUTFLAGS_CTRLENTERFORNEWLINE", ImGuiInputTextFlags_CtrlEnterForNewLine);  // In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
-    lua_setfieldstringint(L, "INPUTFLAGS_NOHORIZONTALSCROLL", ImGuiInputTextFlags_NoHorizontalScroll);  // Disable following the cursor horizontally
-    lua_setfieldstringint(L, "INPUTFLAGS_ALWAYSOVERWRITE", ImGuiInputTextFlags_AlwaysOverwrite);  // Insert mode
-    lua_setfieldstringint(L, "INPUTFLAGS_READONLY", ImGuiInputTextFlags_ReadOnly);  // Read-only mode
-    lua_setfieldstringint(L, "INPUTFLAGS_PASSWORD", ImGuiInputTextFlags_Password);  // Password mode, display all characters as '*'
-    lua_setfieldstringint(L, "INPUTFLAGS_NOUNDOREDO", ImGuiInputTextFlags_NoUndoRedo);  // Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
-    lua_setfieldstringint(L, "INPUTFLAGS_CHARSSCIENTIFIC", ImGuiInputTextFlags_CharsScientific);  // Allow 0123456789.+-*/eE (Scientific notation input)
-    lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKRESIZE", ImGuiInputTextFlags_CallbackResize);  // Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
-    lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKEDIT", ImGuiInputTextFlags_CallbackEdit);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
-    lua_setfieldstringint(L, "INPUTFLAGS_ESCAPECLEARSALL", ImGuiInputTextFlags_EscapeClearsAll);  // Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    /**
+     * INPUTFLAGS_NONE
+     *
+     * @field INPUTFLAGS_NONE
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_NONE", ImGuiInputTextFlags_None);
+    /**
+     * INPUTFLAGS_CHARSDECIMAL
+     * @field INPUTFLAGS_CHARSDECIMAL
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CHARSDECIMAL", ImGuiInputTextFlags_CharsDecimal);
+    /**
+     * INPUTFLAGS_CHARSHEXADECIMAL
+     * @field INPUTFLAGS_CHARSHEXADECIMAL
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CHARSHEXADECIMAL", ImGuiInputTextFlags_CharsHexadecimal);
+    /**
+     * INPUTFLAGS_CHARSUPPERCASE
+     * Turn a..z into A..Z
+     * @field INPUTFLAGS_CHARSUPPERCASE
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CHARSUPPERCASE", ImGuiInputTextFlags_CharsUppercase);
+    /**
+     * INPUTFLAGS_CHARSNOBLANK
+     * Filter out spaces, tabs
+     * @field INPUTFLAGS_CHARSNOBLANK
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CHARSNOBLANK", ImGuiInputTextFlags_CharsNoBlank);
+    /**
+     * INPUTFLAGS_AUTOSELECTALL
+     * Select entire text when first taking mouse focus
+     * @field INPUTFLAGS_AUTOSELECTALL
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_AUTOSELECTALL", ImGuiInputTextFlags_AutoSelectAll);
+    /**
+     * INPUTFLAGS_ENTERRETURNSTRUE
+     * Return 'true' when Enter is pressed (as opposed to every time the value was modified). Consider looking at the IsItemDeactivatedAfterEdit() function.
+     * @field INPUTFLAGS_ENTERRETURNSTRUE
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_ENTERRETURNSTRUE", ImGuiInputTextFlags_EnterReturnsTrue);
+    /**
+     * INPUTFLAGS_CALLBACKCOMPLETION
+     * Callback on pressing TAB (for completion handling)
+     * @field INPUTFLAGS_CALLBACKCOMPLETION
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKCOMPLETION", ImGuiInputTextFlags_CallbackCompletion);
+    /**
+     * INPUTFLAGS_CALLBACKHISTORY
+     * Callback on pressing Up/Down arrows (for history handling)
+     * @field INPUTFLAGS_CALLBACKHISTORY
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKHISTORY", ImGuiInputTextFlags_CallbackHistory);
+    /**
+     * INPUTFLAGS_CALLBACKALWAYS
+     * Callback on each iteration. User code may query cursor position, modify text buffer.
+     * @field INPUTFLAGS_CALLBACKALWAYS
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKALWAYS", ImGuiInputTextFlags_CallbackAlways);
+    /**
+     * INPUTFLAGS_CALLBACKCHARFILTER
+     * Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
+     * @field INPUTFLAGS_CALLBACKCHARFILTER
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKCHARFILTER", ImGuiInputTextFlags_CallbackCharFilter);
+    /**
+     * INPUTFLAGS_ALLOWTABINPUT
+     * Pressing TAB input a '\t' character into the text field
+     * @field INPUTFLAGS_ALLOWTABINPUT
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_ALLOWTABINPUT", ImGuiInputTextFlags_AllowTabInput);
+    /**
+     * INPUTFLAGS_CTRLENTERFORNEWLINE
+     * In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
+     * @field INPUTFLAGS_CTRLENTERFORNEWLINE
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CTRLENTERFORNEWLINE", ImGuiInputTextFlags_CtrlEnterForNewLine);
+    /**
+     * INPUTFLAGS_NOHORIZONTALSCROLL
+     * Disable following the cursor horizontally
+     * @field INPUTFLAGS_NOHORIZONTALSCROLL
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_NOHORIZONTALSCROLL", ImGuiInputTextFlags_NoHorizontalScroll);
+    /**
+     * INPUTFLAGS_ALWAYSOVERWRITE
+     * Insert mode
+     * @field INPUTFLAGS_ALWAYSOVERWRITE
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_ALWAYSOVERWRITE", ImGuiInputTextFlags_AlwaysOverwrite);
+    /**
+     * INPUTFLAGS_READONLY
+     * Read-only mode
+     * @field INPUTFLAGS_READONLY
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_READONLY", ImGuiInputTextFlags_ReadOnly);
+    /**
+     * INPUTFLAGS_PASSWORD
+     * Password mode, display all characters as '*'
+     * @field INPUTFLAGS_PASSWORD
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_PASSWORD", ImGuiInputTextFlags_Password);
+    /**
+     * INPUTFLAGS_NOUNDOREDO
+     * Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
+     * @field INPUTFLAGS_NOUNDOREDO
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_NOUNDOREDO", ImGuiInputTextFlags_NoUndoRedo);
+    /**
+     * INPUTFLAGS_CHARSSCIENTIFIC
+     * Allow 0123456789.+-*\/eE (Scientific notation input)
+     * @field INPUTFLAGS_CHARSSCIENTIFIC
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CHARSSCIENTIFIC", ImGuiInputTextFlags_CharsScientific);
+    /**
+     * INPUTFLAGS_CALLBACKRESIZE
+     * Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
+     * @field INPUTFLAGS_CALLBACKRESIZE
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKRESIZE", ImGuiInputTextFlags_CallbackResize);
+    /**
+     * INPUTFLAGS_CALLBACKEDIT
+     * Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+     * @field INPUTFLAGS_CALLBACKEDIT
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_CALLBACKEDIT", ImGuiInputTextFlags_CallbackEdit);
+    /**
+     * INPUTFLAGS_ESCAPECLEARSALL
+     * Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+     * @field INPUTFLAGS_ESCAPECLEARSALL
+     */
+     lua_setfieldstringint(L, "INPUTFLAGS_ESCAPECLEARSALL", ImGuiInputTextFlags_EscapeClearsAll);
 
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NONE", ImGuiColorEditFlags_None);
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOALPHA", ImGuiColorEditFlags_NoAlpha);   //              // ColorEdit, ColorPicker, ColorButton: ignore Alpha component (will only read 3 components from the input pointer).
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOPICKER", ImGuiColorEditFlags_NoPicker);   //              // ColorEdit: disable picker when clicking on color square.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOOPTIONS", ImGuiColorEditFlags_NoOptions);   //              // ColorEdit: disable toggling options menu when right-clicking on inputs/small preview.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOSMALLPREVIEW", ImGuiColorEditFlags_NoSmallPreview);   //              // ColorEdit, ColorPicker: disable color square preview next to the inputs. (e.g. to show only the inputs)
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOINPUTS", ImGuiColorEditFlags_NoInputs);   //              // ColorEdit, ColorPicker: disable inputs sliders/text widgets (e.g. to show only the small preview color square).
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOTOOLTIP", ImGuiColorEditFlags_NoTooltip);   //              // ColorEdit, ColorPicker, ColorButton: disable tooltip when hovering the preview.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOLABEL", ImGuiColorEditFlags_NoLabel);   //              // ColorEdit, ColorPicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOSIDEPREVIEW", ImGuiColorEditFlags_NoSidePreview);   //              // ColorPicker: disable bigger color preview on right side of the picker, use small color square preview instead.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NODRAGDROP", ImGuiColorEditFlags_NoDragDrop);   //              // ColorEdit: disable drag and drop target. ColorButton: disable drag and drop source.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_NOBORDER", ImGuiColorEditFlags_NoBorder);  //              // ColorButton: disable border (which is enforced by default)
-    lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHABAR", ImGuiColorEditFlags_AlphaBar);  //              // ColorEdit, ColorPicker: show vertical alpha bar/gradient in picker.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHAPREVIEW", ImGuiColorEditFlags_AlphaPreview);  //              // ColorEdit, ColorPicker, ColorButton: display preview as a transparent color over a checkerboard, instead of opaque.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHAPREVIEWHALF", ImGuiColorEditFlags_AlphaPreviewHalf);  //              // ColorEdit, ColorPicker, ColorButton: display half opaque / half checkerboard, instead of opaque.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_HDR", ImGuiColorEditFlags_HDR);  //              // (WIP) ColorEdit: Currently only disable 0.0f..1.0f limits in RGBA edition (note: you probably want to use ImGuiColorEditFlags_Float flag as well).
-    lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYRGB", ImGuiColorEditFlags_DisplayRGB);  // [Display]    // ColorEdit: override _display_ type among RGB/HSV/Hex. ColorPicker: select any combination using one or more of RGB/HSV/Hex.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYHSV", ImGuiColorEditFlags_DisplayHSV);  // [Display]    // "
-    lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYHEX", ImGuiColorEditFlags_DisplayHex);  // [Display]    // "
-    lua_setfieldstringint(L, "COLOREDITFLAGS_UINT8", ImGuiColorEditFlags_Uint8);  // [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0..255.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_FLOAT", ImGuiColorEditFlags_Float);  // [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. No round-trip of value via integers.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_PICKERHUEBAR", ImGuiColorEditFlags_PickerHueBar);  // [Picker]     // ColorPicker: bar for Hue, rectangle for Sat/Value.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_PICKERHUEWHEEL", ImGuiColorEditFlags_PickerHueWheel);  // [Picker]     // ColorPicker: wheel for Hue, triangle for Sat/Value.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_INPUTRGB", ImGuiColorEditFlags_InputRGB);  // [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
-    lua_setfieldstringint(L, "COLOREDITFLAGS_INPUTHSV", ImGuiColorEditFlags_InputHSV);  // [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
+    /**
+     * COLOREDITFLAGS_NONE
+     *
+     * @field COLOREDITFLAGS_NONE
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NONE", ImGuiColorEditFlags_None);
+    /**
+     * COLOREDITFLAGS_NOALPHA
+     *              // ColorEdit, ColorPicker, ColorButton: ignore Alpha component (will only read 3 components from the input pointer).
+     * @field COLOREDITFLAGS_NOALPHA
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOALPHA", ImGuiColorEditFlags_NoAlpha);
+    /**
+     * COLOREDITFLAGS_NOPICKER
+     *              // ColorEdit: disable picker when clicking on color square.
+     * @field COLOREDITFLAGS_NOPICKER
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOPICKER", ImGuiColorEditFlags_NoPicker);
+    /**
+     * COLOREDITFLAGS_NOOPTIONS
+     *              // ColorEdit: disable toggling options menu when right-clicking on inputs/small preview.
+     * @field COLOREDITFLAGS_NOOPTIONS
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOOPTIONS", ImGuiColorEditFlags_NoOptions);
+    /**
+     * COLOREDITFLAGS_NOSMALLPREVIEW
+     *              // ColorEdit, ColorPicker: disable color square preview next to the inputs. (e.g. to show only the inputs)
+     * @field COLOREDITFLAGS_NOSMALLPREVIEW
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOSMALLPREVIEW", ImGuiColorEditFlags_NoSmallPreview);
+    /**
+     * COLOREDITFLAGS_NOINPUTS
+     *              // ColorEdit, ColorPicker: disable inputs sliders/text widgets (e.g. to show only the small preview color square).
+     * @field COLOREDITFLAGS_NOINPUTS
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOINPUTS", ImGuiColorEditFlags_NoInputs);
+    /**
+     * COLOREDITFLAGS_NOTOOLTIP
+     *              // ColorEdit, ColorPicker, ColorButton: disable tooltip when hovering the preview.
+     * @field COLOREDITFLAGS_NOTOOLTIP
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOTOOLTIP", ImGuiColorEditFlags_NoTooltip);
+    /**
+     * COLOREDITFLAGS_NOLABEL
+     *              // ColorEdit, ColorPicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
+     * @field COLOREDITFLAGS_NOLABEL
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOLABEL", ImGuiColorEditFlags_NoLabel);
+    /**
+     * COLOREDITFLAGS_NOSIDEPREVIEW
+     *              // ColorPicker: disable bigger color preview on right side of the picker, use small color square preview instead.
+     * @field COLOREDITFLAGS_NOSIDEPREVIEW
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOSIDEPREVIEW", ImGuiColorEditFlags_NoSidePreview);
+    /**
+     * COLOREDITFLAGS_NODRAGDROP
+     *              // ColorEdit: disable drag and drop target. ColorButton: disable drag and drop source.
+     * @field COLOREDITFLAGS_NODRAGDROP
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NODRAGDROP", ImGuiColorEditFlags_NoDragDrop);
+    /**
+     * COLOREDITFLAGS_NOBORDER
+     *              // ColorButton: disable border (which is enforced by default)
+     * @field COLOREDITFLAGS_NOBORDER
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_NOBORDER", ImGuiColorEditFlags_NoBorder);
+    /**
+     * COLOREDITFLAGS_ALPHABAR
+     *              // ColorEdit, ColorPicker: show vertical alpha bar/gradient in picker.
+     * @field COLOREDITFLAGS_ALPHABAR
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHABAR", ImGuiColorEditFlags_AlphaBar);
+    /**
+     * COLOREDITFLAGS_ALPHAPREVIEW
+     *              // ColorEdit, ColorPicker, ColorButton: display preview as a transparent color over a checkerboard, instead of opaque.
+     * @field COLOREDITFLAGS_ALPHAPREVIEW
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHAPREVIEW", ImGuiColorEditFlags_AlphaPreview);
+    /**
+     * COLOREDITFLAGS_ALPHAPREVIEWHALF
+     *              // ColorEdit, ColorPicker, ColorButton: display half opaque / half checkerboard, instead of opaque.
+     * @field COLOREDITFLAGS_ALPHAPREVIEWHALF
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_ALPHAPREVIEWHALF", ImGuiColorEditFlags_AlphaPreviewHalf);
+    /**
+     * COLOREDITFLAGS_HDR
+     *              // (WIP) ColorEdit: Currently only disable 0.0f..1.0f limits in RGBA edition (note: you probably want to use ImGuiColorEditFlags_Float flag as well).
+     * @field COLOREDITFLAGS_HDR
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_HDR", ImGuiColorEditFlags_HDR);
+    /**
+     * COLOREDITFLAGS_DISPLAYRGB
+     * [Display]    // ColorEdit: override _display_ type among RGB/HSV/Hex. ColorPicker: select any combination using one or more of RGB/HSV/Hex.
+     * @field COLOREDITFLAGS_DISPLAYRGB
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYRGB", ImGuiColorEditFlags_DisplayRGB);
+    /**
+     * COLOREDITFLAGS_DISPLAYHSV
+     * [Display]    // "
+     * @field COLOREDITFLAGS_DISPLAYHSV
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYHSV", ImGuiColorEditFlags_DisplayHSV);
+    /**
+     * COLOREDITFLAGS_DISPLAYHEX
+     * [Display]    // "
+     * @field COLOREDITFLAGS_DISPLAYHEX
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_DISPLAYHEX", ImGuiColorEditFlags_DisplayHex);
+    /**
+     * COLOREDITFLAGS_UINT8
+     * [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0..255.
+     * @field COLOREDITFLAGS_UINT8
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_UINT8", ImGuiColorEditFlags_Uint8);
+    /**
+     * COLOREDITFLAGS_FLOAT
+     * [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. No round-trip of value via integers.
+     * @field COLOREDITFLAGS_FLOAT
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_FLOAT", ImGuiColorEditFlags_Float);
+    /**
+     * COLOREDITFLAGS_PICKERHUEBAR
+     * [Picker]     // ColorPicker: bar for Hue, rectangle for Sat/Value.
+     * @field COLOREDITFLAGS_PICKERHUEBAR
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_PICKERHUEBAR", ImGuiColorEditFlags_PickerHueBar);
+    /**
+     * COLOREDITFLAGS_PICKERHUEWHEEL
+     * [Picker]     // ColorPicker: wheel for Hue, triangle for Sat/Value.
+     * @field COLOREDITFLAGS_PICKERHUEWHEEL
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_PICKERHUEWHEEL", ImGuiColorEditFlags_PickerHueWheel);
+    /**
+     * COLOREDITFLAGS_INPUTRGB
+     * [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
+     * @field COLOREDITFLAGS_INPUTRGB
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_INPUTRGB", ImGuiColorEditFlags_InputRGB);
+    /**
+     * COLOREDITFLAGS_INPUTHSV
+     * [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
+     * @field COLOREDITFLAGS_INPUTHSV
+     */
+     lua_setfieldstringint(L, "COLOREDITFLAGS_INPUTHSV", ImGuiColorEditFlags_InputHSV);
 
 
-    lua_setfieldstringint(L, "COND_NONE", ImGuiCond_None);  // No condition (always set the variable), same as _Always
-    lua_setfieldstringint(L, "COND_ALWAYS", ImGuiCond_Always);  // No condition (always set the variable)
-    lua_setfieldstringint(L, "COND_ONCE", ImGuiCond_Once);  // Set the variable once per runtime session (only the first call will succeed)
-    lua_setfieldstringint(L, "COND_FIRSTUSEEVER", ImGuiCond_FirstUseEver);  // Set the variable if the object/window has no persistently saved data (no entry in .ini file)
-    lua_setfieldstringint(L, "COND_APPEARING", ImGuiCond_Appearing);  // Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+    /**
+     * COND_NONE
+     * No condition (always set the variable), same as _Always
+     * @field COND_NONE
+     */
+     lua_setfieldstringint(L, "COND_NONE", ImGuiCond_None);
+    /**
+     * COND_ALWAYS
+     * No condition (always set the variable)
+     * @field COND_ALWAYS
+     */
+     lua_setfieldstringint(L, "COND_ALWAYS", ImGuiCond_Always);
+    /**
+     * COND_ONCE
+     * Set the variable once per runtime session (only the first call will succeed)
+     * @field COND_ONCE
+     */
+     lua_setfieldstringint(L, "COND_ONCE", ImGuiCond_Once);
+    /**
+     * COND_FIRSTUSEEVER
+     * Set the variable if the object/window has no persistently saved data (no entry in .ini file)
+     * @field COND_FIRSTUSEEVER
+     */
+     lua_setfieldstringint(L, "COND_FIRSTUSEEVER", ImGuiCond_FirstUseEver);
+    /**
+     * COND_APPEARING
+     * Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+     * @field COND_APPEARING
+     */
+     lua_setfieldstringint(L, "COND_APPEARING", ImGuiCond_Appearing);
 
-    lua_setfieldstringint(L, "DIR_NONE", ImGuiDir_None);
-    lua_setfieldstringint(L, "DIR_LEFT", ImGuiDir_Left);
-    lua_setfieldstringint(L, "DIR_RIGHT", ImGuiDir_Right);
-    lua_setfieldstringint(L, "DIR_UP", ImGuiDir_Up);
-    lua_setfieldstringint(L, "DIR_DOWN", ImGuiDir_Down);
+    /**
+     * DIR_NONE
+     *
+     * @field DIR_NONE
+     */
+     lua_setfieldstringint(L, "DIR_NONE", ImGuiDir_None);
+    /**
+     * DIR_LEFT
+     *
+     * @field DIR_LEFT
+     */
+     lua_setfieldstringint(L, "DIR_LEFT", ImGuiDir_Left);
+    /**
+     * DIR_RIGHT
+     *
+     * @field DIR_RIGHT
+     */
+     lua_setfieldstringint(L, "DIR_RIGHT", ImGuiDir_Right);
+    /**
+     * DIR_UP
+     *
+     * @field DIR_UP
+     */
+     lua_setfieldstringint(L, "DIR_UP", ImGuiDir_Up);
+    /**
+     * DIR_DOWN
+     *
+     * @field DIR_DOWN
+     */
+     lua_setfieldstringint(L, "DIR_DOWN", ImGuiDir_Down);
 
-    lua_setfieldstringint(L, "GLYPH_RANGES_DEFAULT", ExtImGuiGlyphRanges_Default);                // Basic Latin, Extended Latin
-    lua_setfieldstringint(L, "GLYPH_RANGES_GREEK", ExtImGuiGlyphRanges_Greek);                  // Default + Greek and Coptic
-    lua_setfieldstringint(L, "GLYPH_RANGES_KOREAN", ExtImGuiGlyphRanges_Korean);                 // Default + Korean characters
-    lua_setfieldstringint(L, "GLYPH_RANGES_JAPANESE", ExtImGuiGlyphRanges_Japanese);               // Default + Hiragana, Katakana, Half-Width, Selection of 2999 Ideographs
-    lua_setfieldstringint(L, "GLYPH_RANGES_CHINESEFULL", ExtImGuiGlyphRanges_ChineseFull);            // Default + Half-Width + Japanese Hiragana/Katakana + full set of about 21000 CJK Unified Ideographs
-    lua_setfieldstringint(L, "GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON", ExtImGuiGlyphRanges_ChineseSimplifiedCommon);// Default + Half-Width + Japanese Hiragana/Katakana + set of 2500 CJK Unified Ideographs for common simplified Chinese
-    lua_setfieldstringint(L, "GLYPH_RANGES_CYRILLIC", ExtImGuiGlyphRanges_Cyrillic);               // Default + about 400 Cyrillic characters
-    lua_setfieldstringint(L, "GLYPH_RANGES_THAI", ExtImGuiGlyphRanges_Thai);                   // Default + Thai characters
-    lua_setfieldstringint(L, "GLYPH_RANGES_VIETNAMESE", ExtImGuiGlyphRanges_Vietnamese);             // Default + Vietnamese characters
+    /**
+     * GLYPH_RANGES_DEFAULT
+     *                 // Basic Latin, Extended Latin
+     * @field GLYPH_RANGES_DEFAULT
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_DEFAULT", ExtImGuiGlyphRanges_Default);
+    /**
+     * GLYPH_RANGES_GREEK
+     *                   // Default + Greek and Coptic
+     * @field GLYPH_RANGES_GREEK
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_GREEK", ExtImGuiGlyphRanges_Greek);
+    /**
+     * GLYPH_RANGES_KOREAN
+     *                  // Default + Korean characters
+     * @field GLYPH_RANGES_KOREAN
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_KOREAN", ExtImGuiGlyphRanges_Korean);
+    /**
+     * GLYPH_RANGES_JAPANESE
+     *                // Default + Hiragana, Katakana, Half-Width, Selection of 2999 Ideographs
+     * @field GLYPH_RANGES_JAPANESE
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_JAPANESE", ExtImGuiGlyphRanges_Japanese);
+    /**
+     * GLYPH_RANGES_CHINESEFULL
+     *             // Default + Half-Width + Japanese Hiragana/Katakana + full set of about 21000 CJK Unified Ideographs
+     * @field GLYPH_RANGES_CHINESEFULL
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_CHINESEFULL", ExtImGuiGlyphRanges_ChineseFull);
+    /**
+     * GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON
+     * // Default + Half-Width + Japanese Hiragana/Katakana + set of 2500 CJK Unified Ideographs for common simplified Chinese
+     * @field GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_CHINESESIMPLIFIEDCOMMON", ExtImGuiGlyphRanges_ChineseSimplifiedCommon);
+    /**
+     * GLYPH_RANGES_CYRILLIC
+     *                // Default + about 400 Cyrillic characters
+     * @field GLYPH_RANGES_CYRILLIC
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_CYRILLIC", ExtImGuiGlyphRanges_Cyrillic);
+    /**
+     * GLYPH_RANGES_THAI
+     *                    // Default + Thai characters
+     * @field GLYPH_RANGES_THAI
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_THAI", ExtImGuiGlyphRanges_Thai);
+    /**
+     * GLYPH_RANGES_VIETNAMESE
+     *              // Default + Vietnamese characters
+     * @field GLYPH_RANGES_VIETNAMESE
+     */
+     lua_setfieldstringint(L, "GLYPH_RANGES_VIETNAMESE", ExtImGuiGlyphRanges_Vietnamese);
 
     // For use with push_style_var / Imgui::PushStyleVar
-    lua_setfieldstringint(L, "STYLEVAR_ALPHA", ImGuiStyleVar_Alpha);                                             // float  Alpha
-    lua_setfieldstringint(L, "STYLEVAR_DISABLEDALPHA", ImGuiStyleVar_DisabledAlpha);                             // float  DisabledAlpha
-    lua_setfieldstringint(L, "STYLEVAR_WINDOWPADDING", ImGuiStyleVar_WindowPadding);                             // ImVec2 WindowPadding
-    lua_setfieldstringint(L, "STYLEVAR_WINDOWROUNDING", ImGuiStyleVar_WindowRounding);                           // float  WindowRounding
-    lua_setfieldstringint(L, "STYLEVAR_WINDOWBORDERSIZE", ImGuiStyleVar_WindowBorderSize);                       // float  WindowBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_WINDOWMINSIZE", ImGuiStyleVar_WindowMinSize);                             // ImVec2 WindowMinSize
-    lua_setfieldstringint(L, "STYLEVAR_WINDOWTITLEALIGN", ImGuiStyleVar_WindowTitleAlign);                       // ImVec2 WindowTitleAlign
-    lua_setfieldstringint(L, "STYLEVAR_CHILDROUNDING", ImGuiStyleVar_ChildRounding);                             // float  ChildRounding
-    lua_setfieldstringint(L, "STYLEVAR_CHILDBORDERSIZE", ImGuiStyleVar_ChildBorderSize);                         // float  ChildBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_POPUPROUNDING", ImGuiStyleVar_PopupRounding);                             // float  PopupRounding
-    lua_setfieldstringint(L, "STYLEVAR_POPUPBORDERSIZE", ImGuiStyleVar_PopupBorderSize);                         // float  PopupBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_FRAMEPADDING", ImGuiStyleVar_FramePadding);                               // ImVec2 FramePadding
-    lua_setfieldstringint(L, "STYLEVAR_FRAMEROUNDING", ImGuiStyleVar_FrameRounding);                             // float  FrameRounding
-    lua_setfieldstringint(L, "STYLEVAR_FRAMEBORDERSIZE", ImGuiStyleVar_FrameBorderSize);                         // float  FrameBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_ITEMSPACING", ImGuiStyleVar_ItemSpacing);                                 // ImVec2 ItemSpacing
-    lua_setfieldstringint(L, "STYLEVAR_ITEMINNERSPACING", ImGuiStyleVar_ItemInnerSpacing);                       // ImVec2 ItemInnerSpacing
-    lua_setfieldstringint(L, "STYLEVAR_INDENTSPACING", ImGuiStyleVar_IndentSpacing);                             // float  IndentSpacing
-    lua_setfieldstringint(L, "STYLEVAR_CELLPADDING", ImGuiStyleVar_CellPadding);                                 // ImVec2 CellPadding
-    lua_setfieldstringint(L, "STYLEVAR_SCROLLBARSIZE", ImGuiStyleVar_ScrollbarSize);                             // float  ScrollbarSize
-    lua_setfieldstringint(L, "STYLEVAR_SCROLLBARROUNDING", ImGuiStyleVar_ScrollbarRounding);                     // float  ScrollbarRounding
-    lua_setfieldstringint(L, "STYLEVAR_GRABMINSIZE", ImGuiStyleVar_GrabMinSize);                                 // float  GrabMinSize
-    lua_setfieldstringint(L, "STYLEVAR_GRABROUNDING", ImGuiStyleVar_GrabRounding);                               // float  GrabRounding
-    lua_setfieldstringint(L, "STYLEVAR_TABROUNDING", ImGuiStyleVar_TabRounding);                                 // float  TabRounding
-    lua_setfieldstringint(L, "STYLEVAR_TABBORDERSIZE", ImGuiStyleVar_TabBorderSize);                             // float  TabBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_TABBARBORDERSIZE", ImGuiStyleVar_TabBarBorderSize);                       // float  TabBarBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_TABLEANGLEDHEADERSANGLE", ImGuiStyleVar_TableAngledHeadersAngle);         // float  TableAngledHeadersAngle
-    lua_setfieldstringint(L, "STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN", ImGuiStyleVar_TableAngledHeadersTextAlign); // ImVec2 TableAngledHeadersTextAlign
-    lua_setfieldstringint(L, "STYLEVAR_BUTTONTEXTALIGN", ImGuiStyleVar_ButtonTextAlign);                         // ImVec2 ButtonTextAlign
-    lua_setfieldstringint(L, "STYLEVAR_SELECTABLETEXTALIGN", ImGuiStyleVar_SelectableTextAlign);                 // ImVec2 SelectableTextAlign
-    lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTBORDERSIZE", ImGuiStyleVar_SeparatorTextBorderSize);         // float  SeparatorTextBorderSize
-    lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTALIGN", ImGuiStyleVar_SeparatorTextAlign);                   // ImVec2 SeparatorTextAlign
-    lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTPADDING", ImGuiStyleVar_SeparatorTextPadding);               // ImVec2 SeparatorTextPadding
+    /**
+     * STYLEVAR_ALPHA
+     *                                              // float  Alpha
+     * @field STYLEVAR_ALPHA
+     */
+     lua_setfieldstringint(L, "STYLEVAR_ALPHA", ImGuiStyleVar_Alpha);
+    /**
+     * STYLEVAR_DISABLEDALPHA
+     * float  DisabledAlpha
+     * @field STYLEVAR_DISABLEDALPHA
+     */
+     lua_setfieldstringint(L, "STYLEVAR_DISABLEDALPHA", ImGuiStyleVar_DisabledAlpha);
+    /**
+     * STYLEVAR_WINDOWPADDING
+     * ImVec2 WindowPadding
+     * @field STYLEVAR_WINDOWPADDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_WINDOWPADDING", ImGuiStyleVar_WindowPadding);
+    /**
+     * STYLEVAR_WINDOWROUNDING
+     *                            // float  WindowRounding
+     * @field STYLEVAR_WINDOWROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_WINDOWROUNDING", ImGuiStyleVar_WindowRounding);
+    /**
+     * STYLEVAR_WINDOWBORDERSIZE
+     *                        // float  WindowBorderSize
+     * @field STYLEVAR_WINDOWBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_WINDOWBORDERSIZE", ImGuiStyleVar_WindowBorderSize);
+    /**
+     * STYLEVAR_WINDOWMINSIZE
+     * ImVec2 WindowMinSize
+     * @field STYLEVAR_WINDOWMINSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_WINDOWMINSIZE", ImGuiStyleVar_WindowMinSize);
+    /**
+     * STYLEVAR_WINDOWTITLEALIGN
+     *                        // ImVec2 WindowTitleAlign
+     * @field STYLEVAR_WINDOWTITLEALIGN
+     */
+     lua_setfieldstringint(L, "STYLEVAR_WINDOWTITLEALIGN", ImGuiStyleVar_WindowTitleAlign);
+    /**
+     * STYLEVAR_CHILDROUNDING
+     * float  ChildRounding
+     * @field STYLEVAR_CHILDROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_CHILDROUNDING", ImGuiStyleVar_ChildRounding);
+    /**
+     * STYLEVAR_CHILDBORDERSIZE
+     *                          // float  ChildBorderSize
+     * @field STYLEVAR_CHILDBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_CHILDBORDERSIZE", ImGuiStyleVar_ChildBorderSize);
+    /**
+     * STYLEVAR_POPUPROUNDING
+     * float  PopupRounding
+     * @field STYLEVAR_POPUPROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_POPUPROUNDING", ImGuiStyleVar_PopupRounding);
+    /**
+     * STYLEVAR_POPUPBORDERSIZE
+     *                          // float  PopupBorderSize
+     * @field STYLEVAR_POPUPBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_POPUPBORDERSIZE", ImGuiStyleVar_PopupBorderSize);
+    /**
+     * STYLEVAR_FRAMEPADDING
+     *                                // ImVec2 FramePadding
+     * @field STYLEVAR_FRAMEPADDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_FRAMEPADDING", ImGuiStyleVar_FramePadding);
+    /**
+     * STYLEVAR_FRAMEROUNDING
+     * float  FrameRounding
+     * @field STYLEVAR_FRAMEROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_FRAMEROUNDING", ImGuiStyleVar_FrameRounding);
+    /**
+     * STYLEVAR_FRAMEBORDERSIZE
+     *                          // float  FrameBorderSize
+     * @field STYLEVAR_FRAMEBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_FRAMEBORDERSIZE", ImGuiStyleVar_FrameBorderSize);
+    /**
+     * STYLEVAR_ITEMSPACING
+     *                                  // ImVec2 ItemSpacing
+     * @field STYLEVAR_ITEMSPACING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_ITEMSPACING", ImGuiStyleVar_ItemSpacing);
+    /**
+     * STYLEVAR_ITEMINNERSPACING
+     *                        // ImVec2 ItemInnerSpacing
+     * @field STYLEVAR_ITEMINNERSPACING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_ITEMINNERSPACING", ImGuiStyleVar_ItemInnerSpacing);
+    /**
+     * STYLEVAR_INDENTSPACING
+     * float  IndentSpacing
+     * @field STYLEVAR_INDENTSPACING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_INDENTSPACING", ImGuiStyleVar_IndentSpacing);
+    /**
+     * STYLEVAR_CELLPADDING
+     *                                  // ImVec2 CellPadding
+     * @field STYLEVAR_CELLPADDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_CELLPADDING", ImGuiStyleVar_CellPadding);
+    /**
+     * STYLEVAR_SCROLLBARSIZE
+     * float  ScrollbarSize
+     * @field STYLEVAR_SCROLLBARSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_SCROLLBARSIZE", ImGuiStyleVar_ScrollbarSize);
+    /**
+     * STYLEVAR_SCROLLBARROUNDING
+     *                      // float  ScrollbarRounding
+     * @field STYLEVAR_SCROLLBARROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_SCROLLBARROUNDING", ImGuiStyleVar_ScrollbarRounding);
+    /**
+     * STYLEVAR_GRABMINSIZE
+     *                                  // float  GrabMinSize
+     * @field STYLEVAR_GRABMINSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_GRABMINSIZE", ImGuiStyleVar_GrabMinSize);
+    /**
+     * STYLEVAR_GRABROUNDING
+     *                                // float  GrabRounding
+     * @field STYLEVAR_GRABROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_GRABROUNDING", ImGuiStyleVar_GrabRounding);
+    /**
+     * STYLEVAR_TABROUNDING
+     *                                  // float  TabRounding
+     * @field STYLEVAR_TABROUNDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_TABROUNDING", ImGuiStyleVar_TabRounding);
+    /**
+     * STYLEVAR_TABBORDERSIZE
+     * float  TabBorderSize
+     * @field STYLEVAR_TABBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_TABBORDERSIZE", ImGuiStyleVar_TabBorderSize);
+    /**
+     * STYLEVAR_TABBARBORDERSIZE
+     *                        // float  TabBarBorderSize
+     * @field STYLEVAR_TABBARBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_TABBARBORDERSIZE", ImGuiStyleVar_TabBarBorderSize);
+    /**
+     * STYLEVAR_TABLEANGLEDHEADERSANGLE
+     *          // float  TableAngledHeadersAngle
+     * @field STYLEVAR_TABLEANGLEDHEADERSANGLE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_TABLEANGLEDHEADERSANGLE", ImGuiStyleVar_TableAngledHeadersAngle);
+    /**
+     * STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN
+     * ImVec2 TableAngledHeadersTextAlign
+     * @field STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN
+     */
+     lua_setfieldstringint(L, "STYLEVAR_TABLEANGLEDHEADERSTEXTALIGN", ImGuiStyleVar_TableAngledHeadersTextAlign);
+    /**
+     * STYLEVAR_BUTTONTEXTALIGN
+     *                          // ImVec2 ButtonTextAlign
+     * @field STYLEVAR_BUTTONTEXTALIGN
+     */
+     lua_setfieldstringint(L, "STYLEVAR_BUTTONTEXTALIGN", ImGuiStyleVar_ButtonTextAlign);
+    /**
+     * STYLEVAR_SELECTABLETEXTALIGN
+     *                  // ImVec2 SelectableTextAlign
+     * @field STYLEVAR_SELECTABLETEXTALIGN
+     */
+     lua_setfieldstringint(L, "STYLEVAR_SELECTABLETEXTALIGN", ImGuiStyleVar_SelectableTextAlign);
+    /**
+     * STYLEVAR_SEPARATORTEXTBORDERSIZE
+     *          // float  SeparatorTextBorderSize
+     * @field STYLEVAR_SEPARATORTEXTBORDERSIZE
+     */
+     lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTBORDERSIZE", ImGuiStyleVar_SeparatorTextBorderSize);
+    /**
+     * STYLEVAR_SEPARATORTEXTALIGN
+     *                    // ImVec2 SeparatorTextAlign
+     * @field STYLEVAR_SEPARATORTEXTALIGN
+     */
+     lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTALIGN", ImGuiStyleVar_SeparatorTextAlign);
+    /**
+     * STYLEVAR_SEPARATORTEXTPADDING
+     *                // ImVec2 SeparatorTextPadding
+     * @field STYLEVAR_SEPARATORTEXTPADDING
+     */
+     lua_setfieldstringint(L, "STYLEVAR_SEPARATORTEXTPADDING", ImGuiStyleVar_SeparatorTextPadding);
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
