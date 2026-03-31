@@ -6,12 +6,7 @@
 
 #define LIB_NAME "ImGui"
 
-#include <dmsdk/sdk.h>
-
-#if !defined(DM_HEADLESS)
-
-#define MODULE_NAME "imgui"
-
+// Need this preamble for Linux gl headers to work
 #include "imgui/imgui.h"
 #include "imgui/imconfig.h"
 
@@ -25,6 +20,12 @@
 #include "imgui/imgui_impl_android.h"
 #endif
 #include "imgui/imgui_impl_opengl3.h"
+
+#include <dmsdk/sdk.h>
+
+#if !defined(DM_HEADLESS)
+
+#define MODULE_NAME "imgui"
 
 #include <dmsdk/dlib/crypt.h>
 
