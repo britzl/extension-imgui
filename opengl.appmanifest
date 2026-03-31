@@ -64,7 +64,6 @@ platforms:
       symbols: []
       libs: []
       linkFlags: []
-      flags:      ["-std=c++11"]
   arm64-linux:
     context:
       excludeLibs: []
@@ -72,7 +71,6 @@ platforms:
       symbols: []
       libs: []
       linkFlags: []
-      flags:      ["-std=c++11"]
   x86-win32:
     context:
       excludeLibs: []
