@@ -5,6 +5,11 @@
  */
 
 #define LIB_NAME "ImGui"
+
+#include <dmsdk/sdk.h>
+
+#if !defined(DM_HEADLESS)
+
 #define MODULE_NAME "imgui"
 
 #include "imgui/imgui.h"
@@ -21,7 +26,6 @@
 #endif
 #include "imgui/imgui_impl_opengl3.h"
 
-#include <dmsdk/sdk.h>
 #include <dmsdk/dlib/crypt.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -2434,11 +2438,11 @@ static float     values_lines[MAX_HISTOGRAM_VALUES];
 
 /** PlotLines
  * @name plot_lines
- * @string label 
- * @integer offset 
- * @integer width 
- * @integer height 
- * @number[] values 
+ * @string label
+ * @integer offset
+ * @integer width
+ * @integer height
+ * @number[] values
  */
 static int imgui_PlotLines(lua_State* L)
 {
@@ -3977,668 +3981,668 @@ static void LuaInit(lua_State* L)
 
     /**
      * MOUSEBUTTON_LEFT
-     * 
+     *
      * @field MOUSEBUTTON_LEFT
      */
      lua_setfieldstringint(L, "MOUSEBUTTON_LEFT", ImGuiMouseButton_Left);
     /**
      * MOUSEBUTTON_RIGHT
-     * 
+     *
      * @field MOUSEBUTTON_RIGHT
      */
      lua_setfieldstringint(L, "MOUSEBUTTON_RIGHT", ImGuiMouseButton_Right);
     /**
      * MOUSEBUTTON_MIDDLE
-     * 
+     *
      * @field MOUSEBUTTON_MIDDLE
      */
      lua_setfieldstringint(L, "MOUSEBUTTON_MIDDLE", ImGuiMouseButton_Middle);
 
     /**
      * SELECTABLE_DONT_CLOSE_POPUPS
-     * 
+     *
      * @field SELECTABLE_DONT_CLOSE_POPUPS
      */
      lua_setfieldstringint(L, "SELECTABLE_DONT_CLOSE_POPUPS", ImGuiSelectableFlags_DontClosePopups);
     /**
      * SELECTABLE_SPAN_ALL_COLUMNS
-     * 
+     *
      * @field SELECTABLE_SPAN_ALL_COLUMNS
      */
      lua_setfieldstringint(L, "SELECTABLE_SPAN_ALL_COLUMNS", ImGuiSelectableFlags_SpanAllColumns);
     /**
      * SELECTABLE_ALLOW_DOUBLE_CLICK
-     * 
+     *
      * @field SELECTABLE_ALLOW_DOUBLE_CLICK
      */
      lua_setfieldstringint(L, "SELECTABLE_ALLOW_DOUBLE_CLICK", ImGuiSelectableFlags_AllowDoubleClick);
     /**
      * SELECTABLE_DISABLED
-     * 
+     *
      * @field SELECTABLE_DISABLED
      */
      lua_setfieldstringint(L, "SELECTABLE_DISABLED", ImGuiSelectableFlags_Disabled);
     /**
      * SELECTABLE_ALLOW_ITEM_OVERLAP
-     * 
+     *
      * @field SELECTABLE_ALLOW_ITEM_OVERLAP
      */
      lua_setfieldstringint(L, "SELECTABLE_ALLOW_ITEM_OVERLAP", ImGuiSelectableFlags_AllowItemOverlap);
 
     /**
      * TABITEM_UNSAVED_DOCUMENT
-     * 
+     *
      * @field TABITEM_UNSAVED_DOCUMENT
      */
      lua_setfieldstringint(L, "TABITEM_UNSAVED_DOCUMENT", ImGuiTabItemFlags_UnsavedDocument);
     /**
      * TABITEM_SET_SELECTED
-     * 
+     *
      * @field TABITEM_SET_SELECTED
      */
      lua_setfieldstringint(L, "TABITEM_SET_SELECTED", ImGuiTabItemFlags_SetSelected);
     /**
      * TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
-     * 
+     *
      * @field TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON
      */
      lua_setfieldstringint(L, "TABITEM_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON", ImGuiTabItemFlags_NoCloseWithMiddleMouseButton);
     /**
      * TABITEM_NO_PUSH_ID
-     * 
+     *
      * @field TABITEM_NO_PUSH_ID
      */
      lua_setfieldstringint(L, "TABITEM_NO_PUSH_ID", ImGuiTabItemFlags_NoPushId);
     /**
      * TABITEM_NO_TOOLTIP
-     * 
+     *
      * @field TABITEM_NO_TOOLTIP
      */
      lua_setfieldstringint(L, "TABITEM_NO_TOOLTIP", ImGuiTabItemFlags_NoTooltip);
     /**
      * TABITEM_NO_REORDER
-     * 
+     *
      * @field TABITEM_NO_REORDER
      */
      lua_setfieldstringint(L, "TABITEM_NO_REORDER", ImGuiTabItemFlags_NoReorder);
     /**
      * TABITEM_LEADING
-     * 
+     *
      * @field TABITEM_LEADING
      */
      lua_setfieldstringint(L, "TABITEM_LEADING", ImGuiTabItemFlags_Leading);
     /**
      * TABITEM_TRAILING
-     * 
+     *
      * @field TABITEM_TRAILING
      */
      lua_setfieldstringint(L, "TABITEM_TRAILING", ImGuiTabItemFlags_Trailing);
 
     /**
      * FOCUSED_CHILD_WINDOWS
-     * 
+     *
      * @field FOCUSED_CHILD_WINDOWS
      */
      lua_setfieldstringint(L, "FOCUSED_CHILD_WINDOWS", ImGuiFocusedFlags_ChildWindows);
     /**
      * FOCUSED_ROOT_WINDOW
-     * 
+     *
      * @field FOCUSED_ROOT_WINDOW
      */
      lua_setfieldstringint(L, "FOCUSED_ROOT_WINDOW", ImGuiFocusedFlags_RootWindow);
     /**
      * FOCUSED_ANY_WINDOW
-     * 
+     *
      * @field FOCUSED_ANY_WINDOW
      */
      lua_setfieldstringint(L, "FOCUSED_ANY_WINDOW", ImGuiFocusedFlags_AnyWindow);
     /**
      * FOCUSED_ROOT_AND_CHILD_WINDOWS
-     * 
+     *
      * @field FOCUSED_ROOT_AND_CHILD_WINDOWS
      */
      lua_setfieldstringint(L, "FOCUSED_ROOT_AND_CHILD_WINDOWS", ImGuiFocusedFlags_RootAndChildWindows);
 
     /**
      * TREENODE_SELECTED
-     * 
+     *
      * @field TREENODE_SELECTED
      */
      lua_setfieldstringint(L, "TREENODE_SELECTED", ImGuiTreeNodeFlags_Selected);
     /**
      * TREENODE_FRAMED
-     * 
+     *
      * @field TREENODE_FRAMED
      */
      lua_setfieldstringint(L, "TREENODE_FRAMED", ImGuiTreeNodeFlags_Framed);
     /**
      * TREENODE_ALLOW_ITEM_OVERLAP
-     * 
+     *
      * @field TREENODE_ALLOW_ITEM_OVERLAP
      */
      lua_setfieldstringint(L, "TREENODE_ALLOW_ITEM_OVERLAP", ImGuiTreeNodeFlags_AllowItemOverlap);
     /**
      * TREENODE_NO_TREE_PUSH_ON_OPEN
-     * 
+     *
      * @field TREENODE_NO_TREE_PUSH_ON_OPEN
      */
      lua_setfieldstringint(L, "TREENODE_NO_TREE_PUSH_ON_OPEN", ImGuiTreeNodeFlags_NoTreePushOnOpen);
     /**
      * TREENODE_NO_AUTO_OPEN_ON_LOG
-     * 
+     *
      * @field TREENODE_NO_AUTO_OPEN_ON_LOG
      */
      lua_setfieldstringint(L, "TREENODE_NO_AUTO_OPEN_ON_LOG", ImGuiTreeNodeFlags_NoAutoOpenOnLog);
     /**
      * TREENODE_DEFAULT_OPEN
-     * 
+     *
      * @field TREENODE_DEFAULT_OPEN
      */
      lua_setfieldstringint(L, "TREENODE_DEFAULT_OPEN", ImGuiTreeNodeFlags_DefaultOpen);
     /**
      * TREENODE_OPEN_ON_DOUBLE_CLICK
-     * 
+     *
      * @field TREENODE_OPEN_ON_DOUBLE_CLICK
      */
      lua_setfieldstringint(L, "TREENODE_OPEN_ON_DOUBLE_CLICK", ImGuiTreeNodeFlags_OpenOnDoubleClick);
     /**
      * TREENODE_OPEN_ON_ARROW
-     * 
+     *
      * @field TREENODE_OPEN_ON_ARROW
      */
      lua_setfieldstringint(L, "TREENODE_OPEN_ON_ARROW", ImGuiTreeNodeFlags_OpenOnArrow);
     /**
      * TREENODE_LEAF
-     * 
+     *
      * @field TREENODE_LEAF
      */
      lua_setfieldstringint(L, "TREENODE_LEAF", ImGuiTreeNodeFlags_Leaf);
     /**
      * TREENODE_BULLET
-     * 
+     *
      * @field TREENODE_BULLET
      */
      lua_setfieldstringint(L, "TREENODE_BULLET", ImGuiTreeNodeFlags_Bullet);
     /**
      * TREENODE_FRAME_PADDING
-     * 
+     *
      * @field TREENODE_FRAME_PADDING
      */
      lua_setfieldstringint(L, "TREENODE_FRAME_PADDING", ImGuiTreeNodeFlags_FramePadding);
     /**
      * TREENODE_SPAN_AVAILABLE_WIDTH
-     * 
+     *
      * @field TREENODE_SPAN_AVAILABLE_WIDTH
      */
      lua_setfieldstringint(L, "TREENODE_SPAN_AVAILABLE_WIDTH", ImGuiTreeNodeFlags_SpanAvailWidth);
     /**
      * TREENODE_SPAN_FULL_WIDTH
-     * 
+     *
      * @field TREENODE_SPAN_FULL_WIDTH
      */
      lua_setfieldstringint(L, "TREENODE_SPAN_FULL_WIDTH", ImGuiTreeNodeFlags_SpanFullWidth);
     /**
      * TREENODE_NAV_LEFT_JUMPS_BACK_HERE
-     * 
+     *
      * @field TREENODE_NAV_LEFT_JUMPS_BACK_HERE
      */
      lua_setfieldstringint(L, "TREENODE_NAV_LEFT_JUMPS_BACK_HERE", ImGuiTreeNodeFlags_NavLeftJumpsBackHere);
 
     /**
      * KEY_TAB
-     * 
+     *
      * @field KEY_TAB
      */
      lua_setfieldstringint(L, "KEY_TAB", ImGuiKey_Tab);
     /**
      * KEY_LEFTARROW
-     * 
+     *
      * @field KEY_LEFTARROW
      */
      lua_setfieldstringint(L, "KEY_LEFTARROW", ImGuiKey_LeftArrow);
     /**
      * KEY_RIGHTARROW
-     * 
+     *
      * @field KEY_RIGHTARROW
      */
      lua_setfieldstringint(L, "KEY_RIGHTARROW", ImGuiKey_RightArrow);
     /**
      * KEY_UPARROW
-     * 
+     *
      * @field KEY_UPARROW
      */
      lua_setfieldstringint(L, "KEY_UPARROW", ImGuiKey_UpArrow);
     /**
      * KEY_DOWNARROW
-     * 
+     *
      * @field KEY_DOWNARROW
      */
      lua_setfieldstringint(L, "KEY_DOWNARROW", ImGuiKey_DownArrow);
     /**
      * KEY_PAGEUP
-     * 
+     *
      * @field KEY_PAGEUP
      */
      lua_setfieldstringint(L, "KEY_PAGEUP", ImGuiKey_PageUp);
     /**
      * KEY_PAGEDOWN
-     * 
+     *
      * @field KEY_PAGEDOWN
      */
      lua_setfieldstringint(L, "KEY_PAGEDOWN", ImGuiKey_PageDown);
     /**
      * KEY_HOME
-     * 
+     *
      * @field KEY_HOME
      */
      lua_setfieldstringint(L, "KEY_HOME", ImGuiKey_Home);
     /**
      * KEY_END
-     * 
+     *
      * @field KEY_END
      */
      lua_setfieldstringint(L, "KEY_END", ImGuiKey_End);
     /**
      * KEY_INSERT
-     * 
+     *
      * @field KEY_INSERT
      */
      lua_setfieldstringint(L, "KEY_INSERT", ImGuiKey_Insert);
     /**
      * KEY_DELETE
-     * 
+     *
      * @field KEY_DELETE
      */
      lua_setfieldstringint(L, "KEY_DELETE", ImGuiKey_Delete);
     /**
      * KEY_BACKSPACE
-     * 
+     *
      * @field KEY_BACKSPACE
      */
      lua_setfieldstringint(L, "KEY_BACKSPACE", ImGuiKey_Backspace);
     /**
      * KEY_SPACE
-     * 
+     *
      * @field KEY_SPACE
      */
      lua_setfieldstringint(L, "KEY_SPACE", ImGuiKey_Space);
     /**
      * KEY_ENTER
-     * 
+     *
      * @field KEY_ENTER
      */
      lua_setfieldstringint(L, "KEY_ENTER", ImGuiKey_Enter);
     /**
      * KEY_ESCAPE
-     * 
+     *
      * @field KEY_ESCAPE
      */
      lua_setfieldstringint(L, "KEY_ESCAPE", ImGuiKey_Escape);
     /**
      * KEY_KEYPADENTER
-     * 
+     *
      * @field KEY_KEYPADENTER
      */
      lua_setfieldstringint(L, "KEY_KEYPADENTER", ImGuiKey_KeypadEnter);
     /**
      * KEY_A
-     * 
+     *
      * @field KEY_A
      */
      lua_setfieldstringint(L, "KEY_A", ImGuiKey_A);
     /**
      * KEY_C
-     * 
+     *
      * @field KEY_C
      */
      lua_setfieldstringint(L, "KEY_C", ImGuiKey_C);
     /**
      * KEY_V
-     * 
+     *
      * @field KEY_V
      */
      lua_setfieldstringint(L, "KEY_V", ImGuiKey_V);
     /**
      * KEY_X
-     * 
+     *
      * @field KEY_X
      */
      lua_setfieldstringint(L, "KEY_X", ImGuiKey_X);
     /**
      * KEY_Y
-     * 
+     *
      * @field KEY_Y
      */
      lua_setfieldstringint(L, "KEY_Y", ImGuiKey_Y);
     /**
      * KEY_Z
-     * 
+     *
      * @field KEY_Z
      */
      lua_setfieldstringint(L, "KEY_Z", ImGuiKey_Z);
 
     /**
      * ImGuiCol_Text
-     * 
+     *
      * @field ImGuiCol_Text
      */
      lua_setfieldstringint(L, "ImGuiCol_Text", ImGuiCol_Text);
     /**
      * ImGuiCol_TextDisabled
-     * 
+     *
      * @field ImGuiCol_TextDisabled
      */
      lua_setfieldstringint(L, "ImGuiCol_TextDisabled", ImGuiCol_TextDisabled);
     /**
      * ImGuiCol_WindowBg
-     * 
+     *
      * @field ImGuiCol_WindowBg
      */
      lua_setfieldstringint(L, "ImGuiCol_WindowBg", ImGuiCol_WindowBg);
     /**
      * ImGuiCol_ChildBg
-     * 
+     *
      * @field ImGuiCol_ChildBg
      */
      lua_setfieldstringint(L, "ImGuiCol_ChildBg", ImGuiCol_ChildBg);
     /**
      * ImGuiCol_PopupBg
-     * 
+     *
      * @field ImGuiCol_PopupBg
      */
      lua_setfieldstringint(L, "ImGuiCol_PopupBg", ImGuiCol_PopupBg);
     /**
      * ImGuiCol_Border
-     * 
+     *
      * @field ImGuiCol_Border
      */
      lua_setfieldstringint(L, "ImGuiCol_Border", ImGuiCol_Border);
     /**
      * ImGuiCol_BorderShadow
-     * 
+     *
      * @field ImGuiCol_BorderShadow
      */
      lua_setfieldstringint(L, "ImGuiCol_BorderShadow", ImGuiCol_BorderShadow);
     /**
      * ImGuiCol_FrameBg
-     * 
+     *
      * @field ImGuiCol_FrameBg
      */
      lua_setfieldstringint(L, "ImGuiCol_FrameBg", ImGuiCol_FrameBg);
     /**
      * ImGuiCol_FrameBgHovered
-     * 
+     *
      * @field ImGuiCol_FrameBgHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_FrameBgHovered", ImGuiCol_FrameBgHovered);
     /**
      * ImGuiCol_FrameBgActive
-     * 
+     *
      * @field ImGuiCol_FrameBgActive
      */
      lua_setfieldstringint(L, "ImGuiCol_FrameBgActive", ImGuiCol_FrameBgActive);
     /**
      * ImGuiCol_TitleBg
-     * 
+     *
      * @field ImGuiCol_TitleBg
      */
      lua_setfieldstringint(L, "ImGuiCol_TitleBg", ImGuiCol_TitleBg);
     /**
      * ImGuiCol_TitleBgActive
-     * 
+     *
      * @field ImGuiCol_TitleBgActive
      */
      lua_setfieldstringint(L, "ImGuiCol_TitleBgActive", ImGuiCol_TitleBgActive);
     /**
      * ImGuiCol_TitleBgCollapsed
-     * 
+     *
      * @field ImGuiCol_TitleBgCollapsed
      */
      lua_setfieldstringint(L, "ImGuiCol_TitleBgCollapsed", ImGuiCol_TitleBgCollapsed);
     /**
      * ImGuiCol_MenuBarBg
-     * 
+     *
      * @field ImGuiCol_MenuBarBg
      */
      lua_setfieldstringint(L, "ImGuiCol_MenuBarBg", ImGuiCol_MenuBarBg);
     /**
      * ImGuiCol_ScrollbarBg
-     * 
+     *
      * @field ImGuiCol_ScrollbarBg
      */
      lua_setfieldstringint(L, "ImGuiCol_ScrollbarBg", ImGuiCol_ScrollbarBg);
     /**
      * ImGuiCol_ScrollbarGrab
-     * 
+     *
      * @field ImGuiCol_ScrollbarGrab
      */
      lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrab", ImGuiCol_ScrollbarGrab);
     /**
      * ImGuiCol_ScrollbarGrabHovered
-     * 
+     *
      * @field ImGuiCol_ScrollbarGrabHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabHovered", ImGuiCol_ScrollbarGrabHovered);
     /**
      * ImGuiCol_ScrollbarGrabActive
-     * 
+     *
      * @field ImGuiCol_ScrollbarGrabActive
      */
      lua_setfieldstringint(L, "ImGuiCol_ScrollbarGrabActive", ImGuiCol_ScrollbarGrabActive);
     /**
      * ImGuiCol_CheckMark
-     * 
+     *
      * @field ImGuiCol_CheckMark
      */
      lua_setfieldstringint(L, "ImGuiCol_CheckMark", ImGuiCol_CheckMark);
     /**
      * ImGuiCol_SliderGrab
-     * 
+     *
      * @field ImGuiCol_SliderGrab
      */
      lua_setfieldstringint(L, "ImGuiCol_SliderGrab", ImGuiCol_SliderGrab);
     /**
      * ImGuiCol_SliderGrabActive
-     * 
+     *
      * @field ImGuiCol_SliderGrabActive
      */
      lua_setfieldstringint(L, "ImGuiCol_SliderGrabActive", ImGuiCol_SliderGrabActive);
     /**
      * ImGuiCol_Button
-     * 
+     *
      * @field ImGuiCol_Button
      */
      lua_setfieldstringint(L, "ImGuiCol_Button", ImGuiCol_Button);
     /**
      * ImGuiCol_ButtonHovered
-     * 
+     *
      * @field ImGuiCol_ButtonHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_ButtonHovered", ImGuiCol_ButtonHovered);
     /**
      * ImGuiCol_ButtonActive
-     * 
+     *
      * @field ImGuiCol_ButtonActive
      */
      lua_setfieldstringint(L, "ImGuiCol_ButtonActive", ImGuiCol_ButtonActive);
     /**
      * ImGuiCol_Header
-     * 
+     *
      * @field ImGuiCol_Header
      */
      lua_setfieldstringint(L, "ImGuiCol_Header", ImGuiCol_Header);
     /**
      * ImGuiCol_HeaderHovered
-     * 
+     *
      * @field ImGuiCol_HeaderHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_HeaderHovered", ImGuiCol_HeaderHovered);
     /**
      * ImGuiCol_HeaderActive
-     * 
+     *
      * @field ImGuiCol_HeaderActive
      */
      lua_setfieldstringint(L, "ImGuiCol_HeaderActive", ImGuiCol_HeaderActive);
     /**
      * ImGuiCol_Separator
-     * 
+     *
      * @field ImGuiCol_Separator
      */
      lua_setfieldstringint(L, "ImGuiCol_Separator", ImGuiCol_Separator);
     /**
      * ImGuiCol_SeparatorHovered
-     * 
+     *
      * @field ImGuiCol_SeparatorHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_SeparatorHovered", ImGuiCol_SeparatorHovered);
     /**
      * ImGuiCol_SeparatorActive
-     * 
+     *
      * @field ImGuiCol_SeparatorActive
      */
      lua_setfieldstringint(L, "ImGuiCol_SeparatorActive", ImGuiCol_SeparatorActive);
     /**
      * ImGuiCol_ResizeGrip
-     * 
+     *
      * @field ImGuiCol_ResizeGrip
      */
      lua_setfieldstringint(L, "ImGuiCol_ResizeGrip", ImGuiCol_ResizeGrip);
     /**
      * ImGuiCol_ResizeGripHovered
-     * 
+     *
      * @field ImGuiCol_ResizeGripHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_ResizeGripHovered", ImGuiCol_ResizeGripHovered);
     /**
      * ImGuiCol_ResizeGripActive
-     * 
+     *
      * @field ImGuiCol_ResizeGripActive
      */
      lua_setfieldstringint(L, "ImGuiCol_ResizeGripActive", ImGuiCol_ResizeGripActive);
     /**
      * ImGuiCol_Tab
-     * 
+     *
      * @field ImGuiCol_Tab
      */
      lua_setfieldstringint(L, "ImGuiCol_Tab", ImGuiCol_Tab);
     /**
      * ImGuiCol_TabHovered
-     * 
+     *
      * @field ImGuiCol_TabHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_TabHovered", ImGuiCol_TabHovered);
     /**
      * ImGuiCol_TabActive
-     * 
+     *
      * @field ImGuiCol_TabActive
      */
      lua_setfieldstringint(L, "ImGuiCol_TabActive", ImGuiCol_TabActive);
     /**
      * ImGuiCol_TabUnfocused
-     * 
+     *
      * @field ImGuiCol_TabUnfocused
      */
      lua_setfieldstringint(L, "ImGuiCol_TabUnfocused", ImGuiCol_TabUnfocused);
     /**
      * ImGuiCol_TabUnfocusedActive
-     * 
+     *
      * @field ImGuiCol_TabUnfocusedActive
      */
      lua_setfieldstringint(L, "ImGuiCol_TabUnfocusedActive", ImGuiCol_TabUnfocusedActive);
     /**
      * ImGuiCol_PlotLines
-     * 
+     *
      * @field ImGuiCol_PlotLines
      */
      lua_setfieldstringint(L, "ImGuiCol_PlotLines", ImGuiCol_PlotLines);
     /**
      * ImGuiCol_PlotLinesHovered
-     * 
+     *
      * @field ImGuiCol_PlotLinesHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_PlotLinesHovered", ImGuiCol_PlotLinesHovered);
     /**
      * ImGuiCol_PlotHistogram
-     * 
+     *
      * @field ImGuiCol_PlotHistogram
      */
      lua_setfieldstringint(L, "ImGuiCol_PlotHistogram", ImGuiCol_PlotHistogram);
     /**
      * ImGuiCol_PlotHistogramHovered
-     * 
+     *
      * @field ImGuiCol_PlotHistogramHovered
      */
      lua_setfieldstringint(L, "ImGuiCol_PlotHistogramHovered", ImGuiCol_PlotHistogramHovered);
     /**
      * ImGuiCol_TableHeaderBg
-     * 
+     *
      * @field ImGuiCol_TableHeaderBg
      */
      lua_setfieldstringint(L, "ImGuiCol_TableHeaderBg", ImGuiCol_TableHeaderBg);
     /**
      * ImGuiCol_TableBorderStrong
-     * 
+     *
      * @field ImGuiCol_TableBorderStrong
      */
      lua_setfieldstringint(L, "ImGuiCol_TableBorderStrong", ImGuiCol_TableBorderStrong);
     /**
      * ImGuiCol_TableBorderLight
-     * 
+     *
      * @field ImGuiCol_TableBorderLight
      */
      lua_setfieldstringint(L, "ImGuiCol_TableBorderLight", ImGuiCol_TableBorderLight);
     /**
      * ImGuiCol_TableRowBg
-     * 
+     *
      * @field ImGuiCol_TableRowBg
      */
      lua_setfieldstringint(L, "ImGuiCol_TableRowBg", ImGuiCol_TableRowBg);
     /**
      * ImGuiCol_TableRowBgAlt
-     * 
+     *
      * @field ImGuiCol_TableRowBgAlt
      */
      lua_setfieldstringint(L, "ImGuiCol_TableRowBgAlt", ImGuiCol_TableRowBgAlt);
     /**
      * ImGuiCol_TextSelectedBg
-     * 
+     *
      * @field ImGuiCol_TextSelectedBg
      */
      lua_setfieldstringint(L, "ImGuiCol_TextSelectedBg", ImGuiCol_TextSelectedBg);
     /**
      * ImGuiCol_DragDropTarget
-     * 
+     *
      * @field ImGuiCol_DragDropTarget
      */
      lua_setfieldstringint(L, "ImGuiCol_DragDropTarget", ImGuiCol_DragDropTarget);
     /**
      * ImGuiCol_NavHighlight
-     * 
+     *
      * @field ImGuiCol_NavHighlight
      */
      lua_setfieldstringint(L, "ImGuiCol_NavHighlight", ImGuiCol_NavHighlight);
     /**
      * ImGuiCol_NavWindowingHighlight
-     * 
+     *
      * @field ImGuiCol_NavWindowingHighlight
      */
      lua_setfieldstringint(L, "ImGuiCol_NavWindowingHighlight", ImGuiCol_NavWindowingHighlight);
     /**
      * ImGuiCol_NavWindowingDimBg
-     * 
+     *
      * @field ImGuiCol_NavWindowingDimBg
      */
      lua_setfieldstringint(L, "ImGuiCol_NavWindowingDimBg", ImGuiCol_NavWindowingDimBg);
     /**
      * ImGuiCol_ModalWindowDimBg
-     * 
+     *
      * @field ImGuiCol_ModalWindowDimBg
      */
      lua_setfieldstringint(L, "ImGuiCol_ModalWindowDimBg", ImGuiCol_ModalWindowDimBg);
 
     /**
      * TABLECOLUMN_NONE
-     * 
+     *
      * @field TABLECOLUMN_NONE
      */
      lua_setfieldstringint(L, "TABLECOLUMN_NONE", ImGuiTableColumnFlags_None);
@@ -4741,7 +4745,7 @@ static void LuaInit(lua_State* L)
 
     /**
      * TABLE_NONE
-     * 
+     *
      * @field TABLE_NONE
      */
      lua_setfieldstringint(L, "TABLE_NONE", ImGuiTableFlags_None);
@@ -4952,7 +4956,7 @@ static void LuaInit(lua_State* L)
 
     /**
      * WINDOWFLAGS_NONE
-     * 
+     *
      * @field WINDOWFLAGS_NONE
      */
      lua_setfieldstringint(L, "WINDOWFLAGS_NONE", ImGuiWindowFlags_None);
@@ -5097,7 +5101,7 @@ static void LuaInit(lua_State* L)
 
     /**
      * POPUPFLAGS_NONE
-     * 
+     *
      * @field POPUPFLAGS_NONE
      */
      lua_setfieldstringint(L, "POPUPFLAGS_NONE", ImGuiPopupFlags_None);
@@ -5121,13 +5125,13 @@ static void LuaInit(lua_State* L)
      lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONMIDDLE", ImGuiPopupFlags_MouseButtonMiddle);
     /**
      * POPUPFLAGS_MOUSEBUTTONMASK
-     * 
+     *
      * @field POPUPFLAGS_MOUSEBUTTONMASK
      */
      lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONMASK", ImGuiPopupFlags_MouseButtonMask_);
     /**
      * POPUPFLAGS_MOUSEBUTTONDEFAULT
-     * 
+     *
      * @field POPUPFLAGS_MOUSEBUTTONDEFAULT
      */
      lua_setfieldstringint(L, "POPUPFLAGS_MOUSEBUTTONDEFAULT", ImGuiPopupFlags_MouseButtonDefault_);
@@ -5157,14 +5161,14 @@ static void LuaInit(lua_State* L)
      lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUPLEVEL", ImGuiPopupFlags_AnyPopupLevel);
     /**
      * POPUPFLAGS_ANYPOPUP
-     * 
+     *
      * @field POPUPFLAGS_ANYPOPUP
      */
      lua_setfieldstringint(L, "POPUPFLAGS_ANYPOPUP", ImGuiPopupFlags_AnyPopup);
 
     /**
      * DROPFLAGS_NONE
-     * 
+     *
      * @field DROPFLAGS_NONE
      */
      lua_setfieldstringint(L, "DROPFLAGS_NONE", ImGuiDragDropFlags_None);
@@ -5232,7 +5236,7 @@ static void LuaInit(lua_State* L)
 
     /**
      * INPUTFLAGS_NONE
-     * 
+     *
      * @field INPUTFLAGS_NONE
      */
      lua_setfieldstringint(L, "INPUTFLAGS_NONE", ImGuiInputTextFlags_None);
@@ -5363,7 +5367,7 @@ static void LuaInit(lua_State* L)
 
     /**
      * COLOREDITFLAGS_NONE
-     * 
+     *
      * @field COLOREDITFLAGS_NONE
      */
      lua_setfieldstringint(L, "COLOREDITFLAGS_NONE", ImGuiColorEditFlags_None);
@@ -5540,31 +5544,31 @@ static void LuaInit(lua_State* L)
 
     /**
      * DIR_NONE
-     * 
+     *
      * @field DIR_NONE
      */
      lua_setfieldstringint(L, "DIR_NONE", ImGuiDir_None);
     /**
      * DIR_LEFT
-     * 
+     *
      * @field DIR_LEFT
      */
      lua_setfieldstringint(L, "DIR_LEFT", ImGuiDir_Left);
     /**
      * DIR_RIGHT
-     * 
+     *
      * @field DIR_RIGHT
      */
      lua_setfieldstringint(L, "DIR_RIGHT", ImGuiDir_Right);
     /**
      * DIR_UP
-     * 
+     *
      * @field DIR_UP
      */
      lua_setfieldstringint(L, "DIR_UP", ImGuiDir_Up);
     /**
      * DIR_DOWN
-     * 
+     *
      * @field DIR_DOWN
      */
      lua_setfieldstringint(L, "DIR_DOWN", ImGuiDir_Down);
@@ -5822,13 +5826,13 @@ static void LuaInit(lua_State* L)
     assert(top == lua_gettop(L));
 }
 
-dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
+static dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
 {
     imgui_ExtensionInit();
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
+static dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
 {
     // This is actually more complex than this,
     // but that value is buried deep in the private internals of dmGraphics_OpenGL
@@ -5846,12 +5850,12 @@ dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
+static dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
 {
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
+static dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
 {
     dmLogInfo("FinalizeDefoldImGui");
     imgui_Shutdown();
@@ -5859,12 +5863,12 @@ dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result OnUpdateDefoldImGui(dmExtension::Params* params)
+static dmExtension::Result OnUpdateDefoldImGui(dmExtension::Params* params)
 {
     return dmExtension::RESULT_OK;
 }
 
-void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* event)
+static void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* event)
 {
     switch(event->m_Event)
     {
@@ -5886,5 +5890,37 @@ void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* e
     }
 }
 
-DM_DECLARE_EXTENSION(DefoldImGui, LIB_NAME, AppInitializeDefoldImGui, AppFinalizeDefoldImGui, InitializeDefoldImGui, OnUpdateDefoldImGui, OnEventDefoldImGui, FinalizeDefoldImGui)
+#else
 
+static dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result OnUpdateDefoldImGui(dmExtension::Params* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* event)
+{
+}
+
+#endif
+
+DM_DECLARE_EXTENSION(DefoldImGui, LIB_NAME, AppInitializeDefoldImGui, AppFinalizeDefoldImGui, InitializeDefoldImGui, OnUpdateDefoldImGui, OnEventDefoldImGui, FinalizeDefoldImGui)
