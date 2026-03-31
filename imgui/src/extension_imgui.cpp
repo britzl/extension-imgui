@@ -5,6 +5,11 @@
  */
 
 #define LIB_NAME "ImGui"
+
+#include <dmsdk/sdk.h>
+
+#if !defined(DM_HEADLESS)
+
 #define MODULE_NAME "imgui"
 
 #include "imgui/imgui.h"
@@ -21,7 +26,6 @@
 #endif
 #include "imgui/imgui_impl_opengl3.h"
 
-#include <dmsdk/sdk.h>
 #include <dmsdk/dlib/crypt.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -4080,13 +4084,13 @@ static void LuaInit(lua_State* L)
     assert(top == lua_gettop(L));
 }
 
-dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
+static dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
 {
     imgui_ExtensionInit();
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
+static dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
 {
     // This is actually more complex than this,
     // but that value is buried deep in the private internals of dmGraphics_OpenGL
@@ -4104,12 +4108,12 @@ dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
+static dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
 {
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
+static dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
 {
     dmLogInfo("FinalizeDefoldImGui");
     imgui_Shutdown();
@@ -4117,12 +4121,12 @@ dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
     return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result OnUpdateDefoldImGui(dmExtension::Params* params)
+static dmExtension::Result OnUpdateDefoldImGui(dmExtension::Params* params)
 {
     return dmExtension::RESULT_OK;
 }
 
-void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* event)
+static void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* event)
 {
     switch(event->m_Event)
     {
@@ -4144,5 +4148,37 @@ void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* e
     }
 }
 
-DM_DECLARE_EXTENSION(DefoldImGui, LIB_NAME, AppInitializeDefoldImGui, AppFinalizeDefoldImGui, InitializeDefoldImGui, OnUpdateDefoldImGui, OnEventDefoldImGui, FinalizeDefoldImGui)
+#else
 
+static dmExtension::Result AppInitializeDefoldImGui(dmExtension::AppParams* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result AppFinalizeDefoldImGui(dmExtension::AppParams* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result InitializeDefoldImGui(dmExtension::Params* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result FinalizeDefoldImGui(dmExtension::Params* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static dmExtension::Result OnUpdateDefoldImGui(dmExtension::Params* params)
+{
+    return dmExtension::RESULT_OK;
+}
+
+static void OnEventDefoldImGui(dmExtension::Params* params, const dmExtension::Event* event)
+{
+}
+
+#endif
+
+DM_DECLARE_EXTENSION(DefoldImGui, LIB_NAME, AppInitializeDefoldImGui, AppFinalizeDefoldImGui, InitializeDefoldImGui, OnUpdateDefoldImGui, OnEventDefoldImGui, FinalizeDefoldImGui)
