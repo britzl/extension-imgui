@@ -884,6 +884,19 @@ static int imgui_IsWindowHovered(lua_State* L)
     return 1;
 }
 
+/** IsWindowAppearing
+ * @name is_window_appearing
+ * @treturn bool result
+ */
+static int imgui_IsWindowAppearing(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    bool appearing = ImGui::IsWindowAppearing();
+    lua_pushboolean(L, appearing);
+    return 1;
+}
+
 /** GetContentRegionAvail
  * @name get_content_region_avail
  * @treturn number x
@@ -2066,7 +2079,7 @@ static int imgui_ColorEdit4(lua_State* L)
  */
 static int imgui_Selectable(lua_State* L)
 {
-    DM_LUA_STACK_CHECK(L, 1);
+    DM_LUA_STACK_CHECK(L, 2);
     imgui_NewFrame();
     const char* text = luaL_checkstring(L, 1);
     bool selected = lua_toboolean(L, 2);
@@ -2075,9 +2088,10 @@ static int imgui_Selectable(lua_State* L)
     {
         flags = luaL_checkint(L, 3);
     }
-    ImGui::Selectable(text, &selected, flags);
+    bool pushed = ImGui::Selectable(text, &selected, flags);
     lua_pushboolean(L, selected);
-    return 1;
+    lua_pushboolean(L, pushed);
+    return 2;
 }
 
 /** Button
@@ -2104,6 +2118,21 @@ static int imgui_Button(lua_State* L)
     {
         pushed = ImGui::Button(text);
     }
+    lua_pushboolean(L, pushed);
+    return 1;
+}
+
+/** SmallButton
+ * @name small_button
+ * @string text
+ * @treturn boolean pushed
+ */
+static int imgui_SmallButton(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    imgui_NewFrame();
+    const char* text = luaL_checkstring(L, 1);
+    bool pushed = ImGui::SmallButton(text);
     lua_pushboolean(L, pushed);
     return 1;
 }
@@ -3514,6 +3543,17 @@ static int imgui_GetFrameHeight(lua_State* L)
     return 1;
 }
 
+/** GetFontSize
+ * @name get_font_size
+ * @treturn number font_size
+ */
+static int imgui_GetFontSize(lua_State* L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    lua_pushnumber(L, ImGui::GetFontSize());
+    return 1;
+}
+
 
 // ----------------------------
 // ----- DRAW -----------------
@@ -3787,6 +3827,7 @@ static const luaL_reg Module_methods[] =
     {"font_push", imgui_FontPush},
     {"font_pop", imgui_FontPop},
     {"font_scale", imgui_FontScale},
+    {"get_font_size", imgui_GetFontSize},
 
     {"set_next_window_size", imgui_SetNextWindowSize},
     {"set_next_window_pos", imgui_SetNextWindowPos},
@@ -3797,6 +3838,7 @@ static const luaL_reg Module_methods[] =
     {"end_window", imgui_End},
     {"is_window_focused", imgui_IsWindowFocused},
     {"is_window_hovered", imgui_IsWindowHovered},
+    {"is_window_appearing", imgui_IsWindowAppearing},
     {"get_content_region_avail", imgui_GetContentRegionAvail},
     {"get_window_content_region_max", imgui_GetWindowContentRegionMax},
 
@@ -3864,6 +3906,7 @@ static const luaL_reg Module_methods[] =
     {"slider_float3", imgui_SliderFloat3},
     {"slider_float4", imgui_SliderFloat4},
     {"button", imgui_Button},
+    {"small_button", imgui_SmallButton},
     {"button_image", imgui_ButtonImage},
     {"button_arrow", imgui_ButtonArrow},
     {"checkbox", imgui_Checkbox},

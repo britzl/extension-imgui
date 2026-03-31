@@ -570,6 +570,14 @@
     - name: result
       type: bool
 
+  - name: is_window_appearing
+    type: function
+    desc: |
+      IsWindowAppearing.
+    returns:
+    - name: result
+      type: bool
+
   - name: get_content_region_avail
     type: function
     desc: |
@@ -1212,6 +1220,8 @@
     returns:
     - name: selected
       type: boolean
+    - name: pushed
+      type: boolean
 
   - name: button
     type: function
@@ -1226,6 +1236,17 @@
     - name: height
       type: number
       optional: True
+    returns:
+    - name: pushed
+      type: boolean
+
+  - name: small_button
+    type: function
+    desc: |
+      SmallButton.
+    parameters:
+    - name: text
+      type: string
     returns:
     - name: pushed
       type: boolean
@@ -1758,6 +1779,14 @@
       type: number
     returns:
     - name: old_scale
+      type: number
+
+  - name: get_font_size
+    type: function
+    desc: |
+      GetFontSize.
+    returns:
+    - name: font_size
       type: number
 
   - name: get_frame_height
