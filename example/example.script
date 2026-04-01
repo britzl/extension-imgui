@@ -26,18 +26,15 @@ function init(self)
 end
 
 local function close_window(self)
+	local flags = imgui.WINDOWFLAGS_NOMOVE
+	local full, open = imgui.begin_window("Close window", true, flags)
+	if full then
+		imgui.text("You can close this window, but cannot move")
+	end
+	imgui.end_window()
 
-	if imgui then
-		local flags = imgui.WINDOWFLAGS_NOMOVE
-		local full, open = imgui.begin_window("Close window", true, flags)
-		if full then
-			imgui.text("You can close this window, but cannot move")
-		end
-		imgui.end_window()
-
-		if not open then
-			self.show_close_window = false
-		end
+	if not open then
+		self.show_close_window = false
 	end
 end
 
@@ -46,7 +43,7 @@ end
 
 
 local function main_menu_bar(self)
-	if imgui and imgui.begin_main_menu_bar() then
+	if imgui.begin_main_menu_bar() then
 		if imgui.begin_menu("File") then
 			if imgui.menu_item("Quit", "Ctrl+Q") then
 				sys.exit(0)
@@ -75,7 +72,7 @@ local function main_menu_bar(self)
 end
 
 local function nested_menu(self)
-	if imgui and imgui.begin_menu("Nested Menu") then
+	if imgui.begin_menu("Nested Menu") then
 		imgui.menu_item("Nested Item")
 		nested_menu(self)
 		imgui.end_menu()
