@@ -912,6 +912,9 @@ function imgui.is_window_focused(flags) end
 ---@return boolean result
 function imgui.is_window_hovered() end
 
+---@return boolean result
+function imgui.is_window_appearing() end
+
 ---@return number x
 ---@return number y
 function imgui.get_content_region_avail() end
@@ -1206,6 +1209,7 @@ function imgui.color_edit4(label, color, flags) end
 ---@param selected boolean?
 ---@param flags? integer|imgui.SELECTABLE
 ---@return boolean selected
+---@return boolean pushed
 function imgui.selectable(text, selected, flags) end
 
 ---@param text string
@@ -1213,6 +1217,10 @@ function imgui.selectable(text, selected, flags) end
 ---@param height? integer
 ---@return boolean pushed
 function imgui.button(text, width, height) end
+
+---@param text string
+---@return boolean pushed
+function imgui.small_button(text) end
 
 ---@param texture_id number
 ---@param width? integer
@@ -1404,6 +1412,9 @@ function imgui.font_pop() end
 ---@param scale number
 ---@return number old_scale
 function imgui.font_scale(font_id, scale) end
+
+---@return number font_size
+function imgui.get_font_size() end
 
 ---@return number height
 function imgui.get_frame_height() end
