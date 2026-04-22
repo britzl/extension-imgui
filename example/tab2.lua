@@ -16,7 +16,7 @@ return function(self)
 
 
 	-- this is the old way of creating combo boxes
-	-- it still exists in the ImGUI API since it's a quick way ti create a combo box
+	-- it still exists in the ImGUI API since it's a quick way to create a combo box
 	local changed, jedi = imgui.combo("Jedi##array", self.selected_jedi or 1, JEDI)
 	if changed then
 		self.selected_jedi = jedi
